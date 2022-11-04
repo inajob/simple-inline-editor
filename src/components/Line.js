@@ -3,7 +3,7 @@ import React from 'react';
 class Line extends React.Component{
   render() {
 		return (
-			<textarea>{this.props.value}</textarea>
+			<textarea value={this.props.value} onChange={this.props.onChange} />
 		)
 	}
 }
