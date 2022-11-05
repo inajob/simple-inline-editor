@@ -14,6 +14,7 @@ export const Line = (props) => {
        value={props.value}
        onChange={props.onChange}
        onKeyDown={props.onKeyDown}
+       onClick={props.onClick}
     />
   );
 };

@@ -59,6 +59,11 @@ export const Editor = (props) => {
               }
             })
           }}
+          onClick={(e) => {
+            setCursor((prev) => {
+              return {row: index, col: prev.col};
+            })
+          }}
         />
       ))}
     </div>);
