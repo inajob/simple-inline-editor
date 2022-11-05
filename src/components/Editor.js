@@ -1,53 +1,40 @@
-import React from 'react';
-import Line from './Line'
+import React, { useState } from 'react';
+import Line from './Line';
 
-class Editor extends React.Component{
-	constructor(props){
-		super(props);
-		this.state = {
-			lines: props.lines,
-			cursor: {row: 0, col: 0},
-		};
-		this.handleChange = this.handleChange.bind(this);
-		this.onKeyDown = this.onKeyDown.bind(this);
-	}
-	handleChange(i){
-		return (e) => {
-		  this.state.lines[i] = e.target.value;
-		  this.setState(this.state);
-		}
-	}
-	onKeyDown(i){
-    return (e) => {
-			switch(e.keyCode){
-				case 38: // up
-					this.state.cursor.row --;
-		      this.setState(this.state);
-					break;
-				case 40: // down
-					this.state.cursor.row ++;
-		      this.setState(this.state);
-					break;
-				default:
-			}
-		}
-	}
+export const Editor = (props) => {
+  const [cursor, setCursor] = useState({
+    row: 0,
+    col: 0,
+  });
+  const [lines, setLines] = useState(props.lines);
 
-	render(){
-		return (
-			<div>
-        {this.props.lines.map((line, index) => (
-					<Line
-					  key={index}
-				    value={line}
-					  isFocus={index===this.state.cursor.row}
-					  onChange={this.handleChange(index)}
-					  onKeyDown={this.onKeyDown(index)}
-					/>
-        ))}
-			</div>
-		)
-	}
-}
+  return (
+    <div>
+      {lines.map((line, index) => (
+        <Line
+          key={index}
+          isFocus={index === cursor.row}
+          value={line}
+          onChange={(e) => ((i) => {
+            setLines((prev) => {
+              prev[i] = e.target.value;
+              return [...prev];
+            })
+          })(index)}
+          onKeyDown={(e) => setCursor((prev) => {
+            switch(e.key) {
+              case "ArrowUp":
+                return { row: prev.row - 1, col: prev.col };
+              case "ArrowDown":
+                return { row: prev.row + 1, col: prev.col };
+              default:
+                // 同じobjectを返せば再レンダリングされない
+                return prev;
+            }
+          })}
+        />
+      ))}
+    </div>);
+};
 
 export default Editor
