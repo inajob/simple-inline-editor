@@ -5,6 +5,7 @@ export const Line = (props) => {
   useEffect(() =>{
     if (props.isFocus) {
       ref.current?.focus?.();
+      ref.current?.setSelectionRange(props.column, props.column);
     }
   } ,[props.isFocus]);
 

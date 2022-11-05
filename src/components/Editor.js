@@ -14,6 +14,7 @@ export const Editor = (props) => {
         <Line
           key={index}
           isFocus={index === cursor.row}
+          column={cursor.col}
           value={line}
           onChange={(e) => ((i) => {
             setLines((prev) => {
@@ -33,6 +34,7 @@ export const Editor = (props) => {
                 case "Backspace":
                   if(e.target.selectionStart === 0 && e.target.selectionEnd === 0){
                     if(prev.row === 0)return prev;
+                    let nextCol = lines[cursor.row - 1].length
                     setLines((prevLines) => {
                       // 上の行と結合する
                       prevLines[prev.row - 1] += prevLines[prev.row];
@@ -40,7 +42,7 @@ export const Editor = (props) => {
                       return [...prevLines];
                     });
                     e.preventDefault();
-                    return { row: prev.row - 1, col: prev.col };
+                    return { row: prev.row - 1, col: nextCol};
                   }
                   return prev;
                 case "Enter":
@@ -52,7 +54,7 @@ export const Editor = (props) => {
                     return [...prevLines];
                   });
                   e.preventDefault();
-                  return { row: prev.row + 1, col: prev.col };
+                  return { row: prev.row + 1, col: 0 };
                 default:
                   // 同じobjectを返せば再レンダリングされない
                   return prev;
