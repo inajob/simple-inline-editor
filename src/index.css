@@ -1,3 +1,34 @@
+* {
+  padding: 0px;
+  margin: 0px;
+}
+
+body{
+  background-color: #ddd;
+}
+
 textarea{
   width:100%;
+  height:1em;
+  border:none;
+  outline:none;
+}
+.editor{
+  margin: 1em;
+  padding: 1em;
+  background-color: white;
+}
+
+.focus textarea{
+  border:solid;
+  border-width:0px 0px 1px 0px;
+}
+.h1-style textarea{
+  font-size: xx-large;
+}
+.h2-style textarea{
+  font-size: x-large;
+}
+.h3-style textarea{
+  font-size: large;
 }

@@ -9,7 +9,7 @@ export const Editor = (props) => {
   const [lines, setLines] = useState(props.lines);
 
   return (
-    <div>
+    <div className="editor">
       {lines.map((line, index) => (
         <Line
           key={index}
