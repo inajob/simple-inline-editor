@@ -25,6 +25,22 @@ export const Editor = (props) => {
           onKeyDown={(e) => {
             setCursor((prev) => {
               switch(e.key) {
+                case "ArrowLeft":
+                  if(e.target.selectionStart === 0 && e.target.selectionEnd === 0){
+                    if(prev.row === 0)return prev;
+                    let nextCol = lines[cursor.row - 1].length
+                    e.preventDefault();
+                    return { row: prev.row - 1, col: nextCol };
+                  }
+                  return prev
+                case "ArrowRight":
+                  let maxCol = lines[cursor.row].length
+                  if(e.target.selectionStart === maxCol && e.target.selectionEnd === maxCol){
+                    if(prev.row === lines.length - 1)return prev;
+                    e.preventDefault();
+                    return { row: prev.row + 1, col: 0 };
+                  }
+                  return prev
                 case "ArrowUp":
                   if(prev.row === 0)return prev;
                   return { row: prev.row - 1, col: prev.col };

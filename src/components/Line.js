@@ -7,7 +7,7 @@ export const Line = (props) => {
       ref.current?.focus?.();
       ref.current?.setSelectionRange(props.column, props.column);
     }
-  } ,[props.isFocus]);
+  } ,[props.isFocus, props.column]);
 
   return (
     <textarea
