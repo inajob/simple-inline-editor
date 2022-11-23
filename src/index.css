@@ -41,3 +41,6 @@ textarea{
 .h3-style textarea, .h3-style div.elm{
   font-size: 1.2em;
 }
+.list-style textarea, .list-style div.elm{
+  color: red;
+}

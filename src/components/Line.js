@@ -17,6 +17,8 @@ export const Line = (props) => {
       clist.push("h2-style");
     }else if(s.indexOf("### ") === 0){
       clist.push("h3-style");
+    }else if(s.match(/^\s*- /)){
+      clist.push("list-style");
     }
 
     if(isFocus){
@@ -57,7 +59,7 @@ export const Line = (props) => {
     var result = []
     while(true){
       var cap;
-      cap = capture(body, ["http://", "https://"], pos);
+      cap = capture(body, ["http://", "https://", " "], pos);
       if((cap.target === "https://" || cap.target === "http://")){
         if(pos !== cap.pos){
           result.push(body.slice(pos, cap.pos));
@@ -73,6 +75,10 @@ export const Line = (props) => {
           pos = body.length;
           break;
         }
+      }else if(cap.target===" "){
+        result.push(body.slice(pos, cap.pos));
+        result.push("\u00A0")
+        pos = cap.pos + cap.target.length;
       }else{
         result.push(body.slice(pos, body.length))
         pos = body.length;
