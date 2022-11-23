@@ -10,7 +10,7 @@ export const Line = (props) => {
   } ,[props.isFocus, props.column]);
 
   const calcStyle = (s, isFocus) => {
-    let clist = [];
+    let clist = ["line"];
     if(s.indexOf("# ") === 0){
       clist.push("h1-style");
     }else if(s.indexOf("## ") === 0){
@@ -82,13 +82,13 @@ export const Line = (props) => {
     return result
   }
   const makeHtml = (s) => {
-    let clist = ["line"];
+    let clist = ["elm"];
     if(s.indexOf("# ") === 0){
-      clist.push("h1-style");
+      //clist.push("h1-style");
     }else if(s.indexOf("## ") === 0){
-      clist.push("h2-style");
+      //clist.push("h2-style");
     }else if(s.indexOf("### ") === 0){
-      clist.push("h3-style");
+      //clist.push("h3-style");
     }
     return (
       <div className={clist.join(" ")}>
