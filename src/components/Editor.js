@@ -16,13 +16,13 @@ export const Editor = (props) => {
           isFocus={index === cursor.row}
           column={cursor.col}
           value={line}
-          onChange={(e) => ((i) => {
+          onChange={(prefix) => (e) => ((i) => {
             setLines((prev) => {
-              prev[i] = e.target.value;
+              prev[i] = prefix + e.target.value;
               return [...prev];
             })
           })(index)}
-          onKeyDown={(e) => {
+          onKeyDown={(prefix) => (e) => {
             setCursor((prev) => {
               switch(e.key) {
                 case "ArrowLeft":
@@ -63,14 +63,18 @@ export const Editor = (props) => {
                   return prev;
                 case "Enter":
                   setLines((prevLines) => {
-                    const column = e.target.selectionStart;
+                    const column = prefix.length + e.target.selectionStart;
                     const afterCursor = prevLines[prev.row].slice(column);
                     prevLines[prev.row] = prevLines[prev.row].slice(0, column);
-                    prevLines.splice(prev.row + 1, 0, afterCursor);
+                    if(prefix.length != 0){
+                      prevLines.splice(prev.row + 1, 0, prefix + " " + afterCursor);
+                    }else{
+                      prevLines.splice(prev.row + 1, 0, afterCursor);
+                    }
                     return [...prevLines];
                   });
                   e.preventDefault();
-                  return { row: prev.row + 1, col: 0 };
+                  return { row: prev.row + 1, col: prefix.length };
                 default:
                   // 同じobjectを返せば再レンダリングされない
                   return prev;

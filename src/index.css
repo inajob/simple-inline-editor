@@ -42,5 +42,19 @@ textarea{
   font-size: 1.2em;
 }
 .list-style textarea, .list-style div.elm{
-  color: red;
+}
+.list-style{
+  display: flex;
+}
+.list-style::before{
+  content: "●";
+}
+.list-indent-1{
+  margin-left: 1em;
+}
+.list-indent-2{
+  margin-left: 2em;
+}
+.list-indent-3{
+  margin-left: 3em;
 }

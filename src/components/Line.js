@@ -11,14 +11,16 @@ export const Line = (props) => {
 
   const calcStyle = (s, isFocus) => {
     let clist = ["line"];
+    let m;
     if(s.indexOf("# ") === 0){
       clist.push("h1-style");
     }else if(s.indexOf("## ") === 0){
       clist.push("h2-style");
     }else if(s.indexOf("### ") === 0){
       clist.push("h3-style");
-    }else if(s.match(/^\s*- /)){
+    }else if(m = s.match(/^(\s*)- /)){
       clist.push("list-style");
+      clist.push("list-indent-" + (m[1].length/2)) // 2space
     }
 
     if(isFocus){
@@ -89,12 +91,15 @@ export const Line = (props) => {
   }
   const makeHtml = (s) => {
     let clist = ["elm"];
+    let m;
     if(s.indexOf("# ") === 0){
       //clist.push("h1-style");
     }else if(s.indexOf("## ") === 0){
       //clist.push("h2-style");
     }else if(s.indexOf("### ") === 0){
       //clist.push("h3-style");
+    }else if(m = s.match(/^(\s*)-( .*)$/)){
+      s = m[2]
     }
     return (
       <div className={clist.join(" ")}>
@@ -102,6 +107,19 @@ export const Line = (props) => {
       </div>
     )
   }
+  const makeText = (s) => {
+    let m;
+    let prefix = "";
+    if(m = s.match(/^(\s*)-( .*)$/)){
+      s = m[2]
+      prefix = m[1] + "-"
+    }
+    return [prefix, s]
+  }
+
+  let parts = makeText(props.value);
+  let prefix = parts[0];
+  let value = parts[1];
 
   return (
     <div
@@ -111,9 +129,9 @@ export const Line = (props) => {
        <textarea
          className={calcTextareaStyle(props.isFocus)}
          ref={ref}
-         value={props.value}
-         onChange={props.onChange}
-         onKeyDown={props.onKeyDown}
+         value={value}
+         onChange={props.onChange(prefix)}
+         onKeyDown={props.onKeyDown(prefix)}
       />
       <div className={calcHtmlStyle(props.isFocus)}>{makeHtml(props.value)}</div>
     </div>
