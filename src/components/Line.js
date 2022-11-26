@@ -11,14 +11,14 @@ export const Line = (props) => {
 
   const calcStyle = (s, isFocus) => {
     let clist = ["line"];
-    let m;
+    let m = s.match(/^(\s*)- /);
     if(s.indexOf("# ") === 0){
       clist.push("h1-style");
     }else if(s.indexOf("## ") === 0){
       clist.push("h2-style");
     }else if(s.indexOf("### ") === 0){
       clist.push("h3-style");
-    }else if(m = s.match(/^(\s*)- /)){
+    }else if(m){
       clist.push("list-style");
       clist.push("list-indent-" + (m[1].length/2)) // 2space
     }
@@ -91,14 +91,14 @@ export const Line = (props) => {
   }
   const makeHtml = (s) => {
     let clist = ["elm"];
-    let m;
+    let m = s.match(/^(\s*)-( .*)$/);
     if(s.indexOf("# ") === 0){
       //clist.push("h1-style");
     }else if(s.indexOf("## ") === 0){
       //clist.push("h2-style");
     }else if(s.indexOf("### ") === 0){
       //clist.push("h3-style");
-    }else if(m = s.match(/^(\s*)-( .*)$/)){
+    }else if(m){
       s = m[2]
     }
     return (
@@ -108,9 +108,9 @@ export const Line = (props) => {
     )
   }
   const makeText = (s) => {
-    let m;
+    let m = s.match(/^(\s*)-( .*)$/);
     let prefix = "";
-    if(m = s.match(/^(\s*)-( .*)$/)){
+    if(m){
       s = m[2]
       prefix = m[1] + "-"
     }

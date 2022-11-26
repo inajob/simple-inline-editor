@@ -64,14 +64,13 @@ export const Editor = (props) => {
                 case "Tab":
                   setLines((prevLines) => {
                     if(e.shiftKey){
-                      console.log("[" + prefix + "]")
-                      if(prefix.length == 1){ // prefix == '-'
+                      if(prefix.length === 1){ // prefix == '-'
                         prevLines[prev.row] = e.target.value.slice(1);
                       }else if(prefix.length > 0){
                         prevLines[prev.row] = prefix.slice(2) + e.target.value;
                       }
                     }else{
-                      if(prefix.length == 0){
+                      if(prefix.length === 0){
                         prevLines[prev.row] = "- " + e.target.value;
                       }else{
                         prevLines[prev.row] = "  "+ prefix + e.target.value;
@@ -86,7 +85,7 @@ export const Editor = (props) => {
                     const column = prefix.length + e.target.selectionStart;
                     const afterCursor = prevLines[prev.row].slice(column);
                     prevLines[prev.row] = prevLines[prev.row].slice(0, column);
-                    if(prefix.length != 0){
+                    if(prefix.length !== 0){
                       prevLines.splice(prev.row + 1, 0, prefix + " " + afterCursor);
                     }else{
                       prevLines.splice(prev.row + 1, 0, afterCursor);
