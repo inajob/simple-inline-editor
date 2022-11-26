@@ -34,7 +34,7 @@ export const Editor = (props) => {
                   }
                   return prev
                 case "ArrowRight":
-                  let maxCol = lines[cursor.row].length
+                  let maxCol = - prefix.length + lines[cursor.row].length
                   if(e.target.selectionStart === maxCol && e.target.selectionEnd === maxCol){
                     if(prev.row === lines.length - 1)return prev;
                     e.preventDefault();
@@ -60,6 +60,26 @@ export const Editor = (props) => {
                     e.preventDefault();
                     return { row: prev.row - 1, col: nextCol};
                   }
+                  return prev;
+                case "Tab":
+                  setLines((prevLines) => {
+                    if(e.shiftKey){
+                      console.log("[" + prefix + "]")
+                      if(prefix.length == 1){ // prefix == '-'
+                        prevLines[prev.row] = e.target.value.slice(1);
+                      }else if(prefix.length > 0){
+                        prevLines[prev.row] = prefix.slice(2) + e.target.value;
+                      }
+                    }else{
+                      if(prefix.length == 0){
+                        prevLines[prev.row] = "- " + e.target.value;
+                      }else{
+                        prevLines[prev.row] = "  "+ prefix + e.target.value;
+                      }
+                    }
+                    return [...prevLines];
+                  })
+                  e.preventDefault();
                   return prev;
                 case "Enter":
                   setLines((prevLines) => {

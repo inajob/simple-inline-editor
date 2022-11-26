@@ -47,7 +47,8 @@ textarea{
   display: flex;
 }
 .list-style::before{
-  content: "●";
+  content: "-";
+  font-weight: bold;
 }
 .list-indent-1{
   margin-left: 1em;
