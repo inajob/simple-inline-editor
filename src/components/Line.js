@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import {isBlock} from '../utils/util'
 
 export const Line = (props) => {
   const ref = useRef();
@@ -89,23 +90,32 @@ export const Line = (props) => {
     }
     return result
   }
+
   const makeHtml = (s) => {
-    let clist = ["elm"];
-    let m = s.match(/^(\s*)-( .*)$/);
-    if(s.indexOf("# ") === 0){
-      //clist.push("h1-style");
-    }else if(s.indexOf("## ") === 0){
-      //clist.push("h2-style");
-    }else if(s.indexOf("### ") === 0){
-      //clist.push("h3-style");
-    }else if(m){
-      s = m[2]
+    if(isBlock(s)){
+      return (
+        <pre className="block">
+          {s}
+        </pre>
+      )
+    }else{
+      let clist = ["elm"];
+      let m = s.match(/^(\s*)-( .*)$/);
+      if(s.indexOf("# ") === 0){
+        //clist.push("h1-style");
+      }else if(s.indexOf("## ") === 0){
+        //clist.push("h2-style");
+      }else if(s.indexOf("### ") === 0){
+        //clist.push("h3-style");
+      }else if(m){
+        s = m[2]
+      }
+      return (
+        <div className={clist.join(" ")}>
+          {makeLine(s)}
+        </div>
+      )
     }
-    return (
-      <div className={clist.join(" ")}>
-        {makeLine(s)}
-      </div>
-    )
   }
   const makeText = (s) => {
     let m = s.match(/^(\s*)-( .*)$/);
@@ -121,6 +131,11 @@ export const Line = (props) => {
   let prefix = parts[0];
   let value = parts[1];
 
+  const calcHeight = (s) => {
+    let lineNo = s.split(/[\r\n]/).length
+    return "calc(" + lineNo + "* 1.5em)"; // same as height
+  }
+
   return (
     <div
       className={calcStyle(props.value, props.isFocus)}
@@ -128,10 +143,11 @@ export const Line = (props) => {
     >
        <textarea
          className={calcTextareaStyle(props.isFocus)}
+         style={{height: calcHeight(value)}}
          ref={ref}
          value={value}
          onChange={props.onChange(prefix)}
-         onKeyDown={props.onKeyDown(prefix)}
+         onKeyDown={props.onKeyDown(prefix, value)}
       />
       <div className={calcHtmlStyle(props.isFocus)}>{makeHtml(props.value)}</div>
     </div>

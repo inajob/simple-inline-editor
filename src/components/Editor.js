@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Line from './Line';
+import {isBlock, isFirstLine, isLastLine} from '../utils/util'
 
 export const Editor = (props) => {
   const [cursor, setCursor] = useState({
@@ -22,7 +23,7 @@ export const Editor = (props) => {
               return [...prev];
             })
           })(index)}
-          onKeyDown={(prefix) => (e) => {
+          onKeyDown={(prefix, line) => (e) => {
             setCursor((prev) => {
               switch(e.key) {
                 case "ArrowLeft":
@@ -42,11 +43,20 @@ export const Editor = (props) => {
                   }
                   return prev
                 case "ArrowUp":
-                  if(prev.row === 0)return prev;
-                  return { row: prev.row - 1, col: prev.col };
+                  if(isBlock(line) && !isFirstLine(e.target.selectionStart, line)){
+                    return prev
+                  }else{
+                    if(prev.row === 0)return prev;
+                    return { row: prev.row - 1, col: prev.col };
+                  }
                 case "ArrowDown":
-                  if(prev.row === lines.length - 1)return prev;
-                  return { row: prev.row + 1, col: prev.col };
+                  if(isBlock(line) && !isLastLine(e.target.selectionStart, line)){
+                    return prev
+                  }else{
+                    if(prev.row === lines.length - 1)return prev;
+                    e.preventDefault();
+                    return { row: prev.row + 1, col: prev.col };
+                  }
                 case "Backspace":
                   if(e.target.selectionStart === 0 && e.target.selectionEnd === 0){
                     if(prev.row === 0)return prev;
@@ -81,19 +91,23 @@ export const Editor = (props) => {
                   e.preventDefault();
                   return prev;
                 case "Enter":
-                  setLines((prevLines) => {
-                    const column = prefix.length + e.target.selectionStart;
-                    const afterCursor = prevLines[prev.row].slice(column);
-                    prevLines[prev.row] = prevLines[prev.row].slice(0, column);
-                    if(prefix.length !== 0){
-                      prevLines.splice(prev.row + 1, 0, prefix + " " + afterCursor);
-                    }else{
-                      prevLines.splice(prev.row + 1, 0, afterCursor);
-                    }
-                    return [...prevLines];
-                  });
-                  e.preventDefault();
-                  return { row: prev.row + 1, col: prefix.length };
+                  if(isBlock(line)){
+                    return prev;
+                  }else{
+                    setLines((prevLines) => {
+                      const column = prefix.length + e.target.selectionStart;
+                      const afterCursor = prevLines[prev.row].slice(column);
+                      prevLines[prev.row] = prevLines[prev.row].slice(0, column);
+                      if(prefix.length !== 0){
+                        prevLines.splice(prev.row + 1, 0, prefix + " " + afterCursor);
+                      }else{
+                        prevLines.splice(prev.row + 1, 0, afterCursor);
+                      }
+                      return [...prevLines];
+                    });
+                    e.preventDefault();
+                    return { row: prev.row + 1, col: prefix.length };
+                  }
                 default:
                   // 同じobjectを返せば再レンダリングされない
                   return prev;

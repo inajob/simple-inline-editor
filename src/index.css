@@ -17,6 +17,11 @@ textarea{
   font-size   : 100%;
   height: 100%;
 }
+pre{
+  background-color: #ddd;
+  border: dashed 1px;
+  padding: 1em;
+}
 .hide{
   display: none;
 }
@@ -24,6 +29,11 @@ textarea{
   margin: 1em;
   padding: 1em;
   background-color: white;
+}
+
+.block::after{
+  content: "```";
+  display: block;
 }
 
 .focus textarea{
