@@ -32,8 +32,8 @@ export const Line = (props) => {
   }
 
   const calcTextareaStyle = (isFocus) => {
-    if(isFocus)return "";
-    return "hide";
+    if(isFocus)return [];
+    return ["hide"];
   }
   const calcHtmlStyle = (isFocus) => {
     if(isFocus)return "hide";
@@ -163,22 +163,44 @@ export const Line = (props) => {
     return "calc(" + lineNo + "* 1.5em)"; // same as height
   }
 
-  return (
-    <div
-      className={calcStyle(props.value, props.isFocus)}
-      onClick={props.onClick}
-    >
-       <textarea
-         className={calcTextareaStyle(props.isFocus)}
-         style={{height: calcHeight(value)}}
-         ref={ref}
-         value={value}
-         onChange={props.onChange(prefix)}
-         onKeyDown={props.onKeyDown(prefix, value)}
-      />
-      <div className={calcHtmlStyle(props.isFocus)}>{makeHtml(props.value)}</div>
-    </div>
-  );
+  let elm;
+  if(isBlock(value)){
+    elm = (
+      <div
+        className={calcStyle(props.value, props.isFocus)}
+        onClick={props.onClick}
+      >
+        <textarea
+          className={["line-item"].concat(calcTextareaStyle(props.isFocus)).join(" ")}
+          style={{height: calcHeight(value)}}
+          ref={ref}
+          value={value}
+          onChange={props.onChange(prefix)}
+          onKeyDown={props.onKeyDown(prefix, value)}
+        />
+        <div className="line-item">{makeHtml(props.value)}</div>
+      </div>
+    )
+  }else{
+    elm = (
+      <div
+        className={calcStyle(props.value, props.isFocus)}
+        onClick={props.onClick}
+      >
+        <textarea
+          className={calcTextareaStyle(props.isFocus)}
+          style={{height: calcHeight(value)}}
+          ref={ref}
+          value={value}
+          onChange={props.onChange(prefix)}
+          onKeyDown={props.onKeyDown(prefix, value)}
+        />
+        <div className={calcHtmlStyle(props.isFocus)}>{makeHtml(props.value)}</div>
+      </div>
+    );
+  }
+
+  return elm;
 };
 
 export default Line

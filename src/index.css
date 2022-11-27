@@ -45,6 +45,12 @@ td{
 
 .focus textarea{
 }
+.line{
+  display: flex;
+}
+.line .line-item{
+  flex: 1;
+}
 .line textarea, .line div.elm{
   font-size: 1em;
   height: 1.5em;
