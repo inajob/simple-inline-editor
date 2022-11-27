@@ -37,3 +37,10 @@ export const isFirstLine = (index, text) => {
   let pos = getCursorPos(index, text)
   return pos[1] === 0
 }
+
+export const parseBlock = (text) => {
+  let m = text.match(/^`{3}(.*)/) //`
+  let blockBody = getLines(text).slice(1).join("\n")
+  let blockType = m[1]
+  return [blockType, blockBody]
+}

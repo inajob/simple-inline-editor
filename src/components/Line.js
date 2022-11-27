@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import {isBlock} from '../utils/util'
+import {isBlock, parseBlock, getLines} from '../utils/util'
 
 export const Line = (props) => {
   const ref = useRef();
@@ -91,13 +91,40 @@ export const Line = (props) => {
     return result
   }
 
+  const csvToTable = (body) => {
+    let rows = []
+    console.log(body)
+    let lines = getLines(body)
+    lines.forEach((l) => {
+      let cellElms = []
+      let cells = l.split(/\s*,\s*/)
+      cells.forEach((cell) => {
+        cellElms.push(<td>{cell}</td>)
+      })
+      rows.push(<tr>{cellElms}</tr>)
+    })
+    return (
+      <table>{rows}</table>
+    )
+  }
+
+  const makeBlock = (type, body) => {
+    switch(type){
+      case "table":
+        return csvToTable(body)
+      default:
+        return (
+          <pre>
+            {body}
+          </pre>
+        )
+    }
+  }
+
   const makeHtml = (s) => {
     if(isBlock(s)){
-      return (
-        <pre className="block">
-          {s}
-        </pre>
-      )
+      let parts = parseBlock(s)
+      return makeBlock(parts[0], parts[1])
     }else{
       let clist = ["elm"];
       let m = s.match(/^(\s*)-( .*)$/);
