@@ -80,8 +80,12 @@ export const Editor = (props) => {
                         prevLines[prev.row] = prefix.slice(2) + e.target.value;
                       }
                     }else{
+                      let bullet = "-"
+                      if(isBlock(e.target.value)){
+                        bullet = " "
+                      }
                       if(prefix.length === 0){
-                        prevLines[prev.row] = "- " + e.target.value;
+                        prevLines[prev.row] = bullet + " " + e.target.value;
                       }else{
                         prevLines[prev.row] = "  "+ prefix + e.target.value;
                       }

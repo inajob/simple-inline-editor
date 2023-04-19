@@ -1,5 +1,9 @@
-export const isBlock = (s) => {
-  if(s.indexOf('```') === 0){
+export const isBlock = (s, isMatch) => {
+  let m = s.match(/^(\s*)```/) //```
+  if(isMatch){
+    return m
+  }
+  if(m != null){
     return true
   }
   return false
@@ -39,7 +43,7 @@ export const isFirstLine = (index, text) => {
 }
 
 export const parseBlock = (text) => {
-  let m = text.match(/^`{3}(.*)/) //`
+  let m = text.match(/^\s*`{3}(.*)/) //`
   let blockBody = getLines(text).slice(1).join("\n")
   let blockType = m[1]
   return [blockType, blockBody]

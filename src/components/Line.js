@@ -12,15 +12,18 @@ export const Line = (props) => {
 
   const calcStyle = (s, isFocus) => {
     let clist = ["line"];
-    let m = s.match(/^(\s*)- /);
+    let isList = s.match(/^(\s*)- /);
     if(s.indexOf("# ") === 0){
       clist.push("h1-style");
     }else if(s.indexOf("## ") === 0){
       clist.push("h2-style");
     }else if(s.indexOf("### ") === 0){
       clist.push("h3-style");
-    }else if(m){
+    }else if(isList){
       clist.push("list-style");
+      clist.push("list-indent-" + (isList[1].length/2)) // 2space
+    }else if(isBlock(s)){
+      let m = isBlock(s, true)
       clist.push("list-indent-" + (m[1].length/2)) // 2space
     }
 
@@ -145,11 +148,17 @@ export const Line = (props) => {
     }
   }
   const makeText = (s) => {
-    let m = s.match(/^(\s*)-( .*)$/);
+    let listMatch = s.match(/^(\s*-)( .*)$/);
     let prefix = "";
-    if(m){
-      s = m[2]
-      prefix = m[1] + "-"
+    if(listMatch){
+      s = listMatch[2]
+      prefix = listMatch[1]
+    }else{
+      let blockMatch = s.match(/^(\s*)(```.*)/) // ```
+      if(blockMatch){
+        prefix = blockMatch[1]
+        s = s.slice(blockMatch[1].length)
+      }
     }
     return [prefix, s]
   }
