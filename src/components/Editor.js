@@ -95,22 +95,26 @@ export const Editor = (props) => {
                   e.preventDefault();
                   return prev;
                 case "Enter":
-                  if(isBlock(line)){
-                    return prev;
+                  if(e.keyCode === 13){
+                    if(isBlock(line)){
+                      return prev;
+                    }else{
+                      setLines((prevLines) => {
+                        const column = prefix.length + e.target.selectionStart;
+                        const afterCursor = prevLines[prev.row].slice(column);
+                        prevLines[prev.row] = prevLines[prev.row].slice(0, column);
+                        if(prefix.length !== 0){
+                          prevLines.splice(prev.row + 1, 0, prefix + " " + afterCursor);
+                        }else{
+                          prevLines.splice(prev.row + 1, 0, afterCursor);
+                        }
+                        return [...prevLines];
+                      });
+                      e.preventDefault();
+                      return { row: prev.row + 1, col: prefix.length };
+                    }
                   }else{
-                    setLines((prevLines) => {
-                      const column = prefix.length + e.target.selectionStart;
-                      const afterCursor = prevLines[prev.row].slice(column);
-                      prevLines[prev.row] = prevLines[prev.row].slice(0, column);
-                      if(prefix.length !== 0){
-                        prevLines.splice(prev.row + 1, 0, prefix + " " + afterCursor);
-                      }else{
-                        prevLines.splice(prev.row + 1, 0, afterCursor);
-                      }
-                      return [...prevLines];
-                    });
-                    e.preventDefault();
-                    return { row: prev.row + 1, col: prefix.length };
+                    return prev;
                   }
                 default:
                   // 同じobjectを返せば再レンダリングされない
