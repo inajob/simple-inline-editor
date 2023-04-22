@@ -131,6 +131,7 @@ export const Line = (props) => {
     }else{
       let clist = ["elm"];
       let m = s.match(/^(\s*)-( .*)$/);
+      let prefix = null;
       if(s.indexOf("# ") === 0){
         //clist.push("h1-style");
       }else if(s.indexOf("## ") === 0){
@@ -139,10 +140,11 @@ export const Line = (props) => {
         //clist.push("h3-style");
       }else if(m){
         s = m[2]
+        prefix = <pre className="for-copy">{m[1] + "-"}</pre>
       }
       return (
         <div className={clist.join(" ")}>
-          {makeLine(s)}
+          {prefix}{makeLine(s)}
         </div>
       )
     }

@@ -37,6 +37,11 @@ td{
   padding: 1em;
   background-color: white;
 }
+.for-copy{
+  font-size: 0px;
+  border:none;
+  display:inline;
+}
 
 .block::after{
   content: "```";
