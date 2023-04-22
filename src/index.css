@@ -40,7 +40,14 @@ td{
 .for-copy{
   font-size: 0px;
   border:none;
+}
+.for-copy-inline{
+  font-size: 0px;
+  border:none;
   display:inline;
+}
+.no-select{
+  user-select: none;
 }
 
 .block::after{

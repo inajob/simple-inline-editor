@@ -124,10 +124,22 @@ export const Line = (props) => {
     }
   }
 
+  const alignIndent = (s) => {
+    let blockMatch = s.match(/^(\s*)(```.*)/) // ```
+    prefix = blockMatch[1]
+    s = s.slice(prefix.length).split("\n").map((s) => prefix + s).join("\n")
+    return s
+  }
+
   const makeHtml = (s) => {
     if(isBlock(s)){
       let parts = parseBlock(s)
-      return makeBlock(parts[0], parts[1])
+      return (
+        <div>
+        <pre className="for-copy">{alignIndent(s + "\n```")}</pre>
+        <div className="no-select">{makeBlock(parts[0], parts[1])}</div>
+        </div>
+      ) // ```
     }else{
       let clist = ["elm"];
       let m = s.match(/^(\s*)-( .*)$/);
@@ -140,7 +152,7 @@ export const Line = (props) => {
         //clist.push("h3-style");
       }else if(m){
         s = m[2]
-        prefix = <pre className="for-copy">{m[1] + "-"}</pre>
+        prefix = <pre className="for-copy-inline">{m[1] + "-"}</pre>
       }
       return (
         <div className={clist.join(" ")}>
