@@ -59,6 +59,7 @@ export const Editor = (props) => {
   const ref = useRef();
   useEffect(() =>{
     ref.current?.addEventListener("selectstart", selectionStart(ref.current));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lines])
 
   return (
