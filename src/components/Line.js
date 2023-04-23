@@ -10,7 +10,7 @@ export const Line = (props) => {
     }
   } ,[props.isFocus, props.column]);
 
-  const calcStyle = (s, isFocus) => {
+  const calcStyle = (s, isFocus, isSelect) => {
     let clist = ["line"];
     let isList = s.match(/^(\s*)- /);
     if(s.indexOf("# ") === 0){
@@ -29,6 +29,9 @@ export const Line = (props) => {
 
     if(isFocus){
       clist.push("focus");
+    }
+    if(isSelect){
+      clist.push("select");
     }
 
     return clist.join(" ");
@@ -190,7 +193,8 @@ export const Line = (props) => {
   if(isBlock(value)){
     elm = (
       <div
-        className={calcStyle(props.value, props.isFocus)}
+        className={calcStyle(props.value, props.isFocus, props.isSelect)}
+        data-lineno={props.row}
         onClick={props.onClick}
       >
         <textarea
@@ -207,7 +211,8 @@ export const Line = (props) => {
   }else{
     elm = (
       <div
-        className={calcStyle(props.value, props.isFocus)}
+        className={calcStyle(props.value, props.isFocus, props.isSelect)}
+        data-lineno={props.row}
         onClick={props.onClick}
       >
         <textarea

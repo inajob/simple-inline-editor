@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Line from './Line';
 import {isBlock, isFirstLine, isLastLine} from '../utils/util'
 
@@ -8,13 +8,70 @@ export const Editor = (props) => {
     col: 0,
   });
   const [lines, setLines] = useState(props.lines);
+  const [selectRange, setSelectRange] = useState([0,0]);
+
+  const findLine = (e) => {
+    if(e == null)return null;
+    if(e.classList && e.classList.contains("line")){return e}
+    return findLine(e.parentNode)
+  }
+
+  let fromLine, toLine
+  const changeSelection = (e) => {
+    let sel = document.getSelection()
+    fromLine = findLine(sel.anchorNode)
+    toLine = findLine(sel.focusNode)
+    if(fromLine && toLine){
+      let fromNo = parseInt(fromLine.dataset.lineno)
+      let toNo = parseInt(toLine.dataset.lineno)
+      setSelectRange([fromNo, toNo])
+    }
+  }
+  let selection = false // now in selection mode?
+  let removeEvent; // function of remove selectionchange event on document
+  const selectionEnd = (e) => {
+    document.removeEventListener("selectionchange", changeSelection)
+    let range = new Range();
+    range.setStart(fromLine, 0)
+    range.setEnd(toLine, toLine.children.length)
+    document.getSelection().empty()
+    document.getSelection().addRange(range)
+
+    selection = false
+    if(removeEvent){
+      removeEvent();
+      removeEvent = null;
+    }
+  }
+  const selectionStart = (elm) => (e) => {
+    if(selection === false){
+      selection = true
+      document.addEventListener("selectionchange", changeSelection);
+      elm.addEventListener("mouseleave", selectionEnd)
+      elm.addEventListener("mouseup", selectionEnd)
+      removeEvent = () => {
+        elm.removeEventListener("mouseleave", selectionEnd)
+        elm.removeEventListener("mouseup", selectionEnd)
+      }
+    }
+  }
+
+  const ref = useRef();
+  useEffect(() =>{
+    ref.current?.addEventListener("selectstart", selectionStart(ref.current));
+  }, [lines])
 
   return (
-    <div className="editor">
+    <div
+      className="editor"
+      ref={ref}
+    >
       {lines.map((line, index) => (
         <Line
           key={index}
           isFocus={index === cursor.row}
+          isSelect={selectRange[0] <= index && index <= selectRange[1]}
+          row={index}
           column={cursor.col}
           value={line}
           onChange={(prefix) => (e) => ((i) => {
@@ -123,6 +180,7 @@ export const Editor = (props) => {
             })
           }}
           onClick={(e) => {
+            setSelectRange([index, index])
             setCursor((prev) => {
               return {row: index, col: prev.col};
             })

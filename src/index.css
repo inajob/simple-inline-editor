@@ -55,6 +55,10 @@ td{
   display: block;
 }
 
+.select{
+  background-color: #ddf;
+}
+
 .focus textarea{
 }
 .line{
