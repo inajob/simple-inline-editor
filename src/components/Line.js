@@ -20,7 +20,6 @@ export const Line = (props) => {
     ref.current.style.height = ref.current.scrollHeight + "px"
     // restore style
     ref.current.style.display = preDisplay
-    console.log(ref.current.scrollHeight);
   } ,[props.value]);
 
 
