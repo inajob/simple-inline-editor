@@ -21,6 +21,7 @@ pre{
   background-color: #ddd;
   border: dashed 1px;
   padding: 1em;
+  white-space: pre-wrap;
 }
 table{
   border: solid 1px;
@@ -63,13 +64,13 @@ td{
 }
 .line{
   display: flex;
+  word-break: break-all;
 }
 .line .line-item{
   flex: 1;
 }
 .line textarea, .line div.elm{
   font-size: 1em;
-  height: 1.5em;
 }
 .h1-style textarea, .h1-style div.elm{
   font-size: 2em;

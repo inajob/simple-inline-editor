@@ -10,6 +10,20 @@ export const Line = (props) => {
     }
   } ,[props.isFocus, props.column]);
 
+  useEffect(() =>{
+    // save style
+    let preDisplay = ref.current.style.display
+    // reset style for calculation
+    ref.current.style.display = "block"
+    ref.current.style.height = "0px"
+    // auto resize
+    ref.current.style.height = ref.current.scrollHeight + "px"
+    // restore style
+    ref.current.style.display = preDisplay
+    console.log(ref.current.scrollHeight);
+  } ,[props.value]);
+
+
   const calcStyle = (s, isFocus, isSelect) => {
     let clist = ["line"];
     let isList = s.match(/^(\s*)- /);
@@ -184,11 +198,6 @@ export const Line = (props) => {
   let prefix = parts[0];
   let value = parts[1];
 
-  const calcHeight = (s) => {
-    let lineNo = s.split(/[\r\n]/).length
-    return "calc(" + lineNo + "* 1.5em)"; // same as height
-  }
-
   let elm;
   if(isBlock(value)){
     elm = (
@@ -199,7 +208,6 @@ export const Line = (props) => {
       >
         <textarea
           className={["line-item"].concat(calcTextareaStyle(props.isFocus)).join(" ")}
-          style={{height: calcHeight(value)}}
           ref={ref}
           value={value}
           onChange={props.onChange(prefix)}
@@ -217,7 +225,6 @@ export const Line = (props) => {
       >
         <textarea
           className={calcTextareaStyle(props.isFocus)}
-          style={{height: calcHeight(value)}}
           ref={ref}
           value={value}
           onChange={props.onChange(prefix)}
