@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Line from './Line';
 import {isBlock, isFirstLine, isLastLine} from '../utils/util'
 
@@ -17,55 +17,41 @@ export const Editor = (props) => {
   }
 
   let fromLine, toLine
+  let selection = false // now in selection mode?
   const changeSelection = (e) => {
+    selection = true
     let sel = document.getSelection()
     fromLine = findLine(sel.anchorNode)
     toLine = findLine(sel.focusNode)
-    if(fromLine && toLine){
-      let fromNo = parseInt(fromLine.dataset.lineno)
-      let toNo = parseInt(toLine.dataset.lineno)
-      setSelectRange([fromNo, toNo])
-    }
   }
-  let selection = false // now in selection mode?
-  let removeEvent; // function of remove selectionchange event on document
+
   const selectionEnd = (e) => {
-    document.removeEventListener("selectionchange", changeSelection)
-    let range = new Range();
-    range.setStart(fromLine, 0)
-    range.setEnd(toLine, toLine.children.length)
-    document.getSelection().empty()
-    document.getSelection().addRange(range)
+    if(selection){
+      let range = new Range();
+      range.setStart(fromLine, 0)
+      range.setEnd(toLine, toLine.children.length)
+      document.getSelection().empty()
+      document.getSelection().addRange(range)
 
-    selection = false
-    if(removeEvent){
-      removeEvent();
-      removeEvent = null;
-    }
-  }
-  const selectionStart = (elm) => (e) => {
-    if(selection === false){
-      selection = true
-      document.addEventListener("selectionchange", changeSelection);
-      elm.addEventListener("mouseleave", selectionEnd)
-      elm.addEventListener("mouseup", selectionEnd)
-      removeEvent = () => {
-        elm.removeEventListener("mouseleave", selectionEnd)
-        elm.removeEventListener("mouseup", selectionEnd)
+      if(fromLine && toLine){
+        let fromNo = parseInt(fromLine.dataset.lineno)
+        let toNo = parseInt(toLine.dataset.lineno)
+        setSelectRange([fromNo, toNo])
       }
+      selection = false
     }
   }
 
-  const ref = useRef();
+  // execute only first
   useEffect(() =>{
-    ref.current?.addEventListener("selectstart", selectionStart(ref.current));
+    document.addEventListener("selectionchange", changeSelection);
+    document.addEventListener("pointerup", selectionEnd);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lines])
+  },[])
 
   return (
     <div
       className="editor"
-      ref={ref}
     >
       {lines.map((line, index) => (
         <Line
