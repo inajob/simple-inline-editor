@@ -56,13 +56,13 @@ export const Editor = (props) => {
     lines.forEach((l) => {
       let blockMatch = l.match(/^(\s*)(```.*)/) // ```
       if(inBlock){
-        let isBlockEnd = (l.indexOf(blockPrefix + "```") == 0);
+        let isBlockEnd = (l.indexOf(blockPrefix + "```") === 0);
         if(isBlockEnd){
           out.push(blockContent.join("\n"))
           inBlock = false;
           blockContent = []
         }else{
-          if(blockPrefix != "" && l.indexOf(blockPrefix) !== 0){
+          if(blockPrefix !== "" && l.indexOf(blockPrefix) !== 0){
             // invalid block
             out.push(blockContent.join("\n"))
             inBlock = false;
@@ -81,7 +81,7 @@ export const Editor = (props) => {
         }
       }
     })
-    if(blockContent.length != 0){
+    if(blockContent.length !== 0){
       out.push(blockContent.join("\n"))
     }
     setLines((prev) => {
