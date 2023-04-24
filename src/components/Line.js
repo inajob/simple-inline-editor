@@ -114,13 +114,13 @@ export const Line = (props) => {
     let rows = []
     console.log(body)
     let lines = getLines(body)
-    lines.forEach((l) => {
+    lines.forEach((l, tri) => {
       let cellElms = []
       let cells = l.split(/\s*,\s*/)
-      cells.forEach((cell) => {
-        cellElms.push(<td>{cell}</td>)
+      cells.forEach((cell, tdi) => {
+        cellElms.push(<td key={tdi}>{cell}</td>)
       })
-      rows.push(<tr>{cellElms}</tr>)
+      rows.push(<tr key={tri}>{cellElms}</tr>)
     })
     return (
       <table>{rows}</table>

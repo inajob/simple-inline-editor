@@ -143,7 +143,7 @@ export const Editor = (props) => {
                     return prev
                   }else{
                     if(prev.row === 0)return prev;
-                    return { row: prev.row - 1, col: prev.col };
+                    return { row: prev.row - 1, col: e.target.selectionStart };
                   }
                 case "ArrowDown":
                   if(isBlock(line) && !isLastLine(e.target.selectionStart, line)){
@@ -151,7 +151,7 @@ export const Editor = (props) => {
                   }else{
                     if(prev.row === lines.length - 1)return prev;
                     e.preventDefault();
-                    return { row: prev.row + 1, col: prev.col };
+                    return { row: prev.row + 1, col: e.target.selectionStart };
                   }
                 case "Backspace":
                   if(e.target.selectionStart === 0 && e.target.selectionEnd === 0){
