@@ -71,6 +71,7 @@ td{
 }
 .line textarea, .line div.elm{
   font-size: 1em;
+  min-height: 1.5em;
 }
 .h1-style textarea, .h1-style div.elm{
   font-size: 2em;
