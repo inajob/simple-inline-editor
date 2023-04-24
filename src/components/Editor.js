@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Line from './Line';
 import {isBlock, isFirstLine, isLastLine} from '../utils/util'
@@ -42,6 +43,57 @@ export const Editor = (props) => {
     }
   }
 
+  const paste = (no) => (e) => {
+    let body = e.clipboardData.getData('text')
+    let lines = body.split(/\r\n|\n/)
+    if(lines.length === 1){
+      // normal paste
+      return true;
+    }
+    let out = [];
+    let blockContent = []
+    let inBlock = false
+    let blockPrefix = 0;
+    lines.forEach((l) => {
+      let blockMatch = l.match(/^(\s*)(```.*)/) // ```
+      if(inBlock){
+        let isBlockEnd = (l.indexOf(blockPrefix + "```") == 0);
+        if(isBlockEnd){
+          out.push(blockContent.join("\n"))
+          inBlock = false;
+          blockContent = []
+        }else{
+          if(blockPrefix != "" && l.indexOf(blockPrefix) !== 0){
+            // invalid block
+            out.push(blockContent.join("\n"))
+            inBlock = false;
+            blockContent = []
+            out.push(l)
+          }
+          blockContent.push(l.slice(blockPrefix.length))
+        }
+      }else{
+        if(blockMatch){
+          inBlock = true;
+          blockPrefix = blockMatch[1];
+          blockContent.push(l)
+        }else{
+          out.push(l)
+        }
+      }
+    })
+    if(blockContent.length != 0){
+      out.push(blockContent.join("\n"))
+    }
+    setLines((prev) => {
+      prev[no] = prev[no] + out[0];
+      prev.splice(no + 1, 0, ...out.slice(1))
+      return [...prev];
+    })
+    e.preventDefault()
+    return false
+  }
+
   // execute only first
   useEffect(() =>{
     document.addEventListener("selectionchange", changeSelection);
@@ -61,6 +113,7 @@ export const Editor = (props) => {
           row={index}
           column={cursor.col}
           value={line}
+          onPaste={paste}
           onChange={(prefix) => (e) => ((i) => {
             setLines((prev) => {
               prev[i] = prefix + e.target.value;

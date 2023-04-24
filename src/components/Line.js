@@ -226,6 +226,7 @@ export const Line = (props) => {
           className={calcTextareaStyle(props.isFocus)}
           ref={ref}
           value={value}
+          onPaste={props.onPaste(props.row)}
           onChange={props.onChange(prefix)}
           onKeyDown={props.onKeyDown(prefix, value)}
         />
