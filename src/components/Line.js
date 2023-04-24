@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useMemo, useCallback } from 'react';
 import {isBlock, parseBlock, getLines} from '../utils/util'
 
 export const Line = (props) => {
@@ -76,7 +76,7 @@ export const Line = (props) => {
     return {pos: minPos, target: minTarget}
   }
 
-  const makeLine = (body) => {
+  const makeLine = useCallback((body) => {
     var pos = 0;
     var result = []
     while(true){
@@ -108,7 +108,7 @@ export const Line = (props) => {
       }
     }
     return result
-  }
+  }, [])
 
   const csvToTable = (body) => {
     let rows = []
@@ -127,7 +127,7 @@ export const Line = (props) => {
     )
   }
 
-  const makeBlock = (type, body) => {
+  const makeBlock = useCallback((type, body) => {
     switch(type){
       case "table":
         return csvToTable(body)
@@ -138,16 +138,16 @@ export const Line = (props) => {
           </pre>
         )
     }
-  }
+  }, [])
 
-  const alignIndent = (s) => {
+  const alignIndent = useCallback((s) => {
     let blockMatch = s.match(/^(\s*)(```.*)/) // ```
-    prefix = blockMatch[1]
+    let prefix = blockMatch[1]
     s = s.slice(prefix.length).split("\n").map((s) => prefix + s).join("\n")
     return s
-  }
+  }, [])
 
-  const makeHtml = (s) => {
+  const makeHtml = useCallback(((s) => {
     if(isBlock(s)){
       let parts = parseBlock(s)
       return (
@@ -176,7 +176,7 @@ export const Line = (props) => {
         </div>
       )
     }
-  }
+  }), [alignIndent, makeBlock, makeLine])
   const makeText = (s) => {
     let listMatch = s.match(/^(\s*-)( .*)$/);
     let prefix = "";
@@ -198,6 +198,7 @@ export const Line = (props) => {
   let value = parts[1];
 
   let elm;
+  let renderElement = useMemo(() => makeHtml(props.value), [props.value, makeHtml])
   if(isBlock(value)){
     elm = (
       <div
@@ -212,7 +213,7 @@ export const Line = (props) => {
           onChange={props.onChange(prefix)}
           onKeyDown={props.onKeyDown(prefix, value)}
         />
-        <div className="line-item">{makeHtml(props.value)}</div>
+        <div className="line-item">{renderElement}</div>
       </div>
     )
   }else{
@@ -230,7 +231,7 @@ export const Line = (props) => {
           onChange={props.onChange(prefix)}
           onKeyDown={props.onKeyDown(prefix, value)}
         />
-        <div className={calcHtmlStyle(props.isFocus)}>{makeHtml(props.value)}</div>
+        <div className={calcHtmlStyle(props.isFocus)}>{renderElement}</div>
       </div>
     );
   }
