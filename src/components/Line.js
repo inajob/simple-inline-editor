@@ -1,15 +1,7 @@
-import React, { useRef, useEffect, useMemo, useCallback } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import {isBlock, parseBlock, getLines} from '../utils/util'
 
-export const Line = (props) => {
-  const ref = useRef();
-  useEffect(() =>{
-    if (props.isFocus) {
-      ref.current?.focus?.();
-      ref.current?.setSelectionRange(props.column, props.column);
-    }
-  } ,[props.isFocus, props.column]);
-
+export const Line = React.forwardRef((props, ref) => {
   useEffect(() =>{
     // save style
     let preDisplay = ref.current.style.display
@@ -20,7 +12,7 @@ export const Line = (props) => {
     ref.current.style.height = ref.current.scrollHeight + "px"
     // restore style
     ref.current.style.display = preDisplay
-  } ,[props.value]);
+  } ,[props.value, ref]);
 
 
   const calcStyle = (s, isFocus, isSelect) => {
@@ -237,6 +229,6 @@ export const Line = (props) => {
   }
 
   return elm;
-};
+});
 
 export default Line

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, createRef, useEffect } from 'react';
 import Line from './Line';
 import {isBlock, isFirstLine, isLastLine} from '../utils/util'
 
@@ -100,6 +100,17 @@ export const Editor = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
+  const linesRef = useRef([]);
+  useEffect(() =>{
+    let focusLine = linesRef.current[cursor.row]
+    focusLine.current.focus()
+    focusLine.current.setSelectionRange(cursor.col, cursor.col);
+  } ,[cursor]);
+
+  lines.forEach((_, i) => {
+    linesRef.current[i] = createRef()
+  });
+
   return (
     <div
       className="editor"
@@ -107,10 +118,10 @@ export const Editor = (props) => {
       {lines.map((line, index) => (
         <Line
           key={index}
+          ref={linesRef.current[index]}
           isFocus={index === cursor.row}
           isSelect={selectRange[0] <= index && index <= selectRange[1]}
           row={index}
-          column={cursor.col}
           value={line}
           onPaste={paste}
           onChange={(prefix) => (e) => ((i) => {
@@ -143,6 +154,7 @@ export const Editor = (props) => {
                     return prev
                   }else{
                     if(prev.row === 0)return prev;
+                    e.preventDefault();
                     return { row: prev.row - 1, col: e.target.selectionStart };
                   }
                 case "ArrowDown":
@@ -219,10 +231,42 @@ export const Editor = (props) => {
             })
           }}
           onClick={(e) => {
-            setSelectRange([index, index])
-            setCursor((prev) => {
-              return {row: index, col: prev.col};
-            })
+            /*
+            let countCharacter = (e) => {
+              if(e.nodeType === Node.TEXT_NODE){
+                return e.nodeValue.length
+              }else if(e.nodeType === Node.ELEMENT_NODE){
+                if(e.className === "for-copy-inline"){
+                  return 0
+                }
+                // TODO: 見出しとリスト以外の書式でうまく動くか不明
+                return countCharacter(e.firstChild)
+              }
+              throw new Error("unknown nodeType", e.nodeType)
+            }
+            */
+            if(cursor.row !== index){
+              /*
+              let selection = document.getSelection()
+              let focusNode = selection.focusNode
+              let elmNode = focusNode.parentNode
+              let count = 0;
+              for(let i = 0; i < elmNode.childNodes.length; i ++){
+                let e = elmNode.childNodes[i]
+                if(e === focusNode){
+                  count += selection.focusOffset
+                  break;
+                }else{
+                  count += countCharacter(e)
+                }
+              }
+              */
+              let count = e.target.selectionStart
+              setSelectRange([index, index])
+              setCursor((prev) => {
+                return {row: index, col: count};
+              })
+            }
           }}
         />
       ))}
