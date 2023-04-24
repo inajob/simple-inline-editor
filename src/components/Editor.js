@@ -28,18 +28,17 @@ export const Editor = (props) => {
 
   const selectionEnd = (e) => {
     if(selection){
-      let range = new Range();
-      range.setStart(fromLine, 0)
-      range.setEnd(toLine, toLine.children.length)
-      document.getSelection().empty()
-      document.getSelection().addRange(range)
-
-      if(fromLine && toLine){
+      selection = false
+      if(fromLine && toLine && fromLine !== toLine){
+        let range = new Range();
+        range.setStart(fromLine, 0)
+        range.setEnd(toLine, toLine.children.length)
+        document.getSelection().empty()
+        document.getSelection().addRange(range)
         let fromNo = parseInt(fromLine.dataset.lineno)
         let toNo = parseInt(toLine.dataset.lineno)
         setSelectRange([fromNo, toNo])
       }
-      selection = false
     }
   }
 
