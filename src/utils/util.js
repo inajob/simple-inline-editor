@@ -1,5 +1,5 @@
 export const isBlock = (s, isMatch) => {
-  let m = s.match(/^(\s*)```/) //```
+  const m = s.match(/^(\s*)```/) //```
   if(isMatch){
     return m
   }
@@ -9,7 +9,7 @@ export const isBlock = (s, isMatch) => {
   return false
 }
 export const getLines = (text) => {
-  var list = text.split(/[\r\n]/);
+  const list = text.split(/[\r\n]/);
   return list;
 }
 export const numLines = (s) => {
@@ -18,10 +18,9 @@ export const numLines = (s) => {
 
 // sのindex番目がx,yで何番目か調べる
 export const getCursorPos = (index, text) => {
-  var list = text.split(/[\r\n]/);
-  var pos = 0;
-  var i;
-  for(i = 0; i < list.length; i ++){
+  const list = text.split(/[\r\n]/);
+  let pos = 0;
+  for(let i = 0; i < list.length; i ++){
     pos += list[i].length + 1;
     if(pos > index){
       // X, Y
@@ -32,19 +31,19 @@ export const getCursorPos = (index, text) => {
 }
 
 export const isLastLine = (index, text) => {
-  let pos = getCursorPos(index, text)
-  let n = numLines(text)
+  const pos = getCursorPos(index, text)
+  const n = numLines(text)
   return pos[1] === n -1
 }
 
 export const isFirstLine = (index, text) => {
-  let pos = getCursorPos(index, text)
+  const pos = getCursorPos(index, text)
   return pos[1] === 0
 }
 
 export const parseBlock = (text) => {
-  let m = text.match(/^\s*`{3}(.*)/) //`
-  let blockBody = getLines(text).slice(1).join("\n")
-  let blockType = m[1]
+  const m = text.match(/^\s*`{3}(.*)/) //`
+  const blockBody = getLines(text).slice(1).join("\n")
+  const blockType = m[1]
   return [blockType, blockBody]
 }

@@ -4,7 +4,7 @@ import {isBlock, parseBlock, getLines} from '../utils/util'
 export const Line = React.forwardRef((props, ref) => {
   useEffect(() =>{
     // save style
-    let preDisplay = ref.current.style.display
+    const preDisplay = ref.current.style.display
     // reset style for calculation
     ref.current.style.display = "block"
     ref.current.style.height = "0px"
@@ -16,8 +16,8 @@ export const Line = React.forwardRef((props, ref) => {
 
 
   const calcStyle = (s, isFocus, isSelect) => {
-    let clist = ["line"];
-    let isList = s.match(/^(\s*)- /);
+    const clist = ["line"];
+    const isList = s.match(/^(\s*)- /);
     if(s.indexOf("# ") === 0){
       clist.push("h1-style");
     }else if(s.indexOf("## ") === 0){
@@ -28,7 +28,7 @@ export const Line = React.forwardRef((props, ref) => {
       clist.push("list-style");
       clist.push("list-indent-" + (isList[1].length/2)) // 2space
     }else if(isBlock(s)){
-      let m = isBlock(s, true)
+      const m = isBlock(s, true)
       clist.push("list-indent-" + (m[1].length/2)) // 2space
     }
 
@@ -54,10 +54,10 @@ export const Line = React.forwardRef((props, ref) => {
   // multi-target indexOf
   // return minimum index and target
   const capture = (body, targets, offset) => {
-    var minPos = -1;
-    var minTarget = "";
+    let minPos = -1;
+    let minTarget = "";
     targets.forEach(function(target){
-      var index = body.indexOf(target, offset);
+      let index = body.indexOf(target, offset);
       if(index !== -1){
         if(minPos === -1 || minPos > index){
           minPos = index;
@@ -69,16 +69,16 @@ export const Line = React.forwardRef((props, ref) => {
   }
 
   const makeLine = useCallback((body) => {
-    var pos = 0;
-    var result = []
+    let pos = 0;
+    const result = []
     while(true){
-      var cap;
+      let cap;
       cap = capture(body, ["http://", "https://", " "], pos);
       if((cap.target === "https://" || cap.target === "http://")){
         if(pos !== cap.pos){
           result.push(body.slice(pos, cap.pos));
         }
-        var endPos = capture(body, [" ","\r", "\n"], cap.pos + cap.target.length);
+        let endPos = capture(body, [" ","\r", "\n"], cap.pos + cap.target.length);
         if(endPos.pos !== -1){
           let link = body.slice(cap.pos, endPos.pos)
           result.push(<a href={link}>{link}</a>);
@@ -103,12 +103,12 @@ export const Line = React.forwardRef((props, ref) => {
   }, [])
 
   const csvToTable = (body) => {
-    let rows = []
+    const rows = []
     console.log(body)
-    let lines = getLines(body)
+    const lines = getLines(body)
     lines.forEach((l, tri) => {
-      let cellElms = []
-      let cells = l.split(/\s*,\s*/)
+      const cellElms = []
+      const cells = l.split(/\s*,\s*/)
       cells.forEach((cell, tdi) => {
         cellElms.push(<td key={tdi}>{cell}</td>)
       })
@@ -133,8 +133,8 @@ export const Line = React.forwardRef((props, ref) => {
   }, [])
 
   const alignIndent = useCallback((s) => {
-    let blockMatch = s.match(/^(\s*)(```.*)/) // ```
-    let prefix = blockMatch[1]
+    const blockMatch = s.match(/^(\s*)(```.*)/) // ```
+    const prefix = blockMatch[1]
     s = s.slice(prefix.length).split("\n").map((s) => prefix + s).join("\n")
     return s
   }, [])
@@ -149,8 +149,8 @@ export const Line = React.forwardRef((props, ref) => {
         </div>
       ) // ```
     }else{
-      let clist = ["elm"];
-      let m = s.match(/^(\s*)-( .*)$/);
+      const clist = ["elm"];
+      const m = s.match(/^(\s*)-( .*)$/);
       let prefix = null;
       if(s.indexOf("# ") === 0){
         //clist.push("h1-style");
@@ -170,7 +170,7 @@ export const Line = React.forwardRef((props, ref) => {
     }
   }), [alignIndent, makeBlock, makeLine])
   const makeText = (s) => {
-    let listMatch = s.match(/^(\s*-)( .*)$/);
+    const listMatch = s.match(/^(\s*-)( .*)$/);
     let prefix = "";
     if(listMatch){
       s = listMatch[2]
@@ -185,12 +185,12 @@ export const Line = React.forwardRef((props, ref) => {
     return [prefix, s]
   }
 
-  let parts = makeText(props.value);
-  let prefix = parts[0];
-  let value = parts[1];
+  const parts = makeText(props.value);
+  const prefix = parts[0];
+  const value = parts[1];
 
   let elm;
-  let renderElement = useMemo(() => makeHtml(props.value), [props.value, makeHtml])
+  const renderElement = useMemo(() => makeHtml(props.value), [props.value, makeHtml])
   if(isBlock(value)){
     elm = (
       <div
