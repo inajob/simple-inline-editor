@@ -23,6 +23,11 @@ export const Editor = (props) => {
     let sel = document.getSelection()
     fromLine = findLine(sel.anchorNode)
     toLine = findLine(sel.focusNode)
+    if(fromLine !== toLine){
+      setCursor((prev) => {
+        return {row: -1, col: 0};
+      })
+    }
   }
 
   const selectionEnd = (e) => {
@@ -40,6 +45,22 @@ export const Editor = (props) => {
       }
     }
   }
+
+  const popupRef = useRef();
+  useEffect(() =>{
+    if(selectRange[1] - selectRange[0] >= 1){
+      popupRef.current.style.display = "block"
+      const rect = document.getSelection().focusNode.getBoundingClientRect()
+
+      const y = rect.bottom
+      const x = rect.x + rect.width / 2
+      popupRef.current.style.left = x + "px"
+      popupRef.current.style.top = y + "px"
+    }else{
+      popupRef.current.style.display = "none"
+    }
+  } ,[selectRange]);
+
 
   const paste = (no) => (e) => {
     let body = e.clipboardData.getData('text')
@@ -101,14 +122,21 @@ export const Editor = (props) => {
 
   const linesRef = useRef([]);
   useEffect(() =>{
-    let focusLine = linesRef.current[cursor.row]
-    focusLine.current.focus()
-    focusLine.current.setSelectionRange(cursor.col, cursor.col);
+    if(cursor.row !== -1){
+      let focusLine = linesRef.current[cursor.row]
+      focusLine.current.focus()
+      focusLine.current.setSelectionRange(cursor.col, cursor.col);
+    }
   } ,[cursor]);
 
   lines.forEach((_, i) => {
     linesRef.current[i] = createRef()
   });
+
+  const popupHandlers = [
+    {name: "alert", handler: () => {alert("test")}},
+    {name: "alert2", handler: () => {alert("test")}},
+  ]
 
   return (
     <div
@@ -269,6 +297,17 @@ export const Editor = (props) => {
           }}
         />
       ))}
+      <div className="popup" ref={popupRef}>
+        {popupHandlers.map((item, i) =>
+        <div
+          key={i}
+          onClick={() => {
+            item.handler()
+            setSelectRange([selectRange[1], selectRange[1]])
+          }}
+        >{item.name}</div>
+        )}
+      </div>
     </div>);
 };
 

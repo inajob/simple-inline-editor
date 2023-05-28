@@ -46,7 +46,7 @@ export const TextareaWithMenu = React.forwardRef((props, ref) => {
         onSelect={inlineSelect}
       />
       <div className="popup" ref={menuRef}>
-        {props.popupHandlers.map((item, i) => 
+        {props.popupHandlers.map((item, i) =>
         <div
           key={i}
           onClick={() => {
