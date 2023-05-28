@@ -69,20 +69,33 @@ td{
 .line .line-item{
   flex: 1;
 }
-.line textarea, .line div.elm{
+.line div.container{
+  width: 100%;
+}
+.popup{
+  position: absolute;
+  top:0px;
+  left:0px;
+  color: white;
+}
+.popup div{
+  background-color: #000;
+  border-radius: 3px;
+}
+.line textarea, .line .menupos, .line div.elm{
   font-size: 1em;
   min-height: 1.5em;
 }
-.h1-style textarea, .h1-style div.elm{
+.h1-style textarea,.h1-style .menu-pos, .h1-style div.elm{
   font-size: 2em;
 }
-.h2-style textarea, .h2-style div.elm{
+.h2-style textarea, .h2-style .menu-pos, .h2-style div.elm{
   font-size: 1.5em;
 }
-.h3-style textarea, .h3-style div.elm{
+.h3-style textarea, .h3-style .menu-pos, .h3-style div.elm{
   font-size: 1.2em;
 }
-.list-style textarea, .list-style div.elm{
+.list-style textarea, .list-style .menu-pos .list-style div.elm{
 }
 .list-style{
   display: flex;

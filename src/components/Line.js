@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useCallback } from 'react';
 import {isBlock, parseBlock, getLines} from '../utils/util'
+import TextareaWithMenu from './TextareaWithMenu';
 
 export const Line = React.forwardRef((props, ref) => {
   useEffect(() =>{
@@ -13,7 +14,6 @@ export const Line = React.forwardRef((props, ref) => {
     // restore style
     ref.current.style.display = preDisplay
   } ,[props.value, ref]);
-
 
   const calcStyle = (s, isFocus, isSelect) => {
     let clist = ["line"];
@@ -184,6 +184,18 @@ export const Line = React.forwardRef((props, ref) => {
     }
     return [prefix, s]
   }
+  const onBracket = (select) => {
+    const e = {target: {value: select.prefix + "[" + select.selection + "]" + select.suffix}}
+    props.onChange(prefix)(e)
+  }
+  const onBold = (select) => {
+    const e = {target: {value: select.prefix + "**" + select.selection + "**" + select.suffix}}
+    props.onChange(prefix)(e)
+  }
+  const popupHandlers = [
+    {name: "[link]", handler: onBracket},
+    {name: "**bold**", handler: onBold},
+  ]
 
   let parts = makeText(props.value);
   let prefix = parts[0];
@@ -198,12 +210,13 @@ export const Line = React.forwardRef((props, ref) => {
         data-lineno={props.row}
         onClick={props.onClick}
       >
-        <textarea
+        <TextareaWithMenu
           className={["line-item"].concat(calcTextareaStyle(props.isFocus)).join(" ")}
           ref={ref}
           value={value}
           onChange={props.onChange(prefix)}
-          onKeyDown={props.onKeyDown(prefix, value)}
+          popupHandlers={[]}
+          onKeyDown={(select) => props.onKeyDown(prefix, value)}
         />
         <div className="line-item">{renderElement}</div>
       </div>
@@ -215,13 +228,21 @@ export const Line = React.forwardRef((props, ref) => {
         data-lineno={props.row}
         onClick={props.onClick}
       >
-        <textarea
+        <TextareaWithMenu
           className={calcTextareaStyle(props.isFocus)}
           ref={ref}
           value={value}
           onPaste={props.onPaste(props.row)}
           onChange={props.onChange(prefix)}
-          onKeyDown={props.onKeyDown(prefix, value)}
+          popupHandlers={popupHandlers}
+          onKeyDown={(select) => (e) => {
+            if(e.key === "Enter" && e.keyCode === 13 && select.selection !== ""){
+              onBracket(select)
+              e.preventDefault();
+            }else{
+              props.onKeyDown(prefix, value)(e)
+            }
+          }}
         />
         <div className={calcHtmlStyle(props.isFocus)}>{renderElement}</div>
       </div>

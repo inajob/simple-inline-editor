@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, createRef, useEffect } from 'react';
 import Line from './Line';
 import {isBlock, isFirstLine, isLastLine} from '../utils/util'
