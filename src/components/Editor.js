@@ -20,7 +20,7 @@ export const Editor = (props) => {
   let selection = false // now in selection mode?
   const changeSelection = (e) => {
     selection = true
-    let sel = document.getSelection()
+    const sel = document.getSelection()
     fromLine = findLine(sel.anchorNode)
     toLine = findLine(sel.focusNode)
     if(fromLine !== toLine){
@@ -34,13 +34,13 @@ export const Editor = (props) => {
     if(selection){
       selection = false
       if(fromLine && toLine && fromLine !== toLine){
-        let range = new Range();
+        const range = new Range();
         range.setStart(fromLine, 0)
         range.setEnd(toLine, toLine.children.length)
         document.getSelection().empty()
         document.getSelection().addRange(range)
-        let fromNo = parseInt(fromLine.dataset.lineno)
-        let toNo = parseInt(toLine.dataset.lineno)
+        const fromNo = parseInt(fromLine.dataset.lineno)
+        const toNo = parseInt(toLine.dataset.lineno)
         setSelectRange([fromNo, toNo])
       }
     }
@@ -63,20 +63,20 @@ export const Editor = (props) => {
 
 
   const paste = (no) => (e) => {
-    let body = e.clipboardData.getData('text')
-    let lines = body.split(/\r\n|\n/)
+    const body = e.clipboardData.getData('text')
+    const lines = body.split(/\r\n|\n/)
     if(lines.length === 1){
       // normal paste
       return true;
     }
-    let out = [];
+    const out = [];
     let blockContent = []
     let inBlock = false
     let blockPrefix = 0;
     lines.forEach((l) => {
-      let blockMatch = l.match(/^(\s*)(```.*)/) // ```
+      const blockMatch = l.match(/^(\s*)(```.*)/) // ```
       if(inBlock){
-        let isBlockEnd = (l.indexOf(blockPrefix + "```") === 0);
+        const isBlockEnd = (l.indexOf(blockPrefix + "```") === 0);
         if(isBlockEnd){
           out.push(blockContent.join("\n"))
           inBlock = false;
@@ -123,7 +123,7 @@ export const Editor = (props) => {
   const linesRef = useRef([]);
   useEffect(() =>{
     if(cursor.row !== -1){
-      let focusLine = linesRef.current[cursor.row]
+      const focusLine = linesRef.current[cursor.row]
       focusLine.current.focus()
       focusLine.current.setSelectionRange(cursor.col, cursor.col);
     }
@@ -163,13 +163,13 @@ export const Editor = (props) => {
                 case "ArrowLeft":
                   if(e.target.selectionStart === 0 && e.target.selectionEnd === 0){
                     if(prev.row === 0)return prev;
-                    let nextCol = lines[cursor.row - 1].length
+                    const nextCol = lines[cursor.row - 1].length
                     e.preventDefault();
                     return { row: prev.row - 1, col: nextCol };
                   }
                   return prev
                 case "ArrowRight":
-                  let maxCol = - prefix.length + lines[cursor.row].length
+                  const maxCol = - prefix.length + lines[cursor.row].length
                   if(e.target.selectionStart === maxCol && e.target.selectionEnd === maxCol){
                     if(prev.row === lines.length - 1)return prev;
                     e.preventDefault();
@@ -195,7 +195,7 @@ export const Editor = (props) => {
                 case "Backspace":
                   if(e.target.selectionStart === 0 && e.target.selectionEnd === 0){
                     if(prev.row === 0)return prev;
-                    let nextCol = lines[cursor.row - 1].length
+                    const nextCol = lines[cursor.row - 1].length
                     setLines((prevLines) => {
                       // 上の行と結合する
                       prevLines[prev.row - 1] += prevLines[prev.row];
@@ -288,7 +288,7 @@ export const Editor = (props) => {
                 }
               }
               */
-              let count = e.target.selectionStart
+              const count = e.target.selectionStart
               setSelectRange([index, index])
               setCursor((prev) => {
                 return {row: index, col: count};
