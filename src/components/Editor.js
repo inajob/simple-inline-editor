@@ -135,7 +135,7 @@ export const Editor = (props) => {
 
   const popupHandlers = [
     {name: "alert", handler: () => {alert("test")}},
-    {name: "alert2", handler: () => {alert("test")}},
+    {name: "alert2", handler: () => {alert("test2-1")}},
   ]
 
   return (
@@ -302,9 +302,16 @@ export const Editor = (props) => {
         <div
           key={i}
           onClick={() => {
+            if(window.ontouchstart!==null){
+              item.handler()
+              setSelectRange([selectRange[1], selectRange[1]])
+            }
+          }}
+          onTouchStart={(e) => {
             item.handler()
             setSelectRange([selectRange[1], selectRange[1]])
           }}
+
         >{item.name}</div>
         )}
       </div>
