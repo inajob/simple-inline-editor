@@ -134,7 +134,11 @@ export const Editor = (props) => {
   });
 
   const popupHandlers = [
-    {name: "alert", handler: () => {alert("test")}},
+    {name: "alert", handler: () => {
+      const selectedLines = lines.slice(selectRange[0], selectRange[1] + 1)
+      // TODO: when lines is block, this way doesn't calc indent.
+      alert(selectedLines.join("\n"))
+    }},
     {name: "alert2", handler: () => {alert("test2-1")}},
   ]
 

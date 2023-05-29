@@ -13,15 +13,16 @@ export const TextareaWithMenu = React.forwardRef((props, ref) => {
   useEffect(() =>{
     menuPosRef.current.style.display = "inline"
 
-    menuRef.current.style.left = menuPosRef.current.getBoundingClientRect().width + "px"
-    menuRef.current.style.top = menuPosRef.current.getBoundingClientRect().height + "px"
-    menuPosRef.current.style.display = "none"
-
     if(select.selection === ""){
       menuRef.current.style.display = "none"
     }else{
       menuRef.current.style.display = "inline"
     }
+
+    menuRef.current.style.left = menuPosRef.current.getBoundingClientRect().width + "px"
+    menuRef.current.style.top = (-menuRef.current.getBoundingClientRect().height) + "px"
+    menuPosRef.current.style.display = "none"
+
   } ,[select]);
 
   const inlineSelect = function(e){
