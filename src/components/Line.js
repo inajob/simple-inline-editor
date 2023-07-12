@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useCallback } from 'react';
+import React, { useEffect, useMemo, useCallback, useRef } from 'react';
 import {isBlock, parseBlock, getLines} from '../utils/util'
 import TextareaWithMenu from './TextareaWithMenu';
 
@@ -184,6 +184,18 @@ export const Line = React.forwardRef((props, ref) => {
     }
     return [prefix, s]
   }
+
+  const elmRef = useRef();
+  const mouseLeave = (selectThisLine) => (e) => {
+    if(e.buttons !== 0){
+      selectThisLine()
+      const range = new Range();
+      range.selectNodeContents(elmRef.current)
+      document.getSelection().empty()
+      document.getSelection().addRange(range)
+    }
+  }
+
   const onBracket = (select) => {
     const e = {target: {value: select.prefix + "[" + select.selection + "]" + select.suffix}}
     props.onChange(prefix)(e)
@@ -207,17 +219,22 @@ export const Line = React.forwardRef((props, ref) => {
     elm = (
       <div
         className={calcStyle(props.value, props.isFocus, props.isSelect)}
+        ref={elmRef}
         data-lineno={props.row}
         onClick={props.onClick}
       >
-        <TextareaWithMenu
+        <div
           className={["line-item"].concat(calcTextareaStyle(props.isFocus)).join(" ")}
-          ref={ref}
-          value={value}
-          onChange={props.onChange(prefix)}
-          popupHandlers={[]}
-          onKeyDown={(select) => props.onKeyDown(prefix, value)}
-        />
+          onMouseLeave={mouseLeave(props.selectThisLine)}
+        >
+          <TextareaWithMenu
+            ref={ref}
+            value={value}
+            onChange={props.onChange(prefix)}
+            popupHandlers={[]}
+            onKeyDown={(select) => props.onKeyDown(prefix, value)}
+          />
+        </div>
         <div className="line-item">{renderElement}</div>
       </div>
     )
@@ -225,25 +242,30 @@ export const Line = React.forwardRef((props, ref) => {
     elm = (
       <div
         className={calcStyle(props.value, props.isFocus, props.isSelect)}
+        ref={elmRef}
         data-lineno={props.row}
         onClick={props.onClick}
       >
-        <TextareaWithMenu
-          className={calcTextareaStyle(props.isFocus)}
-          ref={ref}
-          value={value}
-          onPaste={props.onPaste(props.row)}
-          onChange={props.onChange(prefix)}
-          popupHandlers={popupHandlers}
-          onKeyDown={(select) => (e) => {
-            if(e.key === "Enter" && e.keyCode === 13 && select.selection !== ""){
-              onBracket(select)
-              e.preventDefault();
-            }else{
-              props.onKeyDown(prefix, value)(e)
-            }
-          }}
-        />
+        <div
+          className={calcTextareaStyle(props.isFocus) + " container"}
+          onMouseLeave={mouseLeave(props.selectThisLine)}
+        >
+          <TextareaWithMenu
+            ref={ref}
+            value={value}
+            onPaste={props.onPaste(props.row)}
+            onChange={props.onChange(prefix)}
+            popupHandlers={popupHandlers}
+            onKeyDown={(select) => (e) => {
+              if(e.key === "Enter" && e.keyCode === 13 && select.selection !== ""){
+                onBracket(select)
+                e.preventDefault();
+              }else{
+                props.onKeyDown(prefix, value)(e)
+              }
+            }}
+          />
+        </div>
         <div className={calcHtmlStyle(props.isFocus)}>{renderElement}</div>
       </div>
     );

@@ -35,7 +35,6 @@ export const TextareaWithMenu = React.forwardRef((props, ref) => {
 
   const menuPosRef = useRef();
   const menuRef = useRef();
-
   return (
     <div className={props.className + " container"} style={{position:"relative"}}>
       <textarea

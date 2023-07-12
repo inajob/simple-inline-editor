@@ -45,6 +45,12 @@ export const Editor = (props) => {
       }
     }
   }
+  const selectThisLine = (no) => () => {
+    setCursor((prev) => {
+      return {row: -1, col: 0};
+    })
+    selection = true;
+  }
 
   const popupRef = useRef();
   useEffect(() =>{
@@ -154,6 +160,7 @@ export const Editor = (props) => {
           isSelect={selectRange[0] <= index && index <= selectRange[1]}
           row={index}
           value={line}
+          selectThisLine={selectThisLine(index)}
           onPaste={paste}
           onChange={(prefix) => (e) => ((i) => {
             setLines((prev) => {
