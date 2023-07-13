@@ -50,7 +50,10 @@ export const TextareaWithMenu = React.forwardRef((props, ref) => {
         <div
           key={i}
           onClick={() => {
-            item.handler(select)
+            const change = item.handler(select)
+            if(change){
+              props.onChange(change)
+            }
             clearSelect()
           }}
         >{item.name}</div>

@@ -196,19 +196,6 @@ export const Line = React.forwardRef((props, ref) => {
     }
   }
 
-  const onBracket = (select) => {
-    const e = {target: {value: select.prefix + "[" + select.selection + "]" + select.suffix}}
-    props.onChange(prefix)(e)
-  }
-  const onBold = (select) => {
-    const e = {target: {value: select.prefix + "**" + select.selection + "**" + select.suffix}}
-    props.onChange(prefix)(e)
-  }
-  const popupHandlers = [
-    {name: "[link]", handler: onBracket},
-    {name: "**bold**", handler: onBold},
-  ]
-
   const parts = makeText(props.value);
   const prefix = parts[0];
   const value = parts[1];
@@ -255,10 +242,9 @@ export const Line = React.forwardRef((props, ref) => {
             value={value}
             onPaste={props.onPaste(props.row)}
             onChange={props.onChange(prefix)}
-            popupHandlers={popupHandlers}
+            popupHandlers={props.textPopupHandlers}
             onKeyDown={(select) => (e) => {
               if(e.key === "Enter" && e.keyCode === 13 && select.selection !== ""){
-                onBracket(select)
                 e.preventDefault();
               }else{
                 props.onKeyDown(prefix, value)(e)

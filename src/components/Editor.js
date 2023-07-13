@@ -7,7 +7,6 @@ export const Editor = (props) => {
     row: 0,
     col: 0,
   });
-  const [lines, setLines] = useState(props.lines);
   const [selectRange, setSelectRange] = useState([0,0]);
 
   const findLine = (e) => {
@@ -110,7 +109,7 @@ export const Editor = (props) => {
     if(blockContent.length !== 0){
       out.push(blockContent.join("\n"))
     }
-    setLines((prev) => {
+    props.setLines((prev) => {
       prev[no] = prev[no] + out[0];
       prev.splice(no + 1, 0, ...out.slice(1))
       return [...prev];
@@ -135,24 +134,15 @@ export const Editor = (props) => {
     }
   } ,[cursor]);
 
-  lines.forEach((_, i) => {
+  props.lines.forEach((_, i) => {
     linesRef.current[i] = createRef()
   });
-
-  const popupHandlers = [
-    {name: "alert", handler: () => {
-      const selectedLines = lines.slice(selectRange[0], selectRange[1] + 1)
-      // TODO: when lines is block, this way doesn't calc indent.
-      alert(selectedLines.join("\n"))
-    }},
-    {name: "alert2", handler: () => {alert("test2-1")}},
-  ]
 
   return (
     <div
       className="editor"
     >
-      {lines.map((line, index) => (
+      {props.lines.map((line, index) => (
         <Line
           key={index}
           ref={linesRef.current[index]}
@@ -160,10 +150,11 @@ export const Editor = (props) => {
           isSelect={selectRange[0] <= index && index <= selectRange[1]}
           row={index}
           value={line}
+          textPopupHandlers={props.textPopupHandlers}
           selectThisLine={selectThisLine(index)}
           onPaste={paste}
           onChange={(prefix) => (e) => ((i) => {
-            setLines((prev) => {
+            props.setLines((prev) => {
               prev[i] = prefix + e.target.value;
               return [...prev];
             })
@@ -174,15 +165,15 @@ export const Editor = (props) => {
                 case "ArrowLeft":
                   if(e.target.selectionStart === 0 && e.target.selectionEnd === 0){
                     if(prev.row === 0)return prev;
-                    const nextCol = lines[cursor.row - 1].length
+                    const nextCol = props.lines[cursor.row - 1].length
                     e.preventDefault();
                     return { row: prev.row - 1, col: nextCol };
                   }
                   return prev
                 case "ArrowRight":
-                  const maxCol = - prefix.length + lines[cursor.row].length
+                  const maxCol = - prefix.length + props.lines[cursor.row].length
                   if(e.target.selectionStart === maxCol && e.target.selectionEnd === maxCol){
-                    if(prev.row === lines.length - 1)return prev;
+                    if(prev.row === props.lines.length - 1)return prev;
                     e.preventDefault();
                     return { row: prev.row + 1, col: 0 };
                   }
@@ -199,15 +190,15 @@ export const Editor = (props) => {
                   if(isBlock(line) && !isLastLine(e.target.selectionStart, line)){
                     return prev
                   }else{
-                    if(prev.row === lines.length - 1)return prev;
+                    if(prev.row === props.lines.length - 1)return prev;
                     e.preventDefault();
                     return { row: prev.row + 1, col: e.target.selectionStart };
                   }
                 case "Backspace":
                   if(e.target.selectionStart === 0 && e.target.selectionEnd === 0){
                     if(prev.row === 0)return prev;
-                    const nextCol = lines[cursor.row - 1].length
-                    setLines((prevLines) => {
+                    const nextCol = props.lines[cursor.row - 1].length
+                    props.setLines((prevLines) => {
                       // 上の行と結合する
                       prevLines[prev.row - 1] += prevLines[prev.row];
                       prevLines.splice(prev.row, 1);
@@ -218,7 +209,7 @@ export const Editor = (props) => {
                   }
                   return prev;
                 case "Tab":
-                  setLines((prevLines) => {
+                  props.setLines((prevLines) => {
                     if(e.shiftKey){
                       if(prefix.length === 1){ // prefix == '-'
                         prevLines[prev.row] = e.target.value.slice(1);
@@ -245,7 +236,7 @@ export const Editor = (props) => {
                     if(isBlock(line)){
                       return prev;
                     }else{
-                      setLines((prevLines) => {
+                      props.setLines((prevLines) => {
                         const column = prefix.length + e.target.selectionStart;
                         const afterCursor = prevLines[prev.row].slice(column);
                         prevLines[prev.row] = prevLines[prev.row].slice(0, column);
@@ -309,17 +300,17 @@ export const Editor = (props) => {
         />
       ))}
       <div className="popup" ref={popupRef}>
-        {popupHandlers.map((item, i) =>
+        {props.linePopupHandlers.map((item, i) =>
         <div
           key={i}
           onClick={() => {
             if(window.ontouchstart!==null){
-              item.handler()
+              item.handler(selectRange)
               setSelectRange([selectRange[1], selectRange[1]])
             }
           }}
           onTouchStart={(e) => {
-            item.handler()
+            item.handler(selectRange)
             setSelectRange([selectRange[1], selectRange[1]])
           }}
 
