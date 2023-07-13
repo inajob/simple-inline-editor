@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useCallback, useRef } from 'react';
-import {isBlock, parseBlock, getLines} from '../utils/util'
+import {isBlock, parseBlock} from '../utils/util'
 import TextareaWithMenu from './TextareaWithMenu';
 
 export const Line = React.forwardRef((props, ref) => {
@@ -102,35 +102,18 @@ export const Line = React.forwardRef((props, ref) => {
     return result
   }, [])
 
-  const csvToTable = (body) => {
-    const rows = []
-    console.log(body)
-    const lines = getLines(body)
-    lines.forEach((l, tri) => {
-      const cellElms = []
-      const cells = l.split(/\s*,\s*/)
-      cells.forEach((cell, tdi) => {
-        cellElms.push(<td key={tdi}>{cell}</td>)
-      })
-      rows.push(<tr key={tri}>{cellElms}</tr>)
-    })
-    return (
-      <table>{rows}</table>
-    )
-  }
-
   const makeBlock = useCallback((type, body) => {
-    switch(type){
-      case "table":
-        return csvToTable(body)
-      default:
+    const f = props.blockStyles[type]
+    if(f){
+      return f(body)
+    }else{
         return (
           <pre>
             {body}
           </pre>
         )
     }
-  }, [])
+  }, [props.blockStyles])
 
   const alignIndent = useCallback((s) => {
     const blockMatch = s.match(/^(\s*)(```.*)/) // ```

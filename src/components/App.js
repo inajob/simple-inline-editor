@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import {getLines} from '../utils/util'
 import Editor from './Editor'
 
 const App = (props) => {
@@ -38,6 +39,25 @@ const App = (props) => {
     {name: "[link]", handler: onBracket},
     {name: "**bold**", handler: onBold},
   ]
+  // == block styles ============================
+  const csvToTable = (body) => {
+    const rows = []
+    const lines = getLines(body)
+    lines.forEach((l, tri) => {
+      const cellElms = []
+      const cells = l.split(/\s*,\s*/)
+      cells.forEach((cell, tdi) => {
+        cellElms.push(<td key={tdi}>{cell}</td>)
+      })
+      rows.push(<tr key={tri}>{cellElms}</tr>)
+    })
+    return (
+      <table>{rows}</table>
+    )
+  }
+  const blockStyles = {
+    table: csvToTable
+  }
   // ============================
 
   return (
@@ -47,6 +67,7 @@ const App = (props) => {
       linePopupHandlers={linePopupHandlers}
       textPopupHandlers={textPopupHandlers}
       setLines={setLines}
+      blockStyles={blockStyles}
       lines={lines} />
     </div>
   )

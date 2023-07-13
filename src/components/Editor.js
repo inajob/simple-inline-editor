@@ -151,6 +151,7 @@ export const Editor = (props) => {
           row={index}
           value={line}
           textPopupHandlers={props.textPopupHandlers}
+          blockStyles={props.blockStyles}
           selectThisLine={selectThisLine(index)}
           onPaste={paste}
           onChange={(prefix) => (e) => ((i) => {
