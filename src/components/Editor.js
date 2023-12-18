@@ -201,7 +201,11 @@ export const Editor = (props) => {
                     const nextCol = props.lines[cursor.row - 1].length
                     props.setLines((prevLines) => {
                       // 上の行と結合する
-                      prevLines[prev.row - 1] += prevLines[prev.row];
+                      if(isBlock(prevLines[prev.row - 1])){
+                        prevLines[prev.row - 1] += "\n" + prevLines[prev.row];
+                      }else{
+                        prevLines[prev.row - 1] += prevLines[prev.row];
+                      }
                       prevLines.splice(prev.row, 1);
                       return [...prevLines];
                     });
@@ -234,13 +238,27 @@ export const Editor = (props) => {
                   return prev;
                 case "Enter":
                   if(e.keyCode === 13){
-                    if(isBlock(line)){
+                    if(isBlock(line) && !e.shiftKey){
                       return prev;
                     }else{
                       props.setLines((prevLines) => {
                         const column = prefix.length + e.target.selectionStart;
-                        const afterCursor = prevLines[prev.row].slice(column);
-                        prevLines[prev.row] = prevLines[prev.row].slice(0, column);
+                        let afterCursor = prevLines[prev.row].slice(column);
+                        if(isBlock(line)){
+                          let l = prevLines[prev.row]
+                          if(l[l.length - 1] === "\n"){
+                            prevLines[prev.row] = prevLines[prev.row].slice(0, column - 1); // remove last \n
+                          }else{
+                            prevLines[prev.row] = prevLines[prev.row].slice(0, column);
+                          }
+                          if(afterCursor.length > 0){
+                            if(afterCursor[0] === "\n"){
+                              afterCursor = afterCursor.slice(1)
+                            }
+                          }
+                        }else{
+                          prevLines[prev.row] = prevLines[prev.row].slice(0, column);
+                        }
                         if(prefix.length !== 0){
                           prevLines.splice(prev.row + 1, 0, prefix + " " + afterCursor);
                         }else{

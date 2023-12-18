@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useCallback, useRef } from 'react';
-import {isBlock, parseBlock} from '../utils/util'
+import {isBlock, parseBlock, isComment} from '../utils/util'
 import TextareaWithMenu from './TextareaWithMenu';
 
 export const Line = React.forwardRef((props, ref) => {
@@ -116,21 +116,39 @@ export const Line = React.forwardRef((props, ref) => {
   }, [props.blockStyles])
 
   const alignIndent = useCallback((s) => {
-    const blockMatch = s.match(/^(\s*)(```.*)/) // ```
+    const blockMatch = s.match(/^(\s*)```.*/) // ```
     const prefix = blockMatch[1]
     s = s.slice(prefix.length).split("\n").map((s) => prefix + s).join("\n")
     return s
   }, [])
+  const alignIndentComment = useCallback((s) => {
+    const blockMatch = s.match(/^(\s*)> /)
+    const prefix = blockMatch[1]
+    s = s.slice(prefix.length).split("\n").map((s, i) => prefix + ((i===0)?"":"> ") + s).join("\n")
+    return s
+  }, [])
+
 
   const makeHtml = useCallback(((s) => {
     if(isBlock(s)){
-      let parts = parseBlock(s)
-      return (
-        <div>
-        <pre className="for-copy">{alignIndent(s + "\n```")}</pre>
-        <div className="no-select">{makeBlock(parts[0], parts[1])}</div>
-        </div>
-      ) // ```
+      if(isComment(s)){
+        const m = s.match(/\s*> /)
+        const body = s.slice(m[0].length)
+        return (
+          <div>
+          <pre className="for-copy">{alignIndentComment(s)}</pre>
+          <div className="no-select">{makeBlock("pre", body)}</div>
+          </div>
+        ) // Comment
+      }else{
+        let parts = parseBlock(s)
+        return (
+          <div>
+          <pre className="for-copy">{alignIndent(s + "\n```")}</pre>
+          <div className="no-select">{makeBlock(parts[0], parts[1])}</div>
+          </div>
+        ) // ```
+      }
     }else{
       const clist = ["elm"];
       const m = s.match(/^(\s*)-( .*)$/);
@@ -151,7 +169,7 @@ export const Line = React.forwardRef((props, ref) => {
         </div>
       )
     }
-  }), [alignIndent, makeBlock, makeLine])
+  }), [alignIndent, alignIndentComment, makeBlock, makeLine])
   const makeText = (s) => {
     const listMatch = s.match(/^(\s*-)( .*)$/);
     let prefix = "";
@@ -159,7 +177,7 @@ export const Line = React.forwardRef((props, ref) => {
       s = listMatch[2]
       prefix = listMatch[1]
     }else{
-      let blockMatch = s.match(/^(\s*)(```.*)/) // ```
+      let blockMatch = s.match(/^(\s*)(```.*|> )/) // ```
       if(blockMatch){
         prefix = blockMatch[1]
         s = s.slice(blockMatch[1].length)

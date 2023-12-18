@@ -1,5 +1,5 @@
 export const isBlock = (s, isMatch) => {
-  const m = s.match(/^(\s*)```/) //```
+  const m = s.match(/^(\s*)(```|> )/) //```
   if(isMatch){
     return m
   }
@@ -8,6 +8,14 @@ export const isBlock = (s, isMatch) => {
   }
   return false
 }
+export const isComment = (s) => {
+  const m = s.match(/^(\s*)> /) //```
+  if(m != null){
+    return true
+  }
+  return false
+}
+
 export const getLines = (text) => {
   const list = text.split(/[\r\n]/);
   return list;
