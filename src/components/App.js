@@ -58,6 +58,13 @@ const App = (props) => {
   const blockStyles = {
     table: csvToTable
   }
+  // == keywords ============================
+  const keywords = [
+    "hello",
+    "world",
+    "word",
+    "wonderful",
+  ]
   // ============================
 
   return (
@@ -66,6 +73,7 @@ const App = (props) => {
       <Editor
       linePopupHandlers={linePopupHandlers}
       textPopupHandlers={textPopupHandlers}
+      keywords = {keywords}
       setLines={setLines}
       blockStyles={blockStyles}
       lines={lines} />

@@ -218,6 +218,7 @@ export const Line = React.forwardRef((props, ref) => {
           <TextareaWithMenu
             ref={ref}
             value={value}
+            keywords={props.keywords}
             onChange={props.onChange(prefix)}
             popupHandlers={[]}
             onKeyDown={(select) => props.onKeyDown(prefix, value)}
@@ -241,6 +242,9 @@ export const Line = React.forwardRef((props, ref) => {
           <TextareaWithMenu
             ref={ref}
             value={value}
+            keywords={props.keywords}
+            setLine={props.setLine(prefix)}
+            setCursor={props.setCursor}
             onPaste={props.onPaste(props.row)}
             onChange={props.onChange(prefix)}
             popupHandlers={props.textPopupHandlers}

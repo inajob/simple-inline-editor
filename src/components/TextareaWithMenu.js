@@ -10,10 +10,59 @@ export const TextareaWithMenu = React.forwardRef((props, ref) => {
     setSelect({ prefix: "", selection: "", suffix: "" })
   }
 
+  const getTextInBracket = (pre, post) => {
+    let nest = 0
+    let text = ""
+    let closed = false
+    for(let i = 0; i < pre.length; i ++){
+      const c = pre[i]
+      if(c === "["){
+        nest ++;
+        text = ""
+      }else if(c === "]"){
+        if(nest > 0){
+          nest --;
+          text = ""
+          closed = true
+        }
+        if(nest === 0){
+          closed = false
+        }
+      }else{
+        if(nest > 0 && !closed){
+          text += c
+        }
+      }
+    }
+    let postText = ""
+    if(nest > 0){
+      let postNest = 0
+      let closed = false
+      for(let i = 0; i < post.length; i ++){
+        const c = post[i]
+        if(c === "["){
+          postNest ++;
+        }else if(c === "]"){
+          postNest --;
+          closed = true
+        }else{
+          if(!closed){
+            postText += c
+          }
+        }
+      }
+      if(postNest === 0){postText = ""}
+
+      return text + postText
+    }
+    return ""
+  }
+
   useEffect(() =>{
     menuPosRef.current.style.display = "inline"
 
-    if(select.selection === ""){
+    let candidate = getTextInBracket(select.prefix, select.suffix)
+    if(select.selection === "" && candidate === ""){
       menuRef.current.style.display = "none"
     }else{
       menuRef.current.style.display = "inline"
@@ -33,6 +82,18 @@ export const TextareaWithMenu = React.forwardRef((props, ref) => {
     })
   }
 
+  let popupHandlers = props.popupHandlers
+  let selectedKeyword = ""
+  let candidate = getTextInBracket(select.prefix, select.suffix)
+  if(select.selection === "" && candidate !== ""){
+    // TODO: filter keywords list
+    console.log(candidate)
+    popupHandlers = props.keywords.filter((k) => {return k.indexOf(candidate) != -1}).map((k) => {return {name: k, handler: ()=>{}}})
+    if(popupHandlers.length > 0){
+      selectedKeyword = popupHandlers[0].name
+    }
+  }
+
   const menuPosRef = useRef();
   const menuRef = useRef();
   return (
@@ -42,11 +103,27 @@ export const TextareaWithMenu = React.forwardRef((props, ref) => {
         value={props.value}
         onPaste={props.onPaste}
         onChange={props.onChange}
-        onKeyDown={props.onKeyDown(select)}
+        onKeyDown={(e) => {
+          if(e.key === "Enter" && e.keyCode === 13 && selectedKeyword !== ""){
+            // TODO: complete keyword
+            const before = select.prefix.slice(0, -candidate.length)
+            let after = select.suffix
+            let col = (before + selectedKeyword).length
+            if(after.length == 0 || after[0] != "]"){
+              after = "]" + after
+              col += 1
+            }
+            props.setLine(before + selectedKeyword + after);
+            props.setCursor(col)
+            e.preventDefault();
+          }else{
+            props.onKeyDown(select)(e)
+          }
+        }}
         onSelect={inlineSelect}
       />
       <div className="popup" ref={menuRef}>
-        {props.popupHandlers.map((item, i) =>
+        {popupHandlers.map((item, i) =>
         <div
           key={i}
           onClick={() => {

@@ -151,8 +151,20 @@ export const Editor = (props) => {
           row={index}
           value={line}
           textPopupHandlers={props.textPopupHandlers}
+          keywords={props.keywords}
           blockStyles={props.blockStyles}
           selectThisLine={selectThisLine(index)}
+          setLine={(prefix) => (s) => ((i) => {
+            props.setLines((prev) => {
+              prev[i] = prefix + s;
+              return [...prev];
+            })
+          })(index)}
+          setCursor={(col) => ((index) => {
+            setCursor((prev) => {
+              return {row: index, col: col}
+            })
+          })(index)}
           onPaste={paste}
           onChange={(prefix) => (e) => ((i) => {
             props.setLines((prev) => {
