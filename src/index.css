@@ -82,6 +82,11 @@ td{
   background-color: #000;
   border-radius: 3px;
 }
+.popup div.selected{
+  background-color: #d00;
+  border-radius: 3px;
+}
+
 .line textarea, .line .menupos, .line div.elm{
   font-size: 1em;
   min-height: 1.5em;

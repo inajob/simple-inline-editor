@@ -64,6 +64,7 @@ const App = (props) => {
     "world",
     "word",
     "wonderful",
+    "日本語",
   ]
   // ============================
 
