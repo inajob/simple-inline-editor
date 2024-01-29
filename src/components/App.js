@@ -3,12 +3,11 @@ import {getLines} from '../utils/util'
 import Editor from './Editor'
 
 const App = (props) => {
+  const [contents, setContents] = useState([])
 
   // == Line Popup Handlers ============================
   const linePopupHandlers = [
     {name: "alert", handler: (lines, range) => {
-      const start = range[0]
-      const end = range[1]
       // TODO: when lines is block, this way doesn't calc indent.
       alert(lines.join("\n"))
     }},
@@ -78,6 +77,7 @@ const App = (props) => {
       textPopupHandlers={textPopupHandlers}
       keywords = {keywords}
       blockStyles={blockStyles}
+      onChange={(lines) => setContents(lines)}
       />
     </div>
   )

@@ -4,6 +4,10 @@ import {isBlock, isFirstLine, isLastLine} from '../utils/util'
 
 export const Editor = (props) => {
   const [lines, setLines] = useState(props.initialLines)
+  const onChange = props.onChange
+  useEffect(() => {
+    onChange(lines)
+  },[lines, onChange])
 
   const [cursor, setCursor] = useState({
     row: 0,
