@@ -3,6 +3,8 @@ import Line from './Line';
 import {isBlock, isFirstLine, isLastLine} from '../utils/util'
 
 export const Editor = (props) => {
+  const [lines, setLines] = useState(props.initialLines)
+
   const [cursor, setCursor] = useState({
     row: 0,
     col: 0,
@@ -109,7 +111,7 @@ export const Editor = (props) => {
     if(blockContent.length !== 0){
       out.push(blockContent.join("\n"))
     }
-    props.setLines((prev) => {
+    setLines((prev) => {
       prev[no] = prev[no] + out[0];
       prev.splice(no + 1, 0, ...out.slice(1))
       return [...prev];
@@ -134,7 +136,7 @@ export const Editor = (props) => {
     }
   } ,[cursor]);
 
-  props.lines.forEach((_, i) => {
+  lines.forEach((_, i) => {
     linesRef.current[i] = createRef()
   });
 
@@ -142,7 +144,7 @@ export const Editor = (props) => {
     <div
       className="editor"
     >
-      {props.lines.map((line, index) => (
+      {lines.map((line, index) => (
         <Line
           key={index}
           ref={linesRef.current[index]}
@@ -155,7 +157,7 @@ export const Editor = (props) => {
           blockStyles={props.blockStyles}
           selectThisLine={selectThisLine(index)}
           setLine={(prefix) => (s) => ((i) => {
-            props.setLines((prev) => {
+            setLines((prev) => {
               prev[i] = prefix + s;
               return [...prev];
             })
@@ -167,7 +169,7 @@ export const Editor = (props) => {
           })(index)}
           onPaste={paste}
           onChange={(prefix) => (e) => ((i) => {
-            props.setLines((prev) => {
+            setLines((prev) => {
               prev[i] = prefix + e.target.value;
               return [...prev];
             })
@@ -178,15 +180,15 @@ export const Editor = (props) => {
                 case "ArrowLeft":
                   if(e.target.selectionStart === 0 && e.target.selectionEnd === 0){
                     if(prev.row === 0)return prev;
-                    const nextCol = props.lines[cursor.row - 1].length
+                    const nextCol = lines[cursor.row - 1].length
                     e.preventDefault();
                     return { row: prev.row - 1, col: nextCol };
                   }
                   return prev
                 case "ArrowRight":
-                  const maxCol = - prefix.length + props.lines[cursor.row].length
+                  const maxCol = - prefix.length + lines[cursor.row].length
                   if(e.target.selectionStart === maxCol && e.target.selectionEnd === maxCol){
-                    if(prev.row === props.lines.length - 1)return prev;
+                    if(prev.row === lines.length - 1)return prev;
                     e.preventDefault();
                     return { row: prev.row + 1, col: 0 };
                   }
@@ -203,15 +205,15 @@ export const Editor = (props) => {
                   if(isBlock(line) && !isLastLine(e.target.selectionStart, line)){
                     return prev
                   }else{
-                    if(prev.row === props.lines.length - 1)return prev;
+                    if(prev.row === lines.length - 1)return prev;
                     e.preventDefault();
                     return { row: prev.row + 1, col: e.target.selectionStart };
                   }
                 case "Backspace":
                   if(e.target.selectionStart === 0 && e.target.selectionEnd === 0){
                     if(prev.row === 0)return prev;
-                    const nextCol = props.lines[cursor.row - 1].length
-                    props.setLines((prevLines) => {
+                    const nextCol = lines[cursor.row - 1].length
+                    setLines((prevLines) => {
                       // 上の行と結合する
                       if(isBlock(prevLines[prev.row - 1])){
                         prevLines[prev.row - 1] += "\n" + prevLines[prev.row];
@@ -226,10 +228,12 @@ export const Editor = (props) => {
                   }
                   return prev;
                 case "Tab":
-                  props.setLines((prevLines) => {
+                  let col = e.target.selectionStart
+                  setLines((prevLines) => {
                     if(e.shiftKey){
                       if(prefix.length === 1){ // prefix == '-'
                         prevLines[prev.row] = e.target.value.slice(1);
+                        col --
                       }else if(prefix.length > 0){
                         prevLines[prev.row] = prefix.slice(2) + e.target.value;
                       }
@@ -240,20 +244,22 @@ export const Editor = (props) => {
                       }
                       if(prefix.length === 0){
                         prevLines[prev.row] = bullet + " " + e.target.value;
+                        col ++
                       }else{
                         prevLines[prev.row] = "  "+ prefix + e.target.value;
                       }
                     }
+                    setCursor((prev) => {return {row: prev.row, col: col}})
                     return [...prevLines];
                   })
                   e.preventDefault();
-                  return prev;
+                  return { row: prev.row, col: col};
                 case "Enter":
                   if(e.keyCode === 13){
                     if(isBlock(line) && !e.shiftKey){
                       return prev;
                     }else{
-                      props.setLines((prevLines) => {
+                      setLines((prevLines) => {
                         const column = prefix.length + e.target.selectionStart;
                         let afterCursor = prevLines[prev.row].slice(column);
                         if(isBlock(line)){
@@ -336,12 +342,12 @@ export const Editor = (props) => {
           key={i}
           onClick={() => {
             if(window.ontouchstart!==null){
-              item.handler(selectRange)
+              item.handler(lines.slice(selectRange[0], selectRange[1] + 1), selectRange)
               setSelectRange([selectRange[1], selectRange[1]])
             }
           }}
           onTouchStart={(e) => {
-            item.handler(selectRange)
+            item.handler(lines.slice(selectRange[0], selectRange[1] + 1))
             setSelectRange([selectRange[1], selectRange[1]])
           }}
 

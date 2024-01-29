@@ -3,25 +3,14 @@ import {getLines} from '../utils/util'
 import Editor from './Editor'
 
 const App = (props) => {
-  const [lines, setLines] = useState([
-       "# heading1",
-        "## heading2",
-        "### heading3",
-        "body",
-        "- list",
-        "  - list",
-        "```code\nalert('test')",
-        "```table\naa,bb,cc\n11,22,33",
-        ""
-  ])
 
   // == Line Popup Handlers ============================
   const linePopupHandlers = [
-    {name: "alert", handler: (range) => {
+    {name: "alert", handler: (lines, range) => {
       const start = range[0]
       const end = range[1]
       // TODO: when lines is block, this way doesn't calc indent.
-      alert(lines.slice(start, end + 1).join("\n"))
+      alert(lines.join("\n"))
     }},
     {name: "alert2", handler: () => {alert("test2-1")}},
   ]
@@ -68,16 +57,28 @@ const App = (props) => {
   ]
   // ============================
 
+  const initialLines = [
+       "# heading1",
+        "## heading2",
+        "### heading3",
+        "body",
+        "- list",
+        "  - list",
+        "```code\nalert('test')",
+        "```table\naa,bb,cc\n11,22,33",
+        ""
+  ]
+
   return (
     <div>
 	    <h1>simple-inline-editor</h1>
       <Editor
+      initialLines={initialLines}
       linePopupHandlers={linePopupHandlers}
       textPopupHandlers={textPopupHandlers}
       keywords = {keywords}
-      setLines={setLines}
       blockStyles={blockStyles}
-      lines={lines} />
+      />
     </div>
   )
 }
