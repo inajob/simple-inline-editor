@@ -219,6 +219,8 @@ export const Line = React.forwardRef((props, ref) => {
             ref={ref}
             value={value}
             keywords={props.keywords}
+            onCompositionStart={props.onCompositionStart}
+            onCompositionEnd={props.onCompositionEnd}
             onChange={props.onChange(prefix)}
             popupHandlers={[]}
             onKeyDown={(select) => props.onKeyDown(prefix, value)}
@@ -246,6 +248,8 @@ export const Line = React.forwardRef((props, ref) => {
             setLine={props.setLine(prefix)}
             setCursor={props.setCursor}
             onPaste={props.onPaste(props.row)}
+            onCompositionStart={props.onCompositionStart}
+            onCompositionEnd={props.onCompositionEnd}
             onChange={props.onChange(prefix)}
             popupHandlers={props.textPopupHandlers}
             onKeyDown={(select) => (e) => {

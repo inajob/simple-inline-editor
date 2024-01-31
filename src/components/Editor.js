@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, createRef, useEffect } from 'react';
 import Line from './Line';
 import {isBlock, isFirstLine, isLastLine} from '../utils/util'
@@ -9,9 +10,12 @@ export const Editor = (props) => {
     onChange(lines)
   },[lines, onChange])
 
+  const inProcess = useRef(false);
   const [cursor, setCursor] = useState({
     row: 0,
     col: 0,
+    colEnd: -1,
+    direction: "none"
   });
   const [selectRange, setSelectRange] = useState([0,0]);
 
@@ -133,13 +137,16 @@ export const Editor = (props) => {
 
   const linesRef = useRef([]);
   useEffect(() =>{
-    if(cursor.row !== -1){
+    if(cursor.row !== -1 && inProcess.current === false){
       const focusLine = linesRef.current[cursor.row]
       focusLine.current.focus()
-      focusLine.current.setSelectionRange(cursor.col, cursor.col);
+      let end = cursor.colEnd
+      if(end === -1){
+        end = cursor.col
+      }
+      focusLine.current.setSelectionRange(cursor.col, end, cursor.direction);
     }
-  } ,[cursor]);
-
+  } ,[cursor, lines]);
   lines.forEach((_, i) => {
     linesRef.current[i] = createRef()
   });
@@ -168,17 +175,37 @@ export const Editor = (props) => {
           })(index)}
           setCursor={(col) => ((index) => {
             setCursor((prev) => {
-              return {row: index, col: col}
+              return {row: index, col: col, colEnd: -1, direction: prev.direction}
             })
           })(index)}
           onPaste={paste}
+          onCompositionStart={() => {
+            inProcess.current = true;
+            console.log("composition start")
+          }}
+          onCompositionEnd={() => {
+            inProcess.current = false;
+            console.log("composition end")
+          }}
           onChange={(prefix) => (e) => ((i) => {
+            console.log("onChange", inProcess.current)
+            if(inProcess.current === false){
+              let currentColumn = e.target.selectionStart
+              let currentColumnEnd = e.target.selectionEnd
+              let currentDirection = e.target.selectionDirection
+              setCursor((prev) => {
+                return {row: prev.row, col: currentColumn, colEnd: currentColumnEnd, direction: currentDirection}
+              })
+            }
             setLines((prev) => {
               prev[i] = prefix + e.target.value;
               return [...prev];
             })
           })(index)}
           onKeyDown={(prefix, line) => (e) => {
+            let currentColumn = e.target.selectionStart
+            let currentColumnEnd = e.target.selectionEnd
+            let currentDirection = e.target.selectionDirection
             setCursor((prev) => {
               switch(e.key) {
                 case "ArrowLeft":
@@ -186,24 +213,57 @@ export const Editor = (props) => {
                     if(prev.row === 0)return prev;
                     const nextCol = lines[cursor.row - 1].length
                     e.preventDefault();
-                    return { row: prev.row - 1, col: nextCol };
+                    return { row: prev.row - 1, col: nextCol, colEnd: -1, direction: currentDirection};
                   }
-                  return prev
+                  if(!e.shiftKey){
+                    currentColumn --
+                    currentColumnEnd = -1
+                  }else{
+                    if(currentColumn == currentColumnEnd){
+                      currentColumn --
+                      currentDirection = "backward"
+                    }else if(currentDirection === "forward"){
+                      //currentColumn --
+                      currentColumnEnd --
+                    }else if(currentDirection === "backward"){
+                      currentColumn --
+                      //currentColumnEnd --
+                    }
+                  }
+
+                  e.preventDefault();
+                  return { row: prev.row, col: currentColumn, colEnd: currentColumnEnd, direction: currentDirection};
                 case "ArrowRight":
                   const maxCol = - prefix.length + lines[cursor.row].length
                   if(e.target.selectionStart === maxCol && e.target.selectionEnd === maxCol){
                     if(prev.row === lines.length - 1)return prev;
                     e.preventDefault();
-                    return { row: prev.row + 1, col: 0 };
+                    return { row: prev.row + 1, col: 0, colEnd: -1, direction: currentDirection};
                   }
-                  return prev
+                  if(!e.shiftKey){
+                    if(currentColumn < currentColumnEnd){
+                      currentColumn = currentColumnEnd
+                    }
+                    currentColumn ++
+                    currentColumnEnd = -1
+                  }else{
+                    if(currentDirection === "forward"){
+                      //currentColumn ++
+                      currentColumnEnd ++
+                    }else if(currentDirection === "backward"){
+                      currentColumn ++
+                      //currentColumnEnd ++
+                    }
+                  }
+                  e.preventDefault();
+                  return { row: prev.row, col: currentColumn, colEnd: currentColumnEnd, direction: currentDirection};
                 case "ArrowUp":
                   if(isBlock(line) && !isFirstLine(e.target.selectionStart, line)){
                     return prev
                   }else{
                     if(prev.row === 0)return prev;
                     e.preventDefault();
-                    return { row: prev.row - 1, col: e.target.selectionStart };
+                    return { row: prev.row - 1, col: e.target.selectionStart, colEnd: -1, direction: currentDirection};
                   }
                 case "ArrowDown":
                   if(isBlock(line) && !isLastLine(e.target.selectionStart, line)){
@@ -211,10 +271,27 @@ export const Editor = (props) => {
                   }else{
                     if(prev.row === lines.length - 1)return prev;
                     e.preventDefault();
-                    return { row: prev.row + 1, col: e.target.selectionStart };
+                    return { row: prev.row + 1, col: e.target.selectionStart, colEnd: -1, direction: currentDirection};
                   }
                 case "Backspace":
-                  if(e.target.selectionStart === 0 && e.target.selectionEnd === 0){
+                  if(prefix.length !== 0 && ((e.target.selectionStart === 0 && e.target.selectionEnd === 0) || (e.target.selectionStart === 1 && e.target.selectionEnd === 1))){
+                   if(prefix.length !== 0){
+                      // インデントを浅くする
+                      setLines((prevLines) => {
+                        if(prefix.length === 1){ // prefix == '-'
+                          prevLines[prev.row] = e.target.value.slice(1);
+                          currentColumn --
+                          if(currentColumn === -1){
+                            currentColumn ++
+                          }
+                        }else if(prefix.length > 0){
+                          prevLines[prev.row] = prefix.slice(2) + e.target.value;
+                        }
+                        return [...prevLines];
+                      })
+                      e.preventDefault();
+                   }
+                  }else if(e.target.selectionStart === 0 && e.target.selectionEnd === 0){
                     if(prev.row === 0)return prev;
                     const nextCol = lines[cursor.row - 1].length
                     setLines((prevLines) => {
@@ -228,16 +305,18 @@ export const Editor = (props) => {
                       return [...prevLines];
                     });
                     e.preventDefault();
-                    return { row: prev.row - 1, col: nextCol};
+                    return { row: prev.row - 1, col: nextCol, colEnd: -1, direction: currentDirection};
                   }
-                  return prev;
+                  console.log("normal Backspace", currentColumn)
+                  //currentColumn -- // これは無しでOK、ブラウザのデフォルトの挙動でカーソルが移動する
+                  return { row: prev.row, col: currentColumn, colEnd: currentColumnEnd, direction: currentDirection};
+                  //return prev
                 case "Tab":
-                  let col = e.target.selectionStart
                   setLines((prevLines) => {
                     if(e.shiftKey){
                       if(prefix.length === 1){ // prefix == '-'
                         prevLines[prev.row] = e.target.value.slice(1);
-                        col --
+                        currentColumn --
                       }else if(prefix.length > 0){
                         prevLines[prev.row] = prefix.slice(2) + e.target.value;
                       }
@@ -248,16 +327,17 @@ export const Editor = (props) => {
                       }
                       if(prefix.length === 0){
                         prevLines[prev.row] = bullet + " " + e.target.value;
-                        col ++
+                        currentColumn ++
                       }else{
                         prevLines[prev.row] = "  "+ prefix + e.target.value;
                       }
                     }
-                    setCursor((prev) => {return {row: prev.row, col: col}})
+                    // これが無いと箇条書き解除時に行末にカーソルが移動する時がある
+                    setCursor((prev) => {return {row: prev.row, col: currentColumn, colEnd: -1, direction: currentDirection}})
                     return [...prevLines];
                   })
                   e.preventDefault();
-                  return { row: prev.row, col: col};
+                  return { row: prev.row, col: currentColumn, colEnd: -1, direction: currentDirection};
                 case "Enter":
                   if(e.keyCode === 13){
                     if(isBlock(line) && !e.shiftKey){
@@ -289,14 +369,36 @@ export const Editor = (props) => {
                         return [...prevLines];
                       });
                       e.preventDefault();
-                      return { row: prev.row + 1, col: prefix.length };
+                      return { row: prev.row + 1, col: prefix.length, colEnd: -1, direction: currentDirection };
                     }
                   }else{
                     return prev;
                   }
+                case " ":
+                  // 行頭の場合はインデントを生成する
+                  console.log("space", currentColumn)
+                  if(currentColumn === 0 || (currentColumn === 1 && prefix.length >= 1)){
+                    setLines((prevLines) => {
+                      let bullet = "-"
+                      if(isBlock(e.target.value)){
+                        bullet = " "
+                      }
+                      if(prefix.length === 0){
+                        prevLines[prev.row] = bullet + " " + e.target.value;
+                        currentColumn ++
+                      }else{
+                        prevLines[prev.row] = "  "+ prefix + e.target.value;
+                      }
+                      return [...prevLines];
+                    })
+                    e.preventDefault();
+                  }else{
+                    //currentColumn ++ // これは不要、ブラウザのデフォルトの挙動でカーソルを移動する
+                  }
+                  return { row: prev.row, col: currentColumn, colEnd: currentColumnEnd, direction: currentDirection};
                 default:
-                  // 同じobjectを返せば再レンダリングされない
-                  return prev;
+                  //currentColumn ++ // これは不要、ブラウザのデフォルトの挙動でカーソルを移動する
+                  return prev
               }
             })
           }}

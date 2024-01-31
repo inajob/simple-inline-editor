@@ -147,6 +147,8 @@ export const TextareaWithMenu = React.forwardRef((props, ref) => {
         ref={ref}
         value={props.value}
         onPaste={props.onPaste}
+        onCompositionStart={props.onCompositionStart}
+        onCompositionEnd={props.onCompositionEnd}
         onChange={props.onChange}
         onKeyDown={(e) => {
           if(e.key === "Enter" && e.keyCode === 13 && selectedKeyword !== ""){
