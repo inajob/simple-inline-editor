@@ -5,10 +5,12 @@ import {isBlock, isFirstLine, isLastLine} from '../utils/util'
 export const Editor = (props) => {
   const [lines, setLines] = useState(props.initialLines)
   const onChange = props.onChange
+  let globalColumn // set on keydown, use on changed
   useEffect(() => {
     onChange(lines)
   },[lines, onChange])
 
+  const [inProcess, setInProcess] = useState(true);
   const [cursor, setCursor] = useState({
     row: 0,
     col: 0,
@@ -134,12 +136,14 @@ export const Editor = (props) => {
   const linesRef = useRef([]);
   useEffect(() =>{
     if(cursor.row !== -1){
-      const focusLine = linesRef.current[cursor.row]
-      focusLine.current.focus()
-      focusLine.current.setSelectionRange(cursor.col, cursor.col);
+      console.log("EFFECT", inProcess)
+      //if(inProcess === false){
+        const focusLine = linesRef.current[cursor.row]
+        focusLine.current.focus()
+        focusLine.current.setSelectionRange(cursor.col, cursor.col);
+      //}
     }
-  } ,[cursor]);
-
+  } ,[cursor, lines, inProcess]);
   lines.forEach((_, i) => {
     linesRef.current[i] = createRef()
   });
@@ -173,12 +177,27 @@ export const Editor = (props) => {
           })(index)}
           onPaste={paste}
           onChange={(prefix) => (e) => ((i) => {
+            console.log("onChange", globalColumn)
+            if(globalColumn !== undefined){
+              setCursor((prev) => {
+                return {row: prev.row, col:globalColumn}
+              })
+            }
+
             setLines((prev) => {
               prev[i] = prefix + e.target.value;
               return [...prev];
             })
           })(index)}
           onKeyDown={(prefix, line) => (e) => {
+            globalColumn = e.target.selectionStart
+            //setPreColumn((prev) => globalColumn)
+            if(e.key === "Process"){
+              globalColumn = undefined
+              setInProcess((prev) => true)
+              return
+            }
+            //setInProcess((prev) => false)
             setCursor((prev) => {
               switch(e.key) {
                 case "ArrowLeft":
@@ -188,7 +207,10 @@ export const Editor = (props) => {
                     e.preventDefault();
                     return { row: prev.row - 1, col: nextCol };
                   }
-                  return prev
+                  globalColumn --
+                  //setPreColumn((prev) => prev - 1)
+                  e.preventDefault();
+                  return { row: prev.row, col: globalColumn};
                 case "ArrowRight":
                   const maxCol = - prefix.length + lines[cursor.row].length
                   if(e.target.selectionStart === maxCol && e.target.selectionEnd === maxCol){
@@ -196,7 +218,10 @@ export const Editor = (props) => {
                     e.preventDefault();
                     return { row: prev.row + 1, col: 0 };
                   }
-                  return prev
+                  globalColumn ++
+                  //setPreColumn((prev) => prev + 1)
+                  e.preventDefault();
+                  return { row: prev.row, col: globalColumn};
                 case "ArrowUp":
                   if(isBlock(line) && !isFirstLine(e.target.selectionStart, line)){
                     return prev
@@ -216,28 +241,45 @@ export const Editor = (props) => {
                 case "Backspace":
                   if(e.target.selectionStart === 0 && e.target.selectionEnd === 0){
                     if(prev.row === 0)return prev;
-                    const nextCol = lines[cursor.row - 1].length
-                    setLines((prevLines) => {
-                      // 上の行と結合する
-                      if(isBlock(prevLines[prev.row - 1])){
-                        prevLines[prev.row - 1] += "\n" + prevLines[prev.row];
-                      }else{
-                        prevLines[prev.row - 1] += prevLines[prev.row];
-                      }
-                      prevLines.splice(prev.row, 1);
-                      return [...prevLines];
-                    });
-                    e.preventDefault();
-                    return { row: prev.row - 1, col: nextCol};
+                    if(prefix.length !== 0){
+                      // TODO: インデントを浅くする, Shift + Tabにも同じものがある
+                      setLines((prevLines) => {
+                        if(prefix.length === 1){ // prefix == '-'
+                          prevLines[prev.row] = e.target.value.slice(1);
+                          globalColumn --
+                          //setPreColumn((prev) => prev - 1)
+                        }else if(prefix.length > 0){
+                          prevLines[prev.row] = prefix.slice(2) + e.target.value;
+                        }
+                        return [...prevLines];
+                      })
+                    }else{
+                      const nextCol = lines[cursor.row - 1].length
+                      setLines((prevLines) => {
+                        // 上の行と結合する
+                        if(isBlock(prevLines[prev.row - 1])){
+                          prevLines[prev.row - 1] += "\n" + prevLines[prev.row];
+                        }else{
+                          prevLines[prev.row - 1] += prevLines[prev.row];
+                        }
+                        prevLines.splice(prev.row, 1);
+                        return [...prevLines];
+                      });
+                      e.preventDefault();
+                      return { row: prev.row - 1, col: nextCol};
+                    }
                   }
-                  return prev;
+                  console.log("normal Backspace", globalColumn)
+                  globalColumn --
+                  //setPreColumn((prev) => prev - 1)
+                  return prev
                 case "Tab":
-                  let col = e.target.selectionStart
                   setLines((prevLines) => {
                     if(e.shiftKey){
                       if(prefix.length === 1){ // prefix == '-'
                         prevLines[prev.row] = e.target.value.slice(1);
-                        col --
+                        globalColumn --
+                        //setPreColumn((prev) => prev - 1)
                       }else if(prefix.length > 0){
                         prevLines[prev.row] = prefix.slice(2) + e.target.value;
                       }
@@ -248,16 +290,17 @@ export const Editor = (props) => {
                       }
                       if(prefix.length === 0){
                         prevLines[prev.row] = bullet + " " + e.target.value;
-                        col ++
+                        globalColumn ++
+                        //setPreColumn((prev) => prev + 1)
                       }else{
                         prevLines[prev.row] = "  "+ prefix + e.target.value;
                       }
                     }
-                    setCursor((prev) => {return {row: prev.row, col: col}})
+                    setCursor((prev) => {return {row: prev.row, col: globalColumn}})
                     return [...prevLines];
                   })
                   e.preventDefault();
-                  return { row: prev.row, col: col};
+                  return { row: prev.row, col: globalColumn};
                 case "Enter":
                   if(e.keyCode === 13){
                     if(isBlock(line) && !e.shiftKey){
@@ -294,9 +337,38 @@ export const Editor = (props) => {
                   }else{
                     return prev;
                   }
+                case " ":
+                  // 行頭の場合はインデントを生成する
+                  console.log("space", globalColumn)
+                  if(globalColumn == 0){
+                    // TODO: Tabの中に同じものがある
+                    setLines((prevLines) => {
+                      let bullet = "-"
+                      if(isBlock(e.target.value)){
+                        bullet = " "
+                      }
+                      if(prefix.length === 0){
+                        prevLines[prev.row] = bullet + " " + e.target.value;
+                        globalColumn ++
+                        //setPreColumn((prev) => prev + 1)
+                      }else{
+                        prevLines[prev.row] = "  "+ prefix + e.target.value;
+                      }
+                      return [...prevLines];
+                    })
+                    e.preventDefault();
+                  }else{
+                    globalColumn ++
+                    //setPreColumn((prev) => prev + 1)
+                  }
+                  return prev
+                case "Process":
+                  return prev
                 default:
-                  // 同じobjectを返せば再レンダリングされない
-                  return prev;
+                  globalColumn ++
+                  console.log("default", e.key, globalColumn)
+                  //setPreColumn((prev) => prev + 1)
+                  return prev
               }
             })
           }}
