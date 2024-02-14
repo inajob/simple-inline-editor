@@ -144,6 +144,7 @@ export const Editor = (props) => {
       if(end === -1){
         end = cursor.col
       }
+      console.log("EFFECT", "col:", cursor.col, "end:" , end)
       focusLine.current.setSelectionRange(cursor.col, end, cursor.direction);
     }
   } ,[cursor, lines]);
@@ -395,7 +396,7 @@ export const Editor = (props) => {
                   }else{
                     //currentColumn ++ // これは不要、ブラウザのデフォルトの挙動でカーソルを移動する
                   }
-                  return { row: prev.row, col: currentColumn, colEnd: currentColumnEnd, direction: currentDirection};
+                  return { row: prev.row, col: currentColumn, colEnd: -1, direction: currentDirection};
                 default:
                   //currentColumn ++ // これは不要、ブラウザのデフォルトの挙動でカーソルを移動する
                   return prev
