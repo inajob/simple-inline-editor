@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable",
+      "deno.ns"
+    ]
+  },
+  "fmt": {
+    "exclude": [
+      "./dist"
+    ]
+  },
+  "lint": {
+    "exclude": [
+      "./dist"
+    ]
+  },
+  "tasks": {
+    // hot reload
+    "serve": "deno run -A https://deno.land/x/packup@v0.2.4/cli.ts serve --port=1234 index.html",
+    // build
+    "build": "deno run -A https://deno.land/x/packup@v0.2.4/cli.ts build index.html",
+    // type checking
+    "check": "deno check --remote index.tsx",
+    // format & lint
+    "fmt": "deno fmt --ignore=dist && deno lint --ignore=dist"
+  }
+}
