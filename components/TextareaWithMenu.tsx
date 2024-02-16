@@ -21,7 +21,7 @@ export interface TextareaWithMenuProps {
   onCompositionStart: React.CompositionEventHandler<HTMLTextAreaElement>;
   onCompositionEnd: React.CompositionEventHandler<HTMLTextAreaElement>;
   onPaste?: React.ClipboardEventHandler<HTMLTextAreaElement>;
-  setLine?: React.MouseEventHandler<HTMLTextAreaElement>;
+  setLine?: (select: string) => void;
   setCursor?: (col: number) => void;
   className?: string;
 }
@@ -168,7 +168,6 @@ export const TextareaWithMenu = React.forwardRef<
               col += 1;
             }
             if (!props.setLine) throw new Error("setLine must be set.");
-            // @ts-ignore TextFragmentが入るはずなのに、ただの文字列を入れてしまっている
             props.setLine(before + k + after);
             if (!props.setCursor) throw new Error("setCursor must be set.");
             props.setCursor(col);

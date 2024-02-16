@@ -27,7 +27,7 @@ export interface LineProps {
   onCompositionStart: React.CompositionEventHandler<HTMLTextAreaElement>;
   onCompositionEnd: React.CompositionEventHandler<HTMLTextAreaElement>;
   onPaste: (row: number) => React.ClipboardEventHandler<HTMLTextAreaElement>;
-  setLine: (prefix: string) => React.MouseEventHandler<HTMLTextAreaElement>;
+  setLine: (prefix: string) => (select: string) => void;
   setCursor: (col: number) => void;
   selectThisLine: () => void;
 }
