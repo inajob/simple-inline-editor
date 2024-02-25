@@ -2,12 +2,16 @@ import { React, useEffect, useRef, useState } from "../deps.ts";
 
 export interface TextPopupHandler {
   name: string;
-  handler: (select: TextFragment) => void;
+  handler: (select: TextFragment| null) => TextChangeRequest;
 }
 export interface TextFragment {
   prefix: string;
   selection: string;
   suffix: string;
+}
+export interface TextChangeRequest {
+  value: string;
+  column: number;
 }
 
 export interface TextareaWithMenuProps {
@@ -21,8 +25,8 @@ export interface TextareaWithMenuProps {
   onCompositionStart: React.CompositionEventHandler<HTMLTextAreaElement>;
   onCompositionEnd: React.CompositionEventHandler<HTMLTextAreaElement>;
   onPaste?: React.ClipboardEventHandler<HTMLTextAreaElement>;
-  setLine?: (select: string) => void;
-  setCursor?: (col: number) => void;
+  setLine: (select: string) => void;
+  setCursor: (col: number) => void;
   className?: string;
 }
 export const TextareaWithMenu = React.forwardRef<
@@ -167,10 +171,10 @@ export const TextareaWithMenu = React.forwardRef<
               after = "]" + after;
               col += 1;
             }
-            if (!props.setLine) throw new Error("setLine must be set.");
-            props.setLine(before + k + after);
-            if (!props.setCursor) throw new Error("setCursor must be set.");
-            props.setCursor(col);
+           return {
+            value: before + k + after,
+            column: col
+           }
           },
         };
       });
@@ -197,8 +201,9 @@ export const TextareaWithMenu = React.forwardRef<
             if (
               e.key === "Enter" && e.keyCode === 13 && selectedKeyword !== ""
             ) {
-              // @ts-ignore ある条件のとき実行時エラーが出る可能性あり。直したい
-              popupHandlers[popup.index].handler();
+              const change = popupHandlers[popup.index].handler(null);
+              props.setLine(change.value);
+              props.setCursor(change.column);
               e.preventDefault();
             } else if (e.key == "Tab" && selectedKeyword !== "") {
               setPopup((prev) => {
@@ -221,11 +226,9 @@ export const TextareaWithMenu = React.forwardRef<
               key={i}
               className={popup.index == i ? "selected" : ""}
               onClick={() => {
-                // 返り値なんてないはずだが……
-                const change = item.handler(select) as undefined;
-                if (change) {
-                  props.onChange(change);
-                }
+                const change = item.handler(select);
+                props.setLine(change.value);
+                props.setCursor(change.column);
                 clearSelect();
               }}
             >

@@ -1,7 +1,7 @@
 import { React, useState } from "../deps.ts";
 import { getLines } from "../util.ts";
 import Editor from "./Editor.tsx";
-import { TextFragment } from "./TextareaWithMenu.tsx";
+import { TextFragment, TextChangeRequest } from "./TextareaWithMenu.tsx";
 
 export const App: React.FC = () => {
   const [, setContents] = useState<string[]>([]);
@@ -24,19 +24,24 @@ export const App: React.FC = () => {
   ];
 
   // == Text Popup Handlers ============================
-  const onBracket = (select: TextFragment) => {
-    const change = {
-      target: {
-        value: select.prefix + "[" + select.selection + "]" + select.suffix,
-      },
+  const onBracket = (select: TextFragment|null) => {
+    if(!select){
+      throw new Error("select is null")
+    }
+    const part = select.prefix + "[" + select.selection + "]";
+    const change:TextChangeRequest = {
+      value: part + select.suffix,
+      column: part.length
     };
     return change;
   };
-  const onBold = (select: TextFragment) => {
+  const onBold = (select: TextFragment|null) => {
+    if(!select){
+      throw new Error("select is null")
+    }  const part = select.prefix + "**" + select.selection + "**";
     const change = {
-      target: {
-        value: select.prefix + "**" + select.selection + "**" + select.suffix,
-      },
+      value: part + select.suffix,
+      column: part.length
     };
     return change;
   };

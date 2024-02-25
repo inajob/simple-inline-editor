@@ -46,7 +46,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
       ref.current.style.height = ref.current.scrollHeight + "px";
       // restore style
       ref.current.style.display = preDisplay;
-    }, [props.value, ref]);
+    }, [props.value, ref, props.isFocus]);
 
     const calcStyle = (s: string, isFocus: boolean, isSelect: boolean) => {
       const clist = ["line"];
@@ -264,6 +264,8 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
               ref={ref}
               value={value}
               keywords={props.keywords}
+              setLine={props.setLine(prefix)}
+              setCursor={props.setCursor}
               onCompositionStart={props.onCompositionStart}
               onCompositionEnd={props.onCompositionEnd}
               onChange={props.onChange(prefix)}
