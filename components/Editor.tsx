@@ -57,10 +57,12 @@ export const Editor: React.FC<EditorProps> = (props) => {
   const changeSelection = (e: Event) => {
     selection = true;
     const sel = document.getSelection();
-    fromLine = findLine(sel?.anchorNode);
-    toLine = findLine(sel?.focusNode);
-    if (fromLine !== toLine) {
-      setCursor({ row: -1, col: 0 });
+    if (sel){
+      fromLine = findLine(sel.anchorNode);
+      toLine = findLine(sel.focusNode);
+      if (fromLine !== toLine) {
+        setCursor({ row: -1, col: 0 });
+      }
     }
   };
 
@@ -122,7 +124,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
       const out: string[] = [];
       let blockContent: string[] = [];
       let inBlock = false;
-      let blockPrefix = "0";
+      let blockPrefix = "";
       lines.forEach((l) => {
         const blockMatch = l.match(/^(\s*)(```.*)/); // ```
         if (inBlock) {

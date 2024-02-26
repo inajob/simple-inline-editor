@@ -3,6 +3,24 @@ import { getLines } from "../util.ts";
 import Editor from "./Editor.tsx";
 import { TextFragment, TextChangeRequest } from "./TextareaWithMenu.tsx";
 
+// == block styles ============================
+const csvToTable = (body: string) => {
+  const rows: React.JSX.Element[] = [];
+  const lines = getLines(body);
+  lines.forEach((l, tri) => {
+    const cellElms: React.JSX.Element[] = [];
+    const cells = l.split(/\s*,\s*/);
+    cells.forEach((cell, tdi) => {
+      cellElms.push(<td key={tdi}>{cell}</td>);
+    });
+    rows.push(<tr key={tri}>{cellElms}</tr>);
+  });
+  return <table>{rows}</table>;
+};
+const blockStyles = {
+  table: csvToTable,
+};
+
 export const App: React.FC = () => {
   const [, setContents] = useState<string[]>([]);
 
@@ -49,23 +67,6 @@ export const App: React.FC = () => {
     { name: "[link]", handler: onBracket },
     { name: "**bold**", handler: onBold },
   ];
-  // == block styles ============================
-  const csvToTable = (body: string) => {
-    const rows: React.JSX.Element[] = [];
-    const lines = getLines(body);
-    lines.forEach((l, tri) => {
-      const cellElms: React.JSX.Element[] = [];
-      const cells = l.split(/\s*,\s*/);
-      cells.forEach((cell, tdi) => {
-        cellElms.push(<td key={tdi}>{cell}</td>);
-      });
-      rows.push(<tr key={tri}>{cellElms}</tr>);
-    });
-    return <table>{rows}</table>;
-  };
-  const blockStyles = {
-    table: csvToTable,
-  };
   // == keywords ============================
   const keywords = [
     "hello",

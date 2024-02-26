@@ -167,6 +167,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
     }, []);
 
     const makeHtml = useCallback((s: string) => {
+      console.log(s)
       if (isBlock(s)) {
         if (isComment(s)) {
           const m = s.match(/\s*> /);

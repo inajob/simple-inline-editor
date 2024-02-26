@@ -153,10 +153,9 @@ export const TextareaWithMenu = React.forwardRef<
       };
 
     let popupHandlers = props.popupHandlers;
-    let selectedKeyword = "";
+    let isOpenAutoComplete = false;
     const candidate = getTextInBracket(select.prefix, select.suffix);
     if (select.selection === "" && candidate !== "") {
-      // TODO: filter keywords list
       popupHandlers = props.keywords.filter((k) => {
         return k.indexOf(candidate) != -1;
       }).map((k, i) => {
@@ -179,10 +178,11 @@ export const TextareaWithMenu = React.forwardRef<
         };
       });
       if (popupHandlers.length > 0) {
-        selectedKeyword = popupHandlers[0].name;
+        isOpenAutoComplete = true;
       }
     }
 
+    // 選択ポップアップを出すために文字の幅を計算するための要素
     const menuPosRef = useRef<HTMLSpanElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
     return (
@@ -199,13 +199,13 @@ export const TextareaWithMenu = React.forwardRef<
           onChange={props.onChange}
           onKeyDown={(e) => {
             if (
-              e.key === "Enter" && e.keyCode === 13 && selectedKeyword !== ""
+              e.key === "Enter" && e.keyCode === 13 && isOpenAutoComplete
             ) {
               const change = popupHandlers[popup.index].handler(null);
               props.setLine(change.value);
               props.setCursor(change.column);
               e.preventDefault();
-            } else if (e.key == "Tab" && selectedKeyword !== "") {
+            } else if (e.key == "Tab" && isOpenAutoComplete) {
               setPopup((prev) => {
                 let i = prev.index + 1;
                 if (i >= popupHandlers.length) {
