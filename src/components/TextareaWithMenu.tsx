@@ -1,4 +1,4 @@
-import { React, useEffect, useRef, useState } from "../deps.ts";
+import React, { useEffect, useRef, useState } from "react";
 
 export interface TextPopupHandler {
   name: string;
@@ -116,6 +116,8 @@ export const TextareaWithMenu = React.forwardRef<
       return s.slice(l);
     };
 
+    const candidate = getTextInBracket(select.prefix, select.suffix);
+
     useEffect(() => {
       if (!menuPosRef.current || !menuRef.current) return;
       menuPosRef.current.style.display = "inline";
@@ -131,7 +133,7 @@ export const TextareaWithMenu = React.forwardRef<
       menuRef.current.style.top =
         (-menuRef.current.getBoundingClientRect().height) + "px";
       menuPosRef.current.style.display = "none";
-    }, [select]);
+    }, [select, candidate]);
 
     useEffect(() => {
       setPopup({ index: 0 });
@@ -154,7 +156,6 @@ export const TextareaWithMenu = React.forwardRef<
 
     let popupHandlers = props.popupHandlers;
     let isOpenAutoComplete = false;
-    const candidate = getTextInBracket(select.prefix, select.suffix);
     if (select.selection === "" && candidate !== "") {
       popupHandlers = props.keywords.filter((k) => {
         return k.indexOf(candidate) != -1;

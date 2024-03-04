@@ -1,4 +1,4 @@
-import { React, useState } from "../deps.ts";
+import { useState } from 'react'
 import { getLines } from "../util.ts";
 import Editor from "./Editor.tsx";
 import { TextFragment, TextChangeRequest } from "./TextareaWithMenu.tsx";
@@ -67,6 +67,7 @@ export const App: React.FC = () => {
     { name: "[link]", handler: onBracket },
     { name: "**bold**", handler: onBold },
   ];
+
   // == keywords ============================
   const keywords = [
     "hello",
@@ -88,12 +89,14 @@ export const App: React.FC = () => {
     "```table\naa,bb,cc\n11,22,33",
     "",
   ];
+  const [lines, setLines] = useState(initialLines);
 
   return (
     <div>
       <h1>simple-inline-editor</h1>
       <Editor
-        initialLines={initialLines}
+        lines={lines}
+        setLines={setLines}
         linePopupHandlers={linePopupHandlers}
         textPopupHandlers={textPopupHandlers}
         keywords={keywords}

@@ -1,4 +1,4 @@
-import { ForwardedRef, useEffect, useRef } from "./deps.ts";
+import { ForwardedRef, useEffect, useRef } from "react";
 
 /** make ForwardRef
  *

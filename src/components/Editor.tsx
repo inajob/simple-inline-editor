@@ -1,11 +1,10 @@
 import {
   createRef,
-  React,
   RefObject,
   useEffect,
   useRef,
   useState,
-} from "../deps.ts";
+} from 'react'
 import { Line } from "./Line.tsx";
 import { isBlock, isFirstLine, isLastLine } from "../util.ts";
 import { TextPopupHandler } from "./TextareaWithMenu.tsx";
@@ -16,7 +15,9 @@ export interface LinePopupHandler {
 }
 
 export interface EditorProps {
-  initialLines: string[];
+  //initialLines: string[];
+  lines: string[];
+  setLines: React.Dispatch<React.SetStateAction<string[]>>;
   onChange: (lines: string[]) => void;
   textPopupHandlers: TextPopupHandler[];
   linePopupHandlers: LinePopupHandler[];
@@ -30,7 +31,10 @@ interface Cursor {
   direction?: "none" | "forward" | "backward";
 }
 export const Editor: React.FC<EditorProps> = (props) => {
-  const [lines, setLines] = useState(props.initialLines);
+  //const [lines, setLines] = useState(props.initialLines);
+  const lines = props.lines;
+  const setLines = props.setLines;
+
   const onChange = props.onChange;
   useEffect(() => {
     onChange(lines);
@@ -54,7 +58,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
   let fromLine: HTMLElement | null;
   let toLine: HTMLElement | null;
   let selection = false; // now in selection mode?
-  const changeSelection = (e: Event) => {
+  const changeSelection = () => {
     selection = true;
     const sel = document.getSelection();
     if (sel){
@@ -612,7 +616,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                 setSelectRange([selectRange[1], selectRange[1]]);
               }
             }}
-            onTouchStart={(e) => {
+            onTouchStart={() => {
               item.handler(lines.slice(selectRange[0], selectRange[1] + 1));
               setSelectRange([selectRange[1], selectRange[1]]);
             }}

@@ -1,11 +1,10 @@
 import {
   forwardRef,
-  React,
   useCallback,
   useEffect,
   useMemo,
   useRef,
-} from "../deps.ts";
+} from 'react';
 import { isBlock, isComment, parseBlock } from "../util.ts";
 import { TextareaWithMenu, TextPopupHandler } from "./TextareaWithMenu.tsx";
 import { useForwardRef } from "../useForwardRef.ts";
@@ -104,8 +103,8 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
     const makeLine = useCallback((body: string) => {
       let pos = 0;
       const result = [];
-      while (true) {
-        const cap = capture(body, ["http://", "https://", " "], pos);
+      for (;;) {
+        const cap = capture(body, ["http://", "https://", " ", "["], pos);
         if ((cap.target === "https://" || cap.target === "http://")) {
           if (pos !== cap.pos) {
             result.push(body.slice(pos, cap.pos));
@@ -125,10 +124,26 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
             pos = body.length;
             break;
           }
-        } else if (cap.target === " ") {
+        } else if (cap.target == " ") {
           result.push(body.slice(pos, cap.pos));
           result.push("\u00A0");
           pos = cap.pos + cap.target.length;
+        } else if (cap.target == "["){
+          if (pos !== cap.pos) {
+            result.push(body.slice(pos, cap.pos));
+          }
+          const endPos = capture(body, ["]"], cap.pos + cap.target.length);
+          if (endPos.pos !== -1) {
+            const value = body.slice(cap.pos, endPos.pos + 1)
+            result.push([<span className="braket" onClick={(e) => {
+              console.log("click: " + value.slice(1, value.length - 1))
+              e.stopPropagation()
+            }}>{value}</span>])
+            pos = endPos.pos + 1
+          } else {
+            pos = body.length
+            result.push(body.slice(pos, body.length));
+          }
         } else {
           result.push(body.slice(pos, body.length));
           pos = body.length;
