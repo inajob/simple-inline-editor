@@ -30,6 +30,11 @@ td{
   border: solid 1px;
   padding: 0.3em;
 }
+span.braket{
+  background-color: #ddf;
+  color: blue;
+  cursor: pointer;
+}
 .hide{
   display: none;
 }
