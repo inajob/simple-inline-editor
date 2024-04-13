@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { getLines } from "../util.ts";
 import Editor from "./Editor.tsx";
 import { TextFragment, TextChangeRequest } from "./TextareaWithMenu.tsx";
@@ -21,8 +21,9 @@ const blockStyles = {
   table: csvToTable,
 };
 
+
 export const App: React.FC = () => {
-  const [, setContents] = useState<string[]>([]);
+  const [content, setContents] = useState<string[]>([]);
 
   // == Line Popup Handlers ============================
   const linePopupHandlers = [
@@ -69,7 +70,7 @@ export const App: React.FC = () => {
   ];
 
   // == keywords ============================
-  const keywords = [
+  let keywords = [
     "hello",
     "world",
     "word",
@@ -78,22 +79,83 @@ export const App: React.FC = () => {
   ];
   // ============================
 
-  const initialLines = [
-    "# heading1",
-    "## heading2",
-    "### heading3",
+  const frontPageTemplate = [
+    "# サンプルテキスト",
+    "## 見出し2",
+    "### 見出し3",
     "body",
-    "- list",
-    "  - list",
-    "```code\nalert('test')",
-    "```table\naa,bb,cc\n11,22,33",
+    "- 箇条書き",
+    "  - 箇条書き",
+    "- [リンク]",
+    "```code\n//ソースコード的なもの\nalert('test')",
+    "```table\n表組,の,デモ\n11,22,33",
     "",
   ];
+  const [title, setTitle] = useState("FrontPage");
+  let loadedPage = localStorage.getItem("PAGE:FrontPage")
+  let initialLines = frontPageTemplate
+  if(loadedPage != null){
+    initialLines = JSON.parse(loadedPage)
+  }
   const [lines, setLines] = useState(initialLines);
+
+  const makeKeywords = () => {
+   keywords = Object.keys(localStorage).filter((s) => s.indexOf("PAGE:") == 0).map((s) => s.slice("PAGE:".length))
+  }
+  makeKeywords()
+
+  useEffect(() => {
+    window.addEventListener("popstate", function() {
+      let hash = this.document.location.search;
+      if(hash[0] == "?"){
+        hash = decodeURIComponent(hash.slice(1))
+      }
+      if(hash == ""){
+        hash = "FrontPage"
+      }
+      jump(hash, false)
+    });
+  },[])
+
+  useEffect(() => {
+    console.log("Save", content)
+    localStorage.setItem("PAGE:" + title, JSON.stringify(content))
+    makeKeywords()
+    //setInPrepareing(false)
+  }, [content, title])
+
+  let jump = (title:string, go:boolean) => {
+    console.log("jump", title)
+    if(go){
+      history.pushState({}, "", "?"+title)
+    }
+    let pageData = localStorage.getItem("PAGE:" + title)
+    setTitle(title)
+    if(pageData == null){
+      setLines(["# " + title, "新しいページです"])
+    }else{
+      setLines(JSON.parse(pageData))
+    }
+  }
+
+  const deletePage = () => {
+    localStorage.removeItem("PAGE:" + title)
+    jump("FrontPage", true)
+  }
+  const resetAll = () => {
+    localStorage.clear()
+    localStorage.setItem("PAGE:FrontPage", JSON.stringify(frontPageTemplate))
+    jump("FrontPage", true)
+  }
 
   return (
     <div>
       <h1>simple-inline-editor</h1>
+      <h2>{title}</h2>
+      <ul className="menu">
+        <li onClick={deletePage}>DeletePage</li>
+        <li onClick={resetAll}>ResetAll</li>
+      </ul>
       <Editor
         lines={lines}
         setLines={setLines}
@@ -102,6 +164,9 @@ export const App: React.FC = () => {
         keywords={keywords}
         blockStyles={blockStyles}
         onChange={(lines) => setContents(lines)}
+        onLinkClick={(title) => {
+          jump(title, true)
+        }}
       />
     </div>
   );

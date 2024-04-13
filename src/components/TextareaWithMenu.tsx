@@ -115,7 +115,7 @@ export const TextareaWithMenu = React.forwardRef<
       }
       return s.slice(l);
     };
-
+    
     const candidate = getTextInBracket(select.prefix, select.suffix);
 
     useEffect(() => {
