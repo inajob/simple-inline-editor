@@ -18,6 +18,7 @@ export interface LineProps {
   blockStyles: Record<string, (body: string) => React.JSX.Element>;
   textPopupHandlers: TextPopupHandler[];
   onClick: React.MouseEventHandler<HTMLDivElement>;
+  onLinkClick: ((title: string) => void)
   onChange: (prefix: string) => React.ChangeEventHandler<HTMLTextAreaElement>;
   onKeyDown: (
     prefix: string,
@@ -136,7 +137,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
           if (endPos.pos !== -1) {
             const value = body.slice(cap.pos, endPos.pos + 1)
             result.push([<span className="braket" onClick={(e) => {
-              console.log("click: " + value.slice(1, value.length - 1))
+              props.onLinkClick(value.slice(1, value.length - 1))
               e.stopPropagation()
             }}>{value}</span>])
             pos = endPos.pos + 1
@@ -151,7 +152,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
         }
       }
       return result;
-    }, []);
+    }, [props]);
 
     const makeBlock = useCallback((type: string | undefined, body: string) => {
       const f = type ? props.blockStyles[type] : undefined;

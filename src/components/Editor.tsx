@@ -19,6 +19,7 @@ export interface EditorProps {
   lines: string[];
   setLines: React.Dispatch<React.SetStateAction<string[]>>;
   onChange: (lines: string[]) => void;
+  onLinkClick: ((title: string) => void)
   textPopupHandlers: TextPopupHandler[];
   linePopupHandlers: LinePopupHandler[];
   keywords: string[];
@@ -264,6 +265,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
               switch (e.key) {
                 case "ArrowLeft": {
                   if (
+                    e.currentTarget != null &&
                     e.currentTarget.selectionStart === 0 &&
                     e.currentTarget.selectionEnd === 0
                   ) {
@@ -303,7 +305,9 @@ export const Editor: React.FC<EditorProps> = (props) => {
                 }
                 case "ArrowRight": {
                   const maxCol = -prefix.length + lines[cursor.row].length;
+                  
                   if (
+                    e.currentTarget != null &&
                     e.currentTarget.selectionStart === maxCol &&
                     e.currentTarget.selectionEnd === maxCol
                   ) {
@@ -564,6 +568,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
               }
             });
           }}
+          onLinkClick={props.onLinkClick}
           onClick={(e) => {
             /*
             let countCharacter = (e) => {

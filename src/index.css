@@ -35,6 +35,21 @@ span.braket{
   color: blue;
   cursor: pointer;
 }
+h1 {
+  background-color: #aaf;
+  text-align: right;
+}
+
+ul.menu{
+  display: flex;
+  list-style-type: none;
+}
+ul.menu li{
+  border: solid;
+  padding: 0.1em;
+  margin: 2px;
+}
+
 .hide{
   display: none;
 }
