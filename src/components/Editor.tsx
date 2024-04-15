@@ -401,6 +401,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                       e.preventDefault();
                     }
                   } else if (
+                    e.currentTarget != null &&
                     e.currentTarget.selectionStart === 0 &&
                     e.currentTarget.selectionEnd === 0
                   ) {

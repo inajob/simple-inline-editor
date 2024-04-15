@@ -32,8 +32,8 @@ export interface TextareaWithMenuProps {
 export const TextareaWithMenu = React.forwardRef<
   HTMLTextAreaElement,
   TextareaWithMenuProps
->(
-  (props, ref) => {
+>(function TextareaWithMenu
+  (props, ref){
     const [select, setSelect] = useState<TextFragment>({
       prefix: "",
       selection: "",
@@ -196,7 +196,10 @@ export const TextareaWithMenu = React.forwardRef<
           value={props.value}
           onPaste={props.onPaste}
           onCompositionStart={props.onCompositionStart}
-          onCompositionEnd={props.onCompositionEnd}
+          onCompositionEnd={(e) => {
+            props.onCompositionEnd(e)
+            inlineSelect(e) // 日本語入力確定時にもカーソル移動を反映させる（onSelectが発火しない）
+          }}
           onChange={props.onChange}
           onKeyDown={(e) => {
             if (
