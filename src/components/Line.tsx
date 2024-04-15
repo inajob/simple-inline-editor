@@ -32,7 +32,7 @@ export interface LineProps {
   selectThisLine: () => void;
 }
 export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
-  (props, _ref) => {
+  function Line(props, _ref) {
     const ref = useForwardRef(_ref);
     useEffect(() => {
       if (!ref.current) return;
@@ -152,7 +152,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
         }
       }
       return result;
-    }, [props]); // TODO: this line cause, unexpected refresh
+    }, []); // TODO: this line cause, unexpected refresh
 
     const makeBlock = useCallback((type: string | undefined, body: string) => {
       const f = type ? props.blockStyles[type] : undefined;

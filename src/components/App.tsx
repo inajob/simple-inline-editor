@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { getLines } from "../util.ts";
 import Editor from "./Editor.tsx";
 import { TextFragment, TextChangeRequest } from "./TextareaWithMenu.tsx";
@@ -92,7 +92,7 @@ export const App: React.FC = () => {
     "",
   ];
   const [title, setTitle] = useState("FrontPage");
-  let loadedPage = localStorage.getItem("PAGE:FrontPage")
+  const loadedPage = localStorage.getItem("PAGE:FrontPage")
   let initialLines = frontPageTemplate
   if(loadedPage != null){
     initialLines = JSON.parse(loadedPage)
@@ -122,14 +122,14 @@ export const App: React.FC = () => {
     localStorage.setItem("PAGE:" + title, JSON.stringify(content))
     makeKeywords()
     //setInPrepareing(false)
-  }, [content, title])
+  }, [content, title, makeKeywords])
 
-  let jump = (title:string, go:boolean) => {
+  const jump = (title:string, go:boolean) => {
     console.log("jump", title)
     if(go){
       history.pushState({}, "", "?"+title)
     }
-    let pageData = localStorage.getItem("PAGE:" + title)
+    const pageData = localStorage.getItem("PAGE:" + title)
     setTitle(title)
     if(pageData == null){
       setLines(["# " + title, "新しいページです"])

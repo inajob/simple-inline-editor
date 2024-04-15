@@ -174,7 +174,6 @@ export const Editor: React.FC<EditorProps> = (props) => {
   useEffect(() => {
     document.addEventListener("selectionchange", changeSelection);
     document.addEventListener("pointerup", selectionEnd);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const linesRef = useRef<RefObject<HTMLTextAreaElement>[]>([]);
