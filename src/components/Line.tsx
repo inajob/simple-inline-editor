@@ -143,8 +143,8 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
             }}>{value}</span>])
             pos = endPos.pos + 1
           } else {
-            pos = body.length
             result.push(body.slice(pos, body.length));
+            pos = body.length
           }
         } else {
           result.push(body.slice(pos, body.length));
