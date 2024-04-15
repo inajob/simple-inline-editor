@@ -70,13 +70,13 @@ export const App: React.FC = () => {
   ];
 
   // == keywords ============================
-  let keywords = [
+  const [keywords, setKeywords] = useState([
     "hello",
     "world",
     "word",
     "wonderful",
     "日本語",
-  ];
+  ]);
   // ============================
 
   const frontPageTemplate = [
@@ -99,10 +99,9 @@ export const App: React.FC = () => {
   }
   const [lines, setLines] = useState(initialLines);
 
-  const makeKeywords = () => {
-   keywords = Object.keys(localStorage).filter((s) => s.indexOf("PAGE:") == 0).map((s) => s.slice("PAGE:".length))
-  }
-  makeKeywords()
+  const makeKeywords = useCallback(() => {
+   setKeywords(Object.keys(localStorage).filter((s) => s.indexOf("PAGE:") == 0).map((s) => s.slice("PAGE:".length)))
+  },[])
 
   useEffect(() => {
     window.addEventListener("popstate", function() {
@@ -147,6 +146,9 @@ export const App: React.FC = () => {
     localStorage.setItem("PAGE:FrontPage", JSON.stringify(frontPageTemplate))
     jump("FrontPage", true)
   }
+  const clickHandler = useCallback((title: string) => {
+    jump(title, true)
+  },[])
 
   return (
     <div>
@@ -164,9 +166,7 @@ export const App: React.FC = () => {
         keywords={keywords}
         blockStyles={blockStyles}
         onChange={(lines) => setContents(lines)}
-        onLinkClick={(title) => {
-          jump(title, true)
-        }}
+        onLinkClick={clickHandler}
       />
     </div>
   );

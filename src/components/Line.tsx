@@ -101,6 +101,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
       return { pos: minPos, target: minTarget };
     };
 
+    const linkClickHandler = props.onLinkClick
     const makeLine = useCallback((body: string) => {
       let pos = 0;
       const result = [];
@@ -136,8 +137,8 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
           const endPos = capture(body, ["]"], cap.pos + cap.target.length);
           if (endPos.pos !== -1) {
             const value = body.slice(cap.pos, endPos.pos + 1)
-            result.push([<span className="braket" onClick={(e) => {
-              props.onLinkClick(value.slice(1, value.length - 1))
+            result.push([<span className="braket" key={pos} onClick={(e) => {
+              linkClickHandler(value.slice(1, value.length - 1))
               e.stopPropagation()
             }}>{value}</span>])
             pos = endPos.pos + 1
@@ -152,7 +153,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
         }
       }
       return result;
-    }, []); // TODO: this line cause, unexpected refresh
+    }, [linkClickHandler]);
 
     const makeBlock = useCallback((type: string | undefined, body: string) => {
       const f = type ? props.blockStyles[type] : undefined;
