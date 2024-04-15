@@ -152,7 +152,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
         }
       }
       return result;
-    }, [props]);
+    }, [props]); // TODO: this line cause, unexpected refresh
 
     const makeBlock = useCallback((type: string | undefined, body: string) => {
       const f = type ? props.blockStyles[type] : undefined;
