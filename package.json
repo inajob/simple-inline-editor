@@ -1,5 +1,5 @@
 {
-  "name": "hello",
+  "name": "simple-inline-editor",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -35,5 +35,20 @@
     "typescript": "^5.2.2",
     "typescript-eslint": "^7.6.0",
     "vite": "^5.1.4"
-  }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/inline-editor.js"
+    },
+    "./dist/components/Editor":{
+      "types": "./dist/components/Editor.d.ts"
+    },
+    "./dist/components/TextareaWithMenu":{
+      "types": "./dist/components/TextareaWithMenu.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ]
 }

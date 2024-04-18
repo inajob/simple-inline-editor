@@ -5,7 +5,7 @@ import dts from 'vite-plugin-dts'
 
 
 // https://vitejs.dev/config/
-export default defineConfig({/*
+export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'), // エントリポイント
@@ -14,14 +14,15 @@ export default defineConfig({/*
       formats: ['es', 'umd'],
     },
     rollupOptions: {
-      external: ['react'], // バンドルしたくない依存関係
+      external: ['react', 'react-dom'], // バンドルしたくない依存関係
       output: {
         globals: {
           react: 'React', // UMDビルド時に、external指定した依存関係をscript タグで読み込まれた場合に使用される変数名を指定
+          'react-dom': 'ReactDOM',
         },
       },
     },
-  },*/
+  },
   plugins: [
     react(),
     dts()
