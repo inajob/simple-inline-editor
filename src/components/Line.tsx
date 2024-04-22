@@ -161,9 +161,12 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
         return f(body);
       } else {
         return (
-          <pre>
-            {body}
-          </pre>
+          <>
+            <span className="block-type">{type}</span>
+            <pre>
+              {body}
+            </pre>
+          </>
         );
       }
     }, [props.blockStyles]);

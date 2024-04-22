@@ -15,15 +15,15 @@ function wt() {
     return Q;
   We = 1;
   var v = ve, i = Symbol.for("react.element"), T = Symbol.for("react.fragment"), w = Object.prototype.hasOwnProperty, O = v.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, P = { key: !0, ref: !0, __self: !0, __source: !0 };
-  function A(b, j, $) {
+  function A(k, j, $) {
     var x, _ = {}, L = null, I = null;
     $ !== void 0 && (L = "" + $), j.key !== void 0 && (L = "" + j.key), j.ref !== void 0 && (I = j.ref);
     for (x in j)
       w.call(j, x) && !P.hasOwnProperty(x) && (_[x] = j[x]);
-    if (b && b.defaultProps)
-      for (x in j = b.defaultProps, j)
+    if (k && k.defaultProps)
+      for (x in j = k.defaultProps, j)
         _[x] === void 0 && (_[x] = j[x]);
-    return { $$typeof: i, type: b, key: L, ref: I, props: _, _owner: O.current };
+    return { $$typeof: i, type: k, key: L, ref: I, props: _, _owner: O.current };
   }
   return Q.Fragment = T, Q.jsx = A, Q.jsxs = A, Q;
 }
@@ -40,7 +40,7 @@ var ee = {};
 var Be;
 function Et() {
   return Be || (Be = 1, process.env.NODE_ENV !== "production" && function() {
-    var v = ve, i = Symbol.for("react.element"), T = Symbol.for("react.portal"), w = Symbol.for("react.fragment"), O = Symbol.for("react.strict_mode"), P = Symbol.for("react.profiler"), A = Symbol.for("react.provider"), b = Symbol.for("react.context"), j = Symbol.for("react.forward_ref"), $ = Symbol.for("react.suspense"), x = Symbol.for("react.suspense_list"), _ = Symbol.for("react.memo"), L = Symbol.for("react.lazy"), I = Symbol.for("react.offscreen"), V = Symbol.iterator, B = "@@iterator";
+    var v = ve, i = Symbol.for("react.element"), T = Symbol.for("react.portal"), w = Symbol.for("react.fragment"), O = Symbol.for("react.strict_mode"), P = Symbol.for("react.profiler"), A = Symbol.for("react.provider"), k = Symbol.for("react.context"), j = Symbol.for("react.forward_ref"), $ = Symbol.for("react.suspense"), x = Symbol.for("react.suspense_list"), _ = Symbol.for("react.memo"), L = Symbol.for("react.lazy"), I = Symbol.for("react.offscreen"), V = Symbol.iterator, B = "@@iterator";
     function F(e) {
       if (e === null || typeof e != "object")
         return null;
@@ -57,8 +57,8 @@ function Et() {
     }
     function c(e, o, s) {
       {
-        var h = u.ReactDebugCurrentFrame, R = h.getStackAddendum();
-        R !== "" && (o += "%s", s = s.concat([R]));
+        var h = u.ReactDebugCurrentFrame, b = h.getStackAddendum();
+        b !== "" && (o += "%s", s = s.concat([b]));
         var S = s.map(function(p) {
           return String(p);
         });
@@ -68,7 +68,7 @@ function Et() {
     var d = !1, t = !1, a = !1, n = !1, r = !1, m;
     m = Symbol.for("react.module.reference");
     function f(e) {
-      return !!(typeof e == "string" || typeof e == "function" || e === w || e === P || r || e === O || e === $ || e === x || n || e === I || d || t || a || typeof e == "object" && e !== null && (e.$$typeof === L || e.$$typeof === _ || e.$$typeof === A || e.$$typeof === b || e.$$typeof === j || // This needs to include all possible module reference object
+      return !!(typeof e == "string" || typeof e == "function" || e === w || e === P || r || e === O || e === $ || e === x || n || e === I || d || t || a || typeof e == "object" && e !== null && (e.$$typeof === L || e.$$typeof === _ || e.$$typeof === A || e.$$typeof === k || e.$$typeof === j || // This needs to include all possible module reference object
       // types supported by any Flight configuration anywhere since
       // we don't know which Flight build this will end up being used
       // with.
@@ -78,13 +78,13 @@ function Et() {
       var h = e.displayName;
       if (h)
         return h;
-      var R = o.displayName || o.name || "";
-      return R !== "" ? s + "(" + R + ")" : s;
+      var b = o.displayName || o.name || "";
+      return b !== "" ? s + "(" + b + ")" : s;
     }
     function E(e) {
       return e.displayName || "Context";
     }
-    function C(e) {
+    function R(e) {
       if (e == null)
         return null;
       if (typeof e.tag == "number" && g("Received an unexpected object in getComponentNameFromType(). This is likely a bug in React. Please file an issue."), typeof e == "function")
@@ -107,7 +107,7 @@ function Et() {
       }
       if (typeof e == "object")
         switch (e.$$typeof) {
-          case b:
+          case k:
             var o = e;
             return E(o) + ".Consumer";
           case A:
@@ -117,11 +117,11 @@ function Et() {
             return l(e, e.render, "ForwardRef");
           case _:
             var h = e.displayName || null;
-            return h !== null ? h : C(e.type) || "Memo";
+            return h !== null ? h : R(e.type) || "Memo";
           case L: {
-            var R = e, S = R._payload, p = R._init;
+            var b = e, S = b._payload, p = b._init;
             try {
-              return C(p(S));
+              return R(p(S));
             } catch {
               return null;
             }
@@ -197,8 +197,8 @@ function Et() {
         if (se === void 0)
           try {
             throw Error();
-          } catch (R) {
-            var h = R.stack.trim().match(/\n( *(at )?)/);
+          } catch (b) {
+            var h = b.stack.trim().match(/\n( *(at )?)/);
             se = h && h[1] || "";
           }
         return `
@@ -220,7 +220,7 @@ function Et() {
       }
       var h;
       ce = !0;
-      var R = Error.prepareStackTrace;
+      var b = Error.prepareStackTrace;
       Error.prepareStackTrace = void 0;
       var S;
       S = le.current, le.current = null, Ue();
@@ -276,7 +276,7 @@ function Et() {
             }
         }
       } finally {
-        ce = !1, le.current = S, Ve(), Error.prepareStackTrace = R;
+        ce = !1, le.current = S, Ve(), Error.prepareStackTrace = b;
       }
       var z = e ? e.displayName || e.name : "", $e = z ? te(z) : "";
       return typeof e == "function" && ne.set(e, $e), $e;
@@ -308,9 +308,9 @@ function Et() {
           case _:
             return re(e.type, o, s);
           case L: {
-            var h = e, R = h._payload, S = h._init;
+            var h = e, b = h._payload, S = h._init;
             try {
-              return re(S(R), o, s);
+              return re(S(b), o, s);
             } catch {
             }
           }
@@ -325,7 +325,7 @@ function Et() {
       } else
         Se.setExtraStackFrame(null);
     }
-    function Je(e, o, s, h, R) {
+    function Je(e, o, s, h, b) {
       {
         var S = Function.call.bind(oe);
         for (var p in e)
@@ -340,7 +340,7 @@ function Et() {
             } catch (D) {
               y = D;
             }
-            y && !(y instanceof Error) && (ie(R), g("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", h || "React class", s, p, typeof y), ie(null)), y instanceof Error && !(y.message in xe) && (xe[y.message] = !0, ie(R), g("Failed %s type: %s", s, y.message), ie(null));
+            y && !(y instanceof Error) && (ie(b), g("%s: type specification of %s `%s` is invalid; the type checker function must return `null` or an `Error` but returned a %s. You may have forgotten to pass an argument to the type checker creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and shape all require an argument).", h || "React class", s, p, typeof y), ie(null)), y instanceof Error && !(y.message in xe) && (xe[y.message] = !0, ie(b), g("Failed %s type: %s", s, y.message), ie(null));
           }
       }
     }
@@ -393,8 +393,8 @@ function Et() {
     }
     function tt(e, o) {
       if (typeof e.ref == "string" && X.current && o && X.current.stateNode !== o) {
-        var s = C(X.current.type);
-        fe[s] || (g('Component "%s" contains the string ref "%s". Support for string refs will be removed in a future major release. This case cannot be automatically converted to an arrow function. We ask you to manually fix this case by using useRef() or createRef() instead. Learn more about using refs safely here: https://reactjs.org/link/strict-mode-string-ref', C(X.current.type), e.ref), fe[s] = !0);
+        var s = R(X.current.type);
+        fe[s] || (g('Component "%s" contains the string ref "%s". Support for string refs will be removed in a future major release. This case cannot be automatically converted to an arrow function. We ask you to manually fix this case by using useRef() or createRef() instead. Learn more about using refs safely here: https://reactjs.org/link/strict-mode-string-ref', R(X.current.type), e.ref), fe[s] = !0);
       }
     }
     function nt(e, o) {
@@ -419,7 +419,7 @@ function Et() {
         });
       }
     }
-    var ot = function(e, o, s, h, R, S, p) {
+    var ot = function(e, o, s, h, b, S, p) {
       var y = {
         // This tag allows us to uniquely identify this as a React Element
         $$typeof: i,
@@ -445,13 +445,13 @@ function Et() {
         configurable: !1,
         enumerable: !1,
         writable: !1,
-        value: R
+        value: b
       }), Object.freeze && (Object.freeze(y.props), Object.freeze(y)), y;
     };
-    function it(e, o, s, h, R) {
+    function it(e, o, s, h, b) {
       {
         var S, p = {}, y = null, W = null;
-        s !== void 0 && (je(s), y = "" + s), et(o) && (je(o.key), y = "" + o.key), Qe(o) && (W = o.ref, tt(o, R));
+        s !== void 0 && (je(s), y = "" + s), et(o) && (je(o.key), y = "" + o.key), Qe(o) && (W = o.ref, tt(o, b));
         for (S in o)
           oe.call(o, S) && !Ze.hasOwnProperty(S) && (p[S] = o[S]);
         if (e && e.defaultProps) {
@@ -463,7 +463,7 @@ function Et() {
           var N = typeof e == "function" ? e.displayName || e.name || "Unknown" : e;
           y && nt(p, N), W && rt(p, N);
         }
-        return ot(e, y, W, R, h, X.current, p);
+        return ot(e, y, W, b, h, X.current, p);
       }
     }
     var de = u.ReactCurrentOwner, De = u.ReactDebugCurrentFrame;
@@ -482,7 +482,7 @@ function Et() {
     function Ne() {
       {
         if (de.current) {
-          var e = C(de.current.type);
+          var e = R(de.current.type);
           if (e)
             return `
 
@@ -525,7 +525,7 @@ Check the top-level render call using <` + s + ">.");
           return;
         Fe[s] = !0;
         var h = "";
-        e && e._owner && e._owner !== de.current && (h = " It was passed a child from " + C(e._owner.type) + "."), G(e), g('Each child in a list should have a unique "key" prop.%s%s See https://reactjs.org/link/warning-keys for more information.', s, h), G(null);
+        e && e._owner && e._owner !== de.current && (h = " It was passed a child from " + R(e._owner.type) + "."), G(e), g('Each child in a list should have a unique "key" prop.%s%s See https://reactjs.org/link/warning-keys for more information.', s, h), G(null);
       }
     }
     function Le(e, o) {
@@ -540,9 +540,9 @@ Check the top-level render call using <` + s + ">.");
         else if (ge(e))
           e._store && (e._store.validated = !0);
         else if (e) {
-          var R = F(e);
-          if (typeof R == "function" && R !== e.entries)
-            for (var S = R.call(e), p; !(p = S.next()).done; )
+          var b = F(e);
+          if (typeof b == "function" && b !== e.entries)
+            for (var S = b.call(e), p; !(p = S.next()).done; )
               ge(p.value) && Ae(p.value, o);
         }
       }
@@ -562,12 +562,12 @@ Check the top-level render call using <` + s + ">.");
         else
           return;
         if (s) {
-          var h = C(o);
+          var h = R(o);
           Je(s, e.props, "prop", h, e);
         } else if (o.PropTypes !== void 0 && !he) {
           he = !0;
-          var R = C(o);
-          g("Component %s declared `PropTypes` instead of `propTypes`. Did you misspell the property assignment?", R || "Unknown");
+          var b = R(o);
+          g("Component %s declared `PropTypes` instead of `propTypes`. Did you misspell the property assignment?", b || "Unknown");
         }
         typeof o.getDefaultProps == "function" && !o.getDefaultProps.isReactClassApproved && g("getDefaultProps is only used on classic React.createClass definitions. Use a static property named `defaultProps` instead.");
       }
@@ -584,18 +584,18 @@ Check the top-level render call using <` + s + ">.");
         e.ref !== null && (G(e), g("Invalid attribute `ref` supplied to `React.Fragment`."), G(null));
       }
     }
-    function Ie(e, o, s, h, R, S) {
+    function Ie(e, o, s, h, b, S) {
       {
         var p = f(e);
         if (!p) {
           var y = "";
           (e === void 0 || typeof e == "object" && e !== null && Object.keys(e).length === 0) && (y += " You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.");
-          var W = at(R);
+          var W = at(b);
           W ? y += W : y += Ne();
           var D;
-          e === null ? D = "null" : ue(e) ? D = "array" : e !== void 0 && e.$$typeof === i ? (D = "<" + (C(e.type) || "Unknown") + " />", y = " Did you accidentally export a JSX literal instead of a component?") : D = typeof e, g("React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", D, y);
+          e === null ? D = "null" : ue(e) ? D = "array" : e !== void 0 && e.$$typeof === i ? (D = "<" + (R(e.type) || "Unknown") + " />", y = " Did you accidentally export a JSX literal instead of a component?") : D = typeof e, g("React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: %s.%s", D, y);
         }
-        var N = it(e, o, s, R, S);
+        var N = it(e, o, s, b, S);
         if (N == null)
           return N;
         if (p) {
@@ -625,7 +625,7 @@ Check the top-level render call using <` + s + ">.");
   }()), ee;
 }
 process.env.NODE_ENV === "production" ? me.exports = wt() : me.exports = Et();
-var k = me.exports;
+var C = me.exports;
 function U(v, i) {
   const T = v.match(/^(\s*)(```|> )/);
   return i === !0 ? T : T != null;
@@ -652,7 +652,7 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
       suffix: ""
     }), P = () => {
       O({ prefix: "", selection: "", suffix: "" });
-    }, [A, b] = ae({
+    }, [A, k] = ae({
       index: 0
     }), j = (u, g) => {
       let c = 0, d = "", t = !1;
@@ -690,7 +690,7 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
     q(() => {
       !B.current || !F.current || (B.current.style.display = "inline", w.selection === "" && _ === "" ? F.current.style.display = "none" : F.current.style.display = "inline", F.current.style.left = B.current.getBoundingClientRect().width + "px", F.current.style.top = -F.current.getBoundingClientRect().height + "px", B.current.style.display = "none");
     }, [w, _]), q(() => {
-      b({ index: 0 });
+      k({ index: 0 });
     }, [i.value]);
     const L = function(u) {
       O({
@@ -718,13 +718,13 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
       }
     })), I.length > 0 && (V = !0));
     const B = J(null), F = J(null);
-    return /* @__PURE__ */ k.jsxs(
+    return /* @__PURE__ */ C.jsxs(
       "div",
       {
         className: i.className + " container",
         style: { position: "relative" },
         children: [
-          /* @__PURE__ */ k.jsx(
+          /* @__PURE__ */ C.jsx(
             "textarea",
             {
               ref: T,
@@ -740,7 +740,7 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
                   const g = I[A.index].handler(null);
                   i.setLine(g.value), i.setCursor(g.column), u.preventDefault();
                 } else
-                  u.key == "Tab" && V ? (b((g) => {
+                  u.key == "Tab" && V ? (k((g) => {
                     let c = g.index + 1;
                     return c >= I.length && (c = 0), { index: c };
                   }), u.preventDefault()) : i.onKeyDown(w)(u);
@@ -748,7 +748,7 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
               onSelect: L
             }
           ),
-          /* @__PURE__ */ k.jsx("div", { className: "popup", ref: F, children: I.map((u, g) => /* @__PURE__ */ k.jsx(
+          /* @__PURE__ */ C.jsx("div", { className: "popup", ref: F, children: I.map((u, g) => /* @__PURE__ */ C.jsx(
             "div",
             {
               className: A.index == g ? "selected" : "",
@@ -760,7 +760,7 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
             },
             g
           )) }),
-          /* @__PURE__ */ k.jsx("span", { className: "menu-pos", style: { display: "none" }, ref: B, children: w.prefix.replace(" ", " ") })
+          /* @__PURE__ */ C.jsx("span", { className: "menu-pos", style: { display: "none" }, ref: B, children: w.prefix.replace(" ", " ") })
         ]
       }
     );
@@ -795,7 +795,7 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
         r.push("list-indent-" + (((f = l == null ? void 0 : l[1]) == null ? void 0 : f.length) ?? 0) / 2);
       }
       return a && r.push("focus"), n && r.push("select"), r.join(" ");
-    }, P = (t) => t ? [] : ["hide"], A = (t) => t ? "hide" : "", b = (t, a, n) => {
+    }, P = (t) => t ? [] : ["hide"], A = (t) => t ? "hide" : "", k = (t, a, n) => {
       let r = -1, m = "";
       return a.forEach(function(f) {
         const l = t.indexOf(f, n);
@@ -805,10 +805,10 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
       let a = 0;
       const n = [];
       for (; ; ) {
-        const r = b(t, ["http://", "https://", " ", "["], a);
+        const r = k(t, ["http://", "https://", " ", "["], a);
         if (r.target === "https://" || r.target === "http://") {
           a !== r.pos && n.push(t.slice(a, r.pos));
-          const m = b(
+          const m = k(
             t,
             [" ", "\r", `
 `],
@@ -816,20 +816,20 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
           );
           if (m.pos !== -1) {
             const f = t.slice(r.pos, m.pos);
-            n.push(/* @__PURE__ */ k.jsx("a", { href: f, children: f })), a = m.pos;
+            n.push(/* @__PURE__ */ C.jsx("a", { href: f, children: f })), a = m.pos;
           } else {
             const f = t.slice(r.pos, t.length);
-            n.push(/* @__PURE__ */ k.jsx("a", { href: f, children: f })), a = t.length;
+            n.push(/* @__PURE__ */ C.jsx("a", { href: f, children: f })), a = t.length;
             break;
           }
         } else if (r.target == " ")
           n.push(t.slice(a, r.pos)), n.push(" "), a = r.pos + r.target.length;
         else if (r.target == "[") {
           a !== r.pos && n.push(t.slice(a, r.pos));
-          const m = b(t, ["]"], r.pos + r.target.length);
+          const m = k(t, ["]"], r.pos + r.target.length);
           if (m.pos !== -1) {
             const f = t.slice(r.pos, m.pos + 1);
-            n.push([/* @__PURE__ */ k.jsx("span", { className: "braket", onClick: (l) => {
+            n.push([/* @__PURE__ */ C.jsx("span", { className: "braket", onClick: (l) => {
               j(f.slice(1, f.length - 1)), l.stopPropagation();
             }, children: f }, a)]), a = m.pos + 1;
           } else
@@ -842,7 +842,10 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
       return n;
     }, [j]), x = Z((t, a) => {
       const n = t ? i.blockStyles[t] : void 0;
-      return n ? n(a) : /* @__PURE__ */ k.jsx("pre", { children: a });
+      return n ? n(a) : /* @__PURE__ */ C.jsxs(C.Fragment, { children: [
+        /* @__PURE__ */ C.jsx("span", { className: "block-type", children: t }),
+        /* @__PURE__ */ C.jsx("pre", { children: a })
+      ] });
     }, [i.blockStyles]), _ = Z((t) => {
       const a = t.match(/^(\s*)```.*/), n = (a == null ? void 0 : a[1]) ?? "";
       return t = t.slice(n.length).split(`
@@ -860,21 +863,21 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
       if (console.log(t), U(t))
         if (yt(t)) {
           const n = t.match(/\s*> /), r = t.slice((a = n == null ? void 0 : n[0]) == null ? void 0 : a.length);
-          return /* @__PURE__ */ k.jsxs("div", { children: [
-            /* @__PURE__ */ k.jsx("pre", { className: "for-copy", children: L(t) }),
-            /* @__PURE__ */ k.jsx("div", { className: "no-select", children: x("pre", r) })
+          return /* @__PURE__ */ C.jsxs("div", { children: [
+            /* @__PURE__ */ C.jsx("pre", { className: "for-copy", children: L(t) }),
+            /* @__PURE__ */ C.jsx("div", { className: "no-select", children: x("pre", r) })
           ] });
         } else {
           const n = bt(t);
-          return /* @__PURE__ */ k.jsxs("div", { children: [
-            /* @__PURE__ */ k.jsx("pre", { className: "for-copy", children: _(t + "\n```") }),
-            /* @__PURE__ */ k.jsx("div", { className: "no-select", children: x(n[0], n[1]) })
+          return /* @__PURE__ */ C.jsxs("div", { children: [
+            /* @__PURE__ */ C.jsx("pre", { className: "for-copy", children: _(t + "\n```") }),
+            /* @__PURE__ */ C.jsx("div", { className: "no-select", children: x(n[0], n[1]) })
           ] });
         }
       else {
         const n = ["elm"], r = t.match(/^(\s*)-( .*)$/);
         let m = null;
-        return t.indexOf("# ") === 0 || t.indexOf("## ") === 0 || t.indexOf("### ") === 0 || r && (t = r[2], m = /* @__PURE__ */ k.jsx("pre", { className: "for-copy-inline", children: r[1] + "-" })), /* @__PURE__ */ k.jsxs("div", { className: n.join(" "), children: [
+        return t.indexOf("# ") === 0 || t.indexOf("## ") === 0 || t.indexOf("### ") === 0 || r && (t = r[2], m = /* @__PURE__ */ C.jsx("pre", { className: "for-copy-inline", children: r[1] + "-" })), /* @__PURE__ */ C.jsxs("div", { className: n.join(" "), children: [
           m,
           $(t)
         ] });
@@ -903,7 +906,7 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
       i.value,
       I
     ]);
-    return U(c) ? /* @__PURE__ */ k.jsxs(
+    return U(c) ? /* @__PURE__ */ C.jsxs(
       "div",
       {
         className: O(i.value, i.isFocus, i.isSelect),
@@ -911,12 +914,12 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
         "data-lineno": i.row,
         onClick: i.onClick,
         children: [
-          /* @__PURE__ */ k.jsx(
+          /* @__PURE__ */ C.jsx(
             "div",
             {
               className: ["line-item"].concat(P(i.isFocus)).join(" "),
               onMouseLeave: F(i.selectThisLine),
-              children: /* @__PURE__ */ k.jsx(
+              children: /* @__PURE__ */ C.jsx(
                 Me,
                 {
                   ref: w,
@@ -933,10 +936,10 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
               )
             }
           ),
-          /* @__PURE__ */ k.jsx("div", { className: "line-item", children: d })
+          /* @__PURE__ */ C.jsx("div", { className: "line-item", children: d })
         ]
       }
-    ) : /* @__PURE__ */ k.jsxs(
+    ) : /* @__PURE__ */ C.jsxs(
       "div",
       {
         className: O(i.value, i.isFocus, i.isSelect),
@@ -944,12 +947,12 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
         "data-lineno": i.row,
         onClick: i.onClick,
         children: [
-          /* @__PURE__ */ k.jsx(
+          /* @__PURE__ */ C.jsx(
             "div",
             {
               className: P(i.isFocus) + " container",
               onMouseLeave: F(i.selectThisLine),
-              children: /* @__PURE__ */ k.jsx(
+              children: /* @__PURE__ */ C.jsx(
                 Me,
                 {
                   ref: w,
@@ -969,7 +972,7 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
               )
             }
           ),
-          /* @__PURE__ */ k.jsx("div", { className: A(i.isFocus), children: d })
+          /* @__PURE__ */ C.jsx("div", { className: A(i.isFocus), children: d })
         ]
       }
     );
@@ -984,7 +987,7 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
     col: 0,
     colEnd: -1,
     direction: "none"
-  }), [b, j] = ae([0, 0]), $ = (c) => c == null ? null : c instanceof HTMLElement && c.classList.contains("line") ? c : $(c.parentElement);
+  }), [k, j] = ae([0, 0]), $ = (c) => c == null ? null : c instanceof HTMLElement && c.classList.contains("line") ? c : $(c.parentElement);
   let x, _, L = !1;
   const I = () => {
     L = !0;
@@ -1008,7 +1011,7 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
   q(() => {
     var c;
     if (F.current)
-      if (b[1] - b[0] >= 1) {
+      if (k[1] - k[0] >= 1) {
         F.current.style.display = "block";
         const d = (c = document.getSelection()) == null ? void 0 : c.focusNode;
         if (!d)
@@ -1019,7 +1022,7 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
         F.current.style.left = n + "px", F.current.style.top = a + "px";
       } else
         F.current.style.display = "none";
-  }, [b]);
+  }, [k]);
   const u = (c) => (d) => {
     const a = d.clipboardData.getData("text").split(/\r\n|\n/);
     if (a.length === 1)
@@ -1049,13 +1052,13 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
     }
   }, [P, i]), i.forEach((c, d) => {
     g.current[d] = vt();
-  }), /* @__PURE__ */ k.jsxs("div", { className: "editor", children: [
-    i.map((c, d) => /* @__PURE__ */ k.jsx(
+  }), /* @__PURE__ */ C.jsxs("div", { className: "editor", children: [
+    i.map((c, d) => /* @__PURE__ */ C.jsx(
       xt,
       {
         ref: g.current[d],
         isFocus: d === P.row,
-        isSelect: b[0] <= d && d <= b[1],
+        isSelect: k[0] <= d && d <= k[1],
         row: d,
         value: c,
         textPopupHandlers: v.textPopupHandlers,
@@ -1150,8 +1153,8 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
                   if (l.row === 0)
                     return l;
                   const E = i[P.row - 1].length;
-                  return T((C) => (U(C[l.row - 1]) ? C[l.row - 1] += `
-` + C[l.row] : C[l.row - 1] += C[l.row], C.splice(l.row, 1), [...C])), n.preventDefault(), {
+                  return T((R) => (U(R[l.row - 1]) ? R[l.row - 1] += `
+` + R[l.row] : R[l.row - 1] += R[l.row], R.splice(l.row, 1), [...R])), n.preventDefault(), {
                     row: l.row - 1,
                     col: E,
                     colEnd: -1,
@@ -1169,11 +1172,11 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
                   if (n.shiftKey)
                     t.length === 1 ? (E[l.row] = n.currentTarget.value.slice(1), r--) : t.length > 0 && (E[l.row] = t.slice(2) + n.currentTarget.value);
                   else {
-                    let C = "-";
-                    U(n.currentTarget.value) && (C = " "), t.length === 0 ? (E[l.row] = C + " " + n.currentTarget.value, r++) : E[l.row] = "  " + t + n.currentTarget.value;
+                    let R = "-";
+                    U(n.currentTarget.value) && (R = " "), t.length === 0 ? (E[l.row] = R + " " + n.currentTarget.value, r++) : E[l.row] = "  " + t + n.currentTarget.value;
                   }
-                  return A((C) => ({
-                    row: C.row,
+                  return A((R) => ({
+                    row: R.row,
                     col: r,
                     colEnd: -1,
                     direction: f
@@ -1186,23 +1189,23 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
                 };
               case "Enter":
                 return n.keyCode === 13 ? U(a) && !n.shiftKey ? l : (T((E) => {
-                  const C = t.length + n.currentTarget.selectionStart;
-                  let M = E[l.row].slice(C);
+                  const R = t.length + n.currentTarget.selectionStart;
+                  let M = E[l.row].slice(R);
                   if (U(a)) {
                     const K = E[l.row];
                     K[K.length - 1] === `
 ` ? E[l.row] = E[l.row].slice(
                       0,
-                      C - 1
+                      R - 1
                     ) : E[l.row] = E[l.row].slice(
                       0,
-                      C
+                      R
                     ), M.length > 0 && M[0] === `
 ` && (M = M.slice(1));
                   } else
                     E[l.row] = E[l.row].slice(
                       0,
-                      C
+                      R
                     );
                   return t.length !== 0 ? E.splice(
                     l.row + 1,
@@ -1217,8 +1220,8 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
                 }) : l;
               case " ":
                 return console.log("space", r), (r === 0 || r === 1 && t.length >= 1) && (T((E) => {
-                  let C = "-";
-                  return U(n.currentTarget.value) && (C = " "), t.length === 0 ? (E[l.row] = C + " " + n.currentTarget.value, r++) : E[l.row] = "  " + t + n.currentTarget.value, [...E];
+                  let R = "-";
+                  return U(n.currentTarget.value) && (R = " "), t.length === 0 ? (E[l.row] = R + " " + n.currentTarget.value, r++) : E[l.row] = "  " + t + n.currentTarget.value, [...E];
                 }), n.preventDefault()), {
                   row: l.row,
                   col: r,
@@ -1240,17 +1243,17 @@ const yt = (v) => v.match(/^(\s*)> /) != null, pt = (v) => v.split(/[\r\n]/), Tt
       },
       d
     )),
-    /* @__PURE__ */ k.jsx("div", { className: "popup", ref: F, children: v.linePopupHandlers.map((c, d) => /* @__PURE__ */ k.jsx(
+    /* @__PURE__ */ C.jsx("div", { className: "popup", ref: F, children: v.linePopupHandlers.map((c, d) => /* @__PURE__ */ C.jsx(
       "div",
       {
         onClick: () => {
           globalThis.ontouchstart !== null && (c.handler(
-            i.slice(b[0], b[1] + 1),
-            b
-          ), j([b[1], b[1]]));
+            i.slice(k[0], k[1] + 1),
+            k
+          ), j([k[1], k[1]]));
         },
         onTouchStart: () => {
-          c.handler(i.slice(b[0], b[1] + 1)), j([b[1], b[1]]);
+          c.handler(i.slice(k[0], k[1] + 1)), j([k[1], k[1]]);
         },
         children: c.name
       },
