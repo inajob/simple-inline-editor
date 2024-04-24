@@ -2,8 +2,8 @@ import {
   forwardRef,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
+  useState,
 } from 'react';
 import { isBlock, isComment, parseBlock } from "../util.ts";
 import { TextareaWithMenu, TextPopupHandler } from "./TextareaWithMenu.tsx";
@@ -34,6 +34,7 @@ export interface LineProps {
 export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
   function Line(props, _ref) {
     const ref = useForwardRef(_ref);
+    const [renderElement, setRenderElement] = useState<React.JSX.Element>();
     useEffect(() => {
       if (!ref.current) return;
 
@@ -264,10 +265,10 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
     const prefix = parts[0];
     const value = parts[1];
 
-    const renderElement = useMemo(() => makeHtml(props.value), [
-      props.value,
-      makeHtml,
-    ]);
+    useEffect(() => {
+      setRenderElement(makeHtml(props.value))
+    }, [makeHtml, props.value])
+
     return isBlock(value)
       ? (
         <div
