@@ -181,6 +181,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
   useEffect(() => {
     if (cursor.row !== -1 && inProcess.current === false) {
       const focusLine = linesRef.current[cursor.row];
+      if(!focusLine)return
       if (!focusLine.current) return;
       focusLine.current.focus();
       let end = cursor.colEnd;

@@ -3,6 +3,7 @@ import { getLines } from "../util.ts";
 import Editor from "./Editor.tsx";
 import { TextFragment, TextChangeRequest } from "./TextareaWithMenu.tsx";
 
+
 // == block styles ============================
 const csvToTable = (body: string) => {
   const rows: React.JSX.Element[] = [];
@@ -15,6 +16,16 @@ const csvToTable = (body: string) => {
     });
     rows.push(<tr key={tri}>{cellElms}</tr>);
   });
+  
+  const p = (new Promise((resolve) => {
+    setTimeout(() => {
+      console.log("fire")
+      resolve(<table>{rows}</table>);
+    },1000)
+  }));
+  console.log(p)
+  throw p;
+  
   return <table>{rows}</table>;
 };
 const blockStyles = {

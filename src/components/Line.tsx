@@ -159,7 +159,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
     const makeBlock = useCallback((type: string | undefined, body: string) => {
       const f = type ? props.blockStyles[type] : undefined;
       if (f) {
-        return f(body);
+        return f(body)
       } else {
         return (
           <>
@@ -193,20 +193,33 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
         if (isComment(s)) {
           const m = s.match(/\s*> /);
           const body = s.slice(m?.[0]?.length);
-          return (
+          setRenderElement(
             <div>
               <pre className="for-copy">{alignIndentComment(s)}</pre>
               <div className="no-select">{makeBlock("pre", body)}</div>
             </div>
           ); // Comment
+          return
         } else {
           const parts = parseBlock(s);
-          return (
+          try{
+          const block = makeBlock(parts[0], parts[1])
+          setRenderElement (
             <div>
               <pre className="for-copy">{alignIndent(s + "\n```")}</pre>
-              <div className="no-select">{makeBlock(parts[0], parts[1])}</div>
+              <div className="no-select">{block}</div>
             </div>
           ); // ```
+          }catch(p){
+            if(p instanceof Promise){
+              p.then((e) => {
+                console.log(e)
+                setRenderElement(e)
+              })
+            }
+            setRenderElement(<div>loading...</div>)
+          }
+          return
         }
       } else {
         const clist = ["elm"];
@@ -222,12 +235,13 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
           s = m[2];
           prefix = <pre className="for-copy-inline">{m[1] + "-"}</pre>;
         }
-        return (
+        setRenderElement (
           <div className={clist.join(" ")}>
             {prefix}
             {makeLine(s)}
           </div>
         );
+        return
       }
     }, [alignIndent, alignIndentComment, makeBlock, makeLine]);
     const makeText = (s: string) => {
@@ -266,7 +280,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
     const value = parts[1];
 
     useEffect(() => {
-      setRenderElement(makeHtml(props.value))
+      makeHtml(props.value)
     }, [makeHtml, props.value])
 
     return isBlock(value)
