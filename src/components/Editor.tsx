@@ -56,6 +56,8 @@ export const Editor: React.FC<EditorProps> = (props) => {
     return findLine(e.parentElement);
   };
 
+  const editorRef = useRef<HTMLDivElement>(null);
+
   let fromLine: HTMLElement | null;
   let toLine: HTMLElement | null;
   let selection = false; // now in selection mode?
@@ -65,6 +67,10 @@ export const Editor: React.FC<EditorProps> = (props) => {
     if (sel){
       fromLine = findLine(sel.anchorNode);
       toLine = findLine(sel.focusNode);
+      if(fromLine?.parentNode != editorRef.current){
+        fromLine = null
+        toLine = null
+      }
       if (fromLine !== toLine) {
         setCursor({ row: -1, col: 0 });
       }
@@ -197,7 +203,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
   });
 
   return (
-    <div className="editor">
+    <div className="editor" ref={editorRef}>
       {lines.map((line, index) => (
         <Line
           key={index}
