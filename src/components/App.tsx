@@ -86,6 +86,16 @@ export const App: React.FC = () => {
     "world",
     "word",
     "wonderful",
+    "wonderful",
+    "wonderful",
+    "wonderful",
+    "wonderful",
+    "wonderful",
+    "wonderful",
+    "wonderful",
+    "wonderful",
+    "wonderful",
+    "wonderful",
     "日本語",
   ]);
   // ============================
@@ -111,7 +121,7 @@ export const App: React.FC = () => {
   const [lines, setLines] = useState(initialLines);
 
   const makeKeywords = useCallback(() => {
-   setKeywords(Object.keys(localStorage).filter((s) => s.indexOf("PAGE:") == 0).map((s) => s.slice("PAGE:".length)))
+    setKeywords(Object.keys(localStorage).filter((s) => s.indexOf("PAGE:") == 0).map((s) => s.slice("PAGE:".length)))
   },[])
 
   useEffect(() => {

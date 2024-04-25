@@ -132,6 +132,10 @@ export const TextareaWithMenu = React.forwardRef<
         menuPosRef.current.getBoundingClientRect().width + "px";
       menuRef.current.style.top =
         (-menuRef.current.getBoundingClientRect().height) + "px";
+      const top = menuRef.current.getBoundingClientRect().top + window.scrollY;
+      if(top < 0){
+        menuRef.current.style.top = (-menuRef.current.getBoundingClientRect().height - top) + "px"
+      }
       menuPosRef.current.style.display = "none";
     }, [select, candidate]);
 
