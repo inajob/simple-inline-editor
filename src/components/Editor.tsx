@@ -20,6 +20,7 @@ export interface EditorProps {
   setLines: React.Dispatch<React.SetStateAction<string[]>>;
   onChange: (lines: string[]) => void;
   onLinkClick: ((title: string) => void)
+  onSubLinkClick: ((title: string) => void)
   textPopupHandlers: TextPopupHandler[];
   linePopupHandlers: LinePopupHandler[];
   keywords: string[];
@@ -577,6 +578,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
             });
           }}
           onLinkClick={props.onLinkClick}
+          onSubLinkClick={props.onSubLinkClick}
           onClick={(e) => {
             /*
             let countCharacter = (e) => {

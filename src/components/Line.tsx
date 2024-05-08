@@ -19,6 +19,7 @@ export interface LineProps {
   textPopupHandlers: TextPopupHandler[];
   onClick: React.MouseEventHandler<HTMLDivElement>;
   onLinkClick: ((title: string) => void)
+  onSubLinkClick: ((title: string) => void)
   onChange: (prefix: string) => React.ChangeEventHandler<HTMLTextAreaElement>;
   onKeyDown: (
     prefix: string,
@@ -103,6 +104,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
     };
 
     const linkClickHandler = props.onLinkClick
+    const subLinkClickHandler = props.onSubLinkClick
     const makeLine = useCallback((body: string) => {
       let pos = 0;
       const result = [];
@@ -138,10 +140,16 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
           const endPos = capture(body, ["]"], cap.pos + cap.target.length);
           if (endPos.pos !== -1) {
             const value = body.slice(cap.pos, endPos.pos + 1)
-            result.push([<span className="braket" key={pos} onClick={(e) => {
-              linkClickHandler(value.slice(1, value.length - 1))
-              e.stopPropagation()
-            }}>{value}</span>])
+            result.push([<>
+              <span className="braket" key={pos} onClick={(e) => {
+                linkClickHandler(value.slice(1, value.length - 1))
+                e.stopPropagation()
+              }}>{value.slice(1, value.length - 1)}</span>
+              <span className="bracket-icon" key={"icon-"+pos} onClick={(e) => {
+                subLinkClickHandler(value.slice(1, value.length - 1))
+                e.stopPropagation()
+              }}>[]</span>
+            </>])
             pos = endPos.pos + 1
           } else {
             result.push(body.slice(pos, body.length));
@@ -154,7 +162,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
         }
       }
       return result;
-    }, [linkClickHandler]);
+    }, [linkClickHandler, subLinkClickHandler]);
 
     const makeBlock = useCallback((type: string | undefined, body: string) => {
       const f = type ? props.blockStyles[type] : undefined;

@@ -188,6 +188,7 @@ export const App: React.FC = () => {
         blockStyles={blockStyles}
         onChange={(lines) => setContents(lines)}
         onLinkClick={clickHandler}
+        onSubLinkClick={clickHandler}
       />
     </div>
   );

@@ -35,6 +35,11 @@ span.braket{
   color: blue;
   cursor: pointer;
 }
+span.bracket-icon{
+  background-color: #99f;
+  color: #99f;
+  cursor: pointer;
+}
 h1 {
   background-color: #aaf;
   text-align: right;

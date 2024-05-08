@@ -9,6 +9,7 @@ export interface EditorProps {
     setLines: React.Dispatch<React.SetStateAction<string[]>>;
     onChange: (lines: string[]) => void;
     onLinkClick: ((title: string) => void);
+    onSubLinkClick: ((title: string) => void);
     textPopupHandlers: TextPopupHandler[];
     linePopupHandlers: LinePopupHandler[];
     keywords: string[];

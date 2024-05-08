@@ -10,6 +10,7 @@ export interface LineProps {
     textPopupHandlers: TextPopupHandler[];
     onClick: React.MouseEventHandler<HTMLDivElement>;
     onLinkClick: ((title: string) => void);
+    onSubLinkClick: ((title: string) => void);
     onChange: (prefix: string) => React.ChangeEventHandler<HTMLTextAreaElement>;
     onKeyDown: (prefix: string, value: string) => React.KeyboardEventHandler<HTMLTextAreaElement>;
     onCompositionStart: React.CompositionEventHandler<HTMLTextAreaElement>;
