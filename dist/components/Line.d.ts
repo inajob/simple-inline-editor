@@ -3,6 +3,7 @@ import { TextPopupHandler } from "./TextareaWithMenu.tsx";
 export interface LineProps {
     value: string;
     row: number;
+    key_debug: number;
     isFocus: boolean;
     isSelect: boolean;
     keywords: string[];

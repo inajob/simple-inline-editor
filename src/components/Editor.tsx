@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react'
 import { Line } from "./Line.tsx";
-import { isBlock, isFirstLine, isLastLine } from "../util.ts";
+import { isBlock, isFirstLine, isLastLine, parsePrefix } from "../util.ts";
 import { TextPopupHandler } from "./TextareaWithMenu.tsx";
 
 export interface LinePopupHandler {
@@ -37,6 +37,11 @@ export const Editor: React.FC<EditorProps> = (props) => {
   const lines = props.lines;
   const setLines = props.setLines;
   const keySequence = useRef(lines.length);
+
+  useEffect(() => {
+    keySequence.current = lines.length
+  }, [lines]);
+
   const newKey = () => {
     keySequence.current = keySequence.current + 1
     return keySequence.current
@@ -213,6 +218,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
       {lines.map((line, index) => (
         <Line
           key={line.key}
+          key_debug={line.key}
           ref={linesRef.current[index]}
           isFocus={index === cursor.row}
           isSelect={selectRange[0] <= index && index <= selectRange[1]}
@@ -421,7 +427,8 @@ export const Editor: React.FC<EditorProps> = (props) => {
                     e.currentTarget.selectionEnd === 0
                   ) {
                     if (prev.row === 0) return prev;
-                    const nextCol = lines[cursor.row - 1].body.length - 1;
+                    const parts = parsePrefix(lines[cursor.row - 1].body)
+                    const nextCol = parts[1].length;
                     setLines((prevLines) => {
                       // 上の行と結合する
                       if (isBlock(prevLines[prev.row - 1].body)) {
@@ -493,6 +500,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                     if (isBlock(line) && !e.shiftKey) {
                       return prev;
                     } else {
+                      let nextCol = 0;
                       setLines((prevLines) => {
                         const column = prefix.length +
                           e.currentTarget.selectionStart;
@@ -527,6 +535,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                             0,
                             {body: prefix + " " + afterCursor, key: newKey()},
                           );
+                          nextCol = 1
                         } else {
                           prevLines.splice(prev.row + 1, 0, {body: afterCursor, key: newKey()});
                         }
@@ -535,7 +544,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                       e.preventDefault();
                       return {
                         row: prev.row + 1,
-                        col: prefix.length,
+                        col: nextCol,
                         colEnd: -1,
                         direction: currentDirection,
                       };

@@ -5,13 +5,14 @@ import {
   useRef,
   useState,
 } from 'react';
-import { isBlock, isComment, parseBlock } from "../util.ts";
+import { isBlock, isComment, parseBlock, parsePrefix } from "../util.ts";
 import { TextareaWithMenu, TextPopupHandler } from "./TextareaWithMenu.tsx";
 import { useForwardRef } from "../useForwardRef.ts";
 
 export interface LineProps {
   value: string;
   row: number;
+  key_debug: number;
   isFocus: boolean;
   isSelect: boolean;
   keywords: string[];
@@ -252,22 +253,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
         return
       }
     }, [alignIndent, alignIndentComment, makeBlock, makeLine]);
-    const makeText = (s: string) => {
-      const listMatch = s.match(/^(\s*-)( .*)$/);
-      let prefix = "";
-      if (listMatch) {
-        s = listMatch[2];
-        prefix = listMatch[1];
-      } else {
-        const blockMatch = s.match(/^(\s*)(```.*|> )/); // ```
-        if (blockMatch) {
-          prefix = blockMatch[1];
-          s = s.slice(blockMatch[1].length);
-        }
-      }
-      return [prefix, s];
-    };
-
+    
     const elmRef = useRef<HTMLDivElement>(null);
     const mouseLeave =
       (selectThisLine: () => void): React.MouseEventHandler<HTMLDivElement> =>
@@ -283,7 +269,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
         }
       };
 
-    const parts = makeText(props.value);
+    const parts = parsePrefix(props.value);
     const prefix = parts[0];
     const value = parts[1];
 

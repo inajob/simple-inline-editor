@@ -60,3 +60,19 @@ export const parseBlock = (text: string): [string | undefined, string] => {
   const blockType = m?.[1];
   return [blockType, blockBody];
 };
+
+export const parsePrefix = (s: string) => {
+  const listMatch = s.match(/^(\s*-)( .*)$/);
+  let prefix = "";
+  if (listMatch) {
+    s = listMatch[2];
+    prefix = listMatch[1];
+  } else {
+    const blockMatch = s.match(/^(\s*)(```.*|> )/); // ```
+    if (blockMatch) {
+      prefix = blockMatch[1];
+      s = s.slice(blockMatch[1].length);
+    }
+  }
+  return [prefix, s];
+};
