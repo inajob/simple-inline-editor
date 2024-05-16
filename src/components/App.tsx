@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { getLines } from "../util.ts";
 import Editor from "./Editor.tsx";
 import { TextFragment, TextChangeRequest } from "./TextareaWithMenu.tsx";
@@ -34,7 +34,7 @@ const blockStyles = {
 
 
 export const App: React.FC = () => {
-  const [content, setContents] = useState<string[]>([]);
+  const content = useRef<string[]>([]);
 
   // == Line Popup Handlers ============================
   const linePopupHandlers = [
@@ -118,7 +118,8 @@ export const App: React.FC = () => {
   if(loadedPage != null){
     initialLines = JSON.parse(loadedPage)
   }
-  const [lines, setLines] = useState(initialLines);
+  console.log(initialLines)
+  const [lines, setLines] = useState(initialLines.map((l,i) => {return {key:i, body:l}}));
 
   const makeKeywords = useCallback(() => {
     setKeywords(Object.keys(localStorage).filter((s) => s.indexOf("PAGE:") == 0).map((s) => s.slice("PAGE:".length)))
@@ -138,8 +139,8 @@ export const App: React.FC = () => {
   },[])
 
   useEffect(() => {
-    console.log("Save", content)
-    localStorage.setItem("PAGE:" + title, JSON.stringify(content))
+    console.log("Save", content.current)
+    localStorage.setItem("PAGE:" + title, JSON.stringify(content.current))
     makeKeywords()
     //setInPrepareing(false)
   }, [content, title, makeKeywords])
@@ -152,7 +153,7 @@ export const App: React.FC = () => {
     const pageData = localStorage.getItem("PAGE:" + title)
     setTitle(title)
     if(pageData == null){
-      setLines(["# " + title, "新しいページです"])
+      setLines([{body: "# " + title, key: 0}, {body: "新しいページです", key: 1}])
     }else{
       setLines(JSON.parse(pageData))
     }
@@ -186,7 +187,7 @@ export const App: React.FC = () => {
         textPopupHandlers={textPopupHandlers}
         keywords={keywords}
         blockStyles={blockStyles}
-        onChange={(lines) => setContents(lines)}
+        onChange={(lines) => {content.current = lines}}
         onLinkClick={clickHandler}
         onSubLinkClick={clickHandler}
       />

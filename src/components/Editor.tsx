@@ -16,8 +16,8 @@ export interface LinePopupHandler {
 
 export interface EditorProps {
   //initialLines: string[];
-  lines: string[];
-  setLines: React.Dispatch<React.SetStateAction<string[]>>;
+  lines: {body: string, key: number}[];
+  setLines: React.Dispatch<React.SetStateAction<{body: string, key: number}[]>>;
   onChange: (lines: string[]) => void;
   onLinkClick: ((title: string) => void)
   onSubLinkClick: ((title: string) => void)
@@ -36,10 +36,15 @@ export const Editor: React.FC<EditorProps> = (props) => {
   //const [lines, setLines] = useState(props.initialLines);
   const lines = props.lines;
   const setLines = props.setLines;
+  const keySequence = useRef(lines.length);
+  const newKey = () => {
+    keySequence.current = keySequence.current + 1
+    return keySequence.current
+  }
 
   const onChange = props.onChange;
   useEffect(() => {
-    onChange(lines);
+    onChange(lines.map((l) => l.body));
   }, [lines, onChange]);
 
   const inProcess = useRef(false);
@@ -169,8 +174,8 @@ export const Editor: React.FC<EditorProps> = (props) => {
         out.push(blockContent.join("\n"));
       }
       setLines((prev) => {
-        prev[no] = prev[no] + out[0];
-        prev.splice(no + 1, 0, ...out.slice(1));
+        prev[no] = {body: prev[no] + out[0], key: prev[no].key};
+        prev.splice(no + 1, 0, ...out.slice(1).map((l) => {return {body: l, key: newKey()}}));
         return [...prev];
       });
       e.preventDefault();
@@ -207,12 +212,12 @@ export const Editor: React.FC<EditorProps> = (props) => {
     <div className="editor" ref={editorRef}>
       {lines.map((line, index) => (
         <Line
-          key={index}
+          key={line.key}
           ref={linesRef.current[index]}
           isFocus={index === cursor.row}
           isSelect={selectRange[0] <= index && index <= selectRange[1]}
           row={index}
-          value={line}
+          value={line.body}
           textPopupHandlers={props.textPopupHandlers}
           keywords={props.keywords}
           blockStyles={props.blockStyles}
@@ -220,7 +225,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
           setLine={(prefix) => (s) =>
             ((i) => {
               setLines((prev) => {
-                prev[i] = prefix + s;
+                prev[i].body = prefix + s;
                 return [...prev];
               });
             })(index)}
@@ -261,7 +266,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                 });
               }
               setLines((prev) => {
-                prev[i] = prefix + e.target.value;
+                prev[i].body = prefix + e.target.value;
                 return [...prev];
               });
             })(index)}
@@ -278,7 +283,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                     e.currentTarget.selectionEnd === 0
                   ) {
                     if (prev.row === 0) return prev;
-                    const nextCol = lines[cursor.row - 1].length;
+                    const nextCol = lines[cursor.row - 1].body.length;
                     e.preventDefault();
                     return {
                       row: prev.row - 1,
@@ -312,7 +317,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                   };
                 }
                 case "ArrowRight": {
-                  const maxCol = -prefix.length + lines[cursor.row].length;
+                  const maxCol = -prefix.length + lines[cursor.row].body.length;
                   
                   if (
                     e.currentTarget != null &&
@@ -395,14 +400,16 @@ export const Editor: React.FC<EditorProps> = (props) => {
                       // インデントを浅くする
                       setLines((prevLines) => {
                         if (prefix.length === 1) { // prefix == '-'
-                          prevLines[prev.row] = e.currentTarget.value.slice(1);
+                          prevLines[prev.row].body = e.currentTarget.value.slice(1);
                           currentColumn--;
                           if (currentColumn === -1) {
                             currentColumn++;
+                          }else if(currentColumn === 0 && currentColumnEnd !== 0){
+                            // 条件を限定しすぎか？
+                            currentColumnEnd = 0;
                           }
                         } else if (prefix.length > 0) {
-                          prevLines[prev.row] = prefix.slice(2) +
-                            e.currentTarget.value;
+                          prevLines[prev.row].body = prefix.slice(2) + e.currentTarget.value;
                         }
                         return [...prevLines];
                       });
@@ -414,13 +421,13 @@ export const Editor: React.FC<EditorProps> = (props) => {
                     e.currentTarget.selectionEnd === 0
                   ) {
                     if (prev.row === 0) return prev;
-                    const nextCol = lines[cursor.row - 1].length;
+                    const nextCol = lines[cursor.row - 1].body.length - 1;
                     setLines((prevLines) => {
                       // 上の行と結合する
-                      if (isBlock(prevLines[prev.row - 1])) {
-                        prevLines[prev.row - 1] += "\n" + prevLines[prev.row];
+                      if (isBlock(prevLines[prev.row - 1].body)) {
+                        prevLines[prev.row - 1].body += "\n" + prevLines[prev.row].body;
                       } else {
-                        prevLines[prev.row - 1] += prevLines[prev.row];
+                        prevLines[prev.row - 1].body += prevLines[prev.row].body;
                       }
                       prevLines.splice(prev.row, 1);
                       return [...prevLines];
@@ -446,11 +453,10 @@ export const Editor: React.FC<EditorProps> = (props) => {
                   setLines((prevLines) => {
                     if (e.shiftKey) {
                       if (prefix.length === 1) { // prefix == '-'
-                        prevLines[prev.row] = e.currentTarget.value.slice(1);
+                        prevLines[prev.row].body = e.currentTarget.value.slice(1);
                         currentColumn--;
                       } else if (prefix.length > 0) {
-                        prevLines[prev.row] = prefix.slice(2) +
-                          e.currentTarget.value;
+                        prevLines[prev.row].body = prefix.slice(2) + e.currentTarget.value;
                       }
                     } else {
                       let bullet = "-";
@@ -458,12 +464,10 @@ export const Editor: React.FC<EditorProps> = (props) => {
                         bullet = " ";
                       }
                       if (prefix.length === 0) {
-                        prevLines[prev.row] = bullet + " " +
-                          e.currentTarget.value;
+                        prevLines[prev.row].body = bullet + " " + e.currentTarget.value;
                         currentColumn++;
                       } else {
-                        prevLines[prev.row] = "  " + prefix +
-                          e.currentTarget.value;
+                        prevLines[prev.row].body = "  " + prefix + e.currentTarget.value;
                       }
                     }
                     // これが無いと箇条書き解除時に行末にカーソルが移動する時がある
@@ -492,16 +496,16 @@ export const Editor: React.FC<EditorProps> = (props) => {
                       setLines((prevLines) => {
                         const column = prefix.length +
                           e.currentTarget.selectionStart;
-                        let afterCursor = prevLines[prev.row].slice(column);
+                        let afterCursor = prevLines[prev.row].body.slice(column);
                         if (isBlock(line)) {
-                          const l = prevLines[prev.row];
+                          const l = prevLines[prev.row].body;
                           if (l[l.length - 1] === "\n") {
-                            prevLines[prev.row] = prevLines[prev.row].slice(
+                            prevLines[prev.row].body = prevLines[prev.row].body.slice(
                               0,
                               column - 1,
                             ); // remove last \n
                           } else {
-                            prevLines[prev.row] = prevLines[prev.row].slice(
+                            prevLines[prev.row].body = prevLines[prev.row].body.slice(
                               0,
                               column,
                             );
@@ -512,7 +516,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                             }
                           }
                         } else {
-                          prevLines[prev.row] = prevLines[prev.row].slice(
+                          prevLines[prev.row].body = prevLines[prev.row].body.slice(
                             0,
                             column,
                           );
@@ -521,10 +525,10 @@ export const Editor: React.FC<EditorProps> = (props) => {
                           prevLines.splice(
                             prev.row + 1,
                             0,
-                            prefix + " " + afterCursor,
+                            {body: prefix + " " + afterCursor, key: newKey()},
                           );
                         } else {
-                          prevLines.splice(prev.row + 1, 0, afterCursor);
+                          prevLines.splice(prev.row + 1, 0, {body: afterCursor, key: newKey()});
                         }
                         return [...prevLines];
                       });
@@ -552,11 +556,11 @@ export const Editor: React.FC<EditorProps> = (props) => {
                         bullet = " ";
                       }
                       if (prefix.length === 0) {
-                        prevLines[prev.row] = bullet + " " +
+                        prevLines[prev.row].body = bullet + " " +
                           e.currentTarget.value;
                         currentColumn++;
                       } else {
-                        prevLines[prev.row] = "  " + prefix +
+                        prevLines[prev.row].body = "  " + prefix +
                           e.currentTarget.value;
                       }
                       return [...prevLines];
@@ -625,14 +629,14 @@ export const Editor: React.FC<EditorProps> = (props) => {
             onClick={() => {
               if (globalThis.ontouchstart !== null) {
                 item.handler(
-                  lines.slice(selectRange[0], selectRange[1] + 1),
+                  lines.slice(selectRange[0], selectRange[1] + 1).map((l) => l.body),
                   selectRange,
                 );
                 setSelectRange([selectRange[1], selectRange[1]]);
               }
             }}
             onTouchStart={() => {
-              item.handler(lines.slice(selectRange[0], selectRange[1] + 1));
+              item.handler(lines.slice(selectRange[0], selectRange[1] + 1).map((l) => l.body));
               setSelectRange([selectRange[1], selectRange[1]]);
             }}
           >

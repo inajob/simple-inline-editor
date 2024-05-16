@@ -5,8 +5,14 @@ export interface LinePopupHandler {
     handler: (lines: string[], range?: number[]) => void;
 }
 export interface EditorProps {
-    lines: string[];
-    setLines: React.Dispatch<React.SetStateAction<string[]>>;
+    lines: {
+        body: string;
+        key: number;
+    }[];
+    setLines: React.Dispatch<React.SetStateAction<{
+        body: string;
+        key: number;
+    }[]>>;
     onChange: (lines: string[]) => void;
     onLinkClick: ((title: string) => void);
     onSubLinkClick: ((title: string) => void);
