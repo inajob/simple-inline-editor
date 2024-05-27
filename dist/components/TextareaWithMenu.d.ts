@@ -16,6 +16,7 @@ export interface TextareaWithMenuProps {
     value: string;
     keywords: string[];
     popupHandlers: TextPopupHandler[];
+    onMagicFunc: (() => void);
     onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
     onKeyDown: (select: TextFragment) => React.KeyboardEventHandler<HTMLTextAreaElement>;
     onCompositionStart: React.CompositionEventHandler<HTMLTextAreaElement>;

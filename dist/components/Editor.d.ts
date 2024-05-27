@@ -16,6 +16,7 @@ export interface EditorProps {
     onChange: (lines: string[]) => void;
     onLinkClick: ((title: string) => void);
     onSubLinkClick: ((title: string) => void);
+    onMagicFunc: ((row: number) => () => void);
     textPopupHandlers: TextPopupHandler[];
     linePopupHandlers: LinePopupHandler[];
     keywords: string[];

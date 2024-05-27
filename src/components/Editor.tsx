@@ -21,6 +21,7 @@ export interface EditorProps {
   onChange: (lines: string[]) => void;
   onLinkClick: ((title: string) => void)
   onSubLinkClick: ((title: string) => void)
+  onMagicFunc: ((row: number) => () => void)
   textPopupHandlers: TextPopupHandler[];
   linePopupHandlers: LinePopupHandler[];
   keywords: string[];
@@ -225,6 +226,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
           row={index}
           value={line.body}
           textPopupHandlers={props.textPopupHandlers}
+          onMagicFunc={props.onMagicFunc(index)}
           keywords={props.keywords}
           blockStyles={props.blockStyles}
           selectThisLine={selectThisLine()}

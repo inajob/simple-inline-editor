@@ -190,6 +190,7 @@ export const App: React.FC = () => {
         onChange={(lines) => {content.current = lines}}
         onLinkClick={clickHandler}
         onSubLinkClick={clickHandler}
+        onMagicFunc={(row) => () => {console.log("magic" + row)}}
       />
     </div>
   );

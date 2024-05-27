@@ -12,6 +12,7 @@ export interface LineProps {
     onClick: React.MouseEventHandler<HTMLDivElement>;
     onLinkClick: ((title: string) => void);
     onSubLinkClick: ((title: string) => void);
+    onMagicFunc: (() => void);
     onChange: (prefix: string) => React.ChangeEventHandler<HTMLTextAreaElement>;
     onKeyDown: (prefix: string, value: string) => React.KeyboardEventHandler<HTMLTextAreaElement>;
     onCompositionStart: React.CompositionEventHandler<HTMLTextAreaElement>;

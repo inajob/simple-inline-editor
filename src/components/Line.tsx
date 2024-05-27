@@ -21,6 +21,7 @@ export interface LineProps {
   onClick: React.MouseEventHandler<HTMLDivElement>;
   onLinkClick: ((title: string) => void)
   onSubLinkClick: ((title: string) => void)
+  onMagicFunc: (() => void)
   onChange: (prefix: string) => React.ChangeEventHandler<HTMLTextAreaElement>;
   onKeyDown: (
     prefix: string,
@@ -300,6 +301,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
               onCompositionEnd={props.onCompositionEnd}
               onChange={props.onChange(prefix)}
               popupHandlers={[]}
+              onMagicFunc={() => {}}
               onKeyDown={() => props.onKeyDown(prefix, value)}
             />
           </div>
@@ -328,6 +330,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
               onCompositionEnd={props.onCompositionEnd}
               onChange={props.onChange(prefix)}
               popupHandlers={props.textPopupHandlers}
+              onMagicFunc={props.onMagicFunc}
               onKeyDown={(select) => (e) => {
                 if (
                   e.key === "Enter" && e.keyCode === 13 &&

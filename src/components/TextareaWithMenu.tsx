@@ -18,6 +18,7 @@ export interface TextareaWithMenuProps {
   value: string;
   keywords: string[];
   popupHandlers: TextPopupHandler[];
+  onMagicFunc: (() => void)
   onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
   onKeyDown: (
     select: TextFragment,
@@ -222,7 +223,10 @@ export const TextareaWithMenu = React.forwardRef<
                 return { index: i };
               });
               e.preventDefault();
-            } else {
+            } else if (e.key == "Enter" && e.shiftKey){
+              props.onMagicFunc()
+              e.preventDefault()
+            }else {
               props.onKeyDown(select)(e);
             }
           }}
