@@ -123,11 +123,11 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
           );
           if (endPos.pos !== -1) {
             const link = body.slice(cap.pos, endPos.pos);
-            result.push(<a href={link}>{link}</a>);
+            result.push(<a key={pos} href={link}>{link}</a>);
             pos = endPos.pos;
           } else {
             const link = body.slice(cap.pos, body.length);
-            result.push(<a href={link}>{link}</a>);
+            result.push(<a key={pos} href={link}>{link}</a>);
             pos = body.length;
             break;
           }
@@ -142,16 +142,16 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
           const endPos = capture(body, ["]"], cap.pos + cap.target.length);
           if (endPos.pos !== -1) {
             const value = body.slice(cap.pos, endPos.pos + 1)
-            result.push([<>
-              <span className="braket" key={pos} onClick={(e) => {
+            result.push([<span key={pos}>
+              <span className="braket" onClick={(e) => {
                 linkClickHandler(value.slice(1, value.length - 1))
                 e.stopPropagation()
               }}>{value.slice(1, value.length - 1)}</span>
-              <span className="bracket-icon" key={"icon-"+pos} onClick={(e) => {
+              <span className="bracket-icon" onClick={(e) => {
                 subLinkClickHandler(value.slice(1, value.length - 1))
                 e.stopPropagation()
               }}>[]</span>
-            </>])
+            </span>])
             pos = endPos.pos + 1
           } else {
             result.push(body.slice(pos, body.length));

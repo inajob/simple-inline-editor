@@ -20,7 +20,7 @@ const csvToTable = (body: string) => {
   const p = (new Promise((resolve) => {
     setTimeout(() => {
       console.log("fire")
-      resolve(<table>{rows}</table>);
+      resolve(<table><tbody>{rows}</tbody></table>);
     },1000)
   }));
   console.log(p)

@@ -367,6 +367,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                 case "ArrowUp":
                   if (
                     isBlock(line) &&
+                    e.currentTarget != null &&
                     !isFirstLine(e.currentTarget.selectionStart, line)
                   ) {
                     return prev;
@@ -383,6 +384,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                 case "ArrowDown":
                   if (
                     isBlock(line) &&
+                    e.currentTarget != null &&
                     !isLastLine(e.currentTarget.selectionStart, line)
                   ) {
                     return prev;
@@ -449,7 +451,6 @@ export const Editor: React.FC<EditorProps> = (props) => {
                       direction: currentDirection,
                     };
                   }
-                  console.log("normal Backspace", currentColumn);
                   //currentColumn -- // これは無しでOK、ブラウザのデフォルトの挙動でカーソルが移動する
                   return {
                     row: prev.row,
