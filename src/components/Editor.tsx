@@ -372,7 +372,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                   ) {
                     return prev;
                   } else {
-                    if (prev.row === 0) return prev;
+                    if (prev.row === 0 || e.currentTarget == null) return prev;
                     e.preventDefault();
                     return {
                       row: prev.row - 1,
@@ -389,7 +389,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                   ) {
                     return prev;
                   } else {
-                    if (prev.row === lines.length - 1) return prev;
+                    if (prev.row === lines.length - 1 || e.currentTarget == null) return prev;
                     e.preventDefault();
                     return {
                       row: prev.row + 1,
@@ -503,6 +503,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                     if (isBlock(line) && !e.shiftKey) {
                       return prev;
                     } else {
+                      if(e.currentTarget == null){return prev}
                       let nextCol = 0;
                       setLines((prevLines) => {
                         const column = prefix.length +

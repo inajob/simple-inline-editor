@@ -1166,14 +1166,14 @@ const Et = (d) => d.match(/^(\s*)> /) != null, bt = (d) => d.split(/[\r\n]/), pt
                 });
               }
               case "ArrowUp":
-                return q(l) && r.currentTarget != null && !Tt(r.currentTarget.selectionStart, l) || c.row === 0 ? c : (r.preventDefault(), {
+                return q(l) && r.currentTarget != null && !Tt(r.currentTarget.selectionStart, l) || c.row === 0 || r.currentTarget == null ? c : (r.preventDefault(), {
                   row: c.row - 1,
                   col: r.currentTarget.selectionStart,
                   colEnd: -1,
                   direction: b
                 });
               case "ArrowDown":
-                return q(l) && r.currentTarget != null && !Ct(r.currentTarget.selectionStart, l) || c.row === n.length - 1 ? c : (r.preventDefault(), {
+                return q(l) && r.currentTarget != null && !Ct(r.currentTarget.selectionStart, l) || c.row === n.length - 1 || r.currentTarget == null ? c : (r.preventDefault(), {
                   row: c.row + 1,
                   col: r.currentTarget.selectionStart,
                   colEnd: -1,
@@ -1225,6 +1225,8 @@ const Et = (d) => d.match(/^(\s*)> /) != null, bt = (d) => d.split(/[\r\n]/), pt
                   if (q(l) && !r.shiftKey)
                     return c;
                   {
+                    if (r.currentTarget == null)
+                      return c;
                     let T = 0;
                     return v((P) => {
                       const K = a.length + r.currentTarget.selectionStart;
