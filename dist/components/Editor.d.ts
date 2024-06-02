@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import { TextPopupHandler } from "./TextareaWithMenu.tsx";
+import { TextPopupHandler, Keyword } from "./TextareaWithMenu.tsx";
 export interface LinePopupHandler {
     name: string;
     handler: (lines: string[], range?: number[]) => void;
@@ -19,7 +19,7 @@ export interface EditorProps {
     onMagicFunc: ((row: number) => () => void);
     textPopupHandlers: TextPopupHandler[];
     linePopupHandlers: LinePopupHandler[];
-    keywords: string[];
+    keywords: Keyword[];
     blockStyles: Record<string, (body: string) => React.JSX.Element>;
 }
 export declare const Editor: React.FC<EditorProps>;

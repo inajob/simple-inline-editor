@@ -1,4 +1,8 @@
 import React from "react";
+export interface Keyword {
+    value: string;
+    style: string;
+}
 export interface TextPopupHandler {
     name: string;
     handler: (select: TextFragment | null) => TextChangeRequest;
@@ -14,7 +18,7 @@ export interface TextChangeRequest {
 }
 export interface TextareaWithMenuProps {
     value: string;
-    keywords: string[];
+    keywords: Keyword[];
     popupHandlers: TextPopupHandler[];
     onMagicFunc: (() => void);
     onChange: React.ChangeEventHandler<HTMLTextAreaElement>;

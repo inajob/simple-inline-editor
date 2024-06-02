@@ -185,7 +185,7 @@ export const App: React.FC = () => {
         setLines={setLines}
         linePopupHandlers={linePopupHandlers}
         textPopupHandlers={textPopupHandlers}
-        keywords={keywords}
+        keywords={keywords.map((k) => {return {value: k, style: "red"}})}
         blockStyles={blockStyles}
         onChange={(lines) => {content.current = lines}}
         onLinkClick={clickHandler}

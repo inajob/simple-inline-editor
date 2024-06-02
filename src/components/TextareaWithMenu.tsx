@@ -1,5 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 
+export interface Keyword {
+  value: string
+  style: string
+}
 export interface TextPopupHandler {
   name: string;
   handler: (select: TextFragment| null) => TextChangeRequest;
@@ -16,7 +20,7 @@ export interface TextChangeRequest {
 
 export interface TextareaWithMenuProps {
   value: string;
-  keywords: string[];
+  keywords: Keyword[];
   popupHandlers: TextPopupHandler[];
   onMagicFunc: (() => void)
   onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
@@ -162,7 +166,7 @@ export const TextareaWithMenu = React.forwardRef<
     let popupHandlers = props.popupHandlers;
     let isOpenAutoComplete = false;
     if (select.selection === "" && candidate !== "") {
-      popupHandlers = props.keywords.filter((k) => {
+      popupHandlers = props.keywords.map((m) => m.value).filter((k) => {
         return k.indexOf(candidate) != -1;
       }).map((k, i) => {
         return {

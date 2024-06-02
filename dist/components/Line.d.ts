@@ -1,12 +1,12 @@
 /// <reference types="react" />
-import { TextPopupHandler } from "./TextareaWithMenu.tsx";
+import { TextPopupHandler, Keyword } from "./TextareaWithMenu.tsx";
 export interface LineProps {
     value: string;
     row: number;
     key_debug: number;
     isFocus: boolean;
     isSelect: boolean;
-    keywords: string[];
+    keywords: Keyword[];
     blockStyles: Record<string, (body: string) => React.JSX.Element>;
     textPopupHandlers: TextPopupHandler[];
     onClick: React.MouseEventHandler<HTMLDivElement>;

@@ -6,7 +6,7 @@ import {
   useState,
 } from 'react';
 import { isBlock, isComment, parseBlock, parsePrefix } from "../util.ts";
-import { TextareaWithMenu, TextPopupHandler } from "./TextareaWithMenu.tsx";
+import { TextareaWithMenu, TextPopupHandler, Keyword } from "./TextareaWithMenu.tsx";
 import { useForwardRef } from "../useForwardRef.ts";
 
 export interface LineProps {
@@ -15,7 +15,7 @@ export interface LineProps {
   key_debug: number;
   isFocus: boolean;
   isSelect: boolean;
-  keywords: string[];
+  keywords: Keyword[];
   blockStyles: Record<string, (body: string) => React.JSX.Element>;
   textPopupHandlers: TextPopupHandler[];
   onClick: React.MouseEventHandler<HTMLDivElement>;
@@ -142,13 +142,20 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
           const endPos = capture(body, ["]"], cap.pos + cap.target.length);
           if (endPos.pos !== -1) {
             const value = body.slice(cap.pos, endPos.pos + 1)
+            const id = value.slice(1, value.length - 1)
+            const k = props.keywords.find((k) => k.value == id)
+            console.log("K", id, props.keywords, k)
+            let style = " unknown"
+            if(k){
+              style = " " + k.style
+            }
             result.push([<span key={pos}>
-              <span className="braket" onClick={(e) => {
-                linkClickHandler(value.slice(1, value.length - 1))
+              <span className={"braket" + style} onClick={(e) => {
+                linkClickHandler(id)
                 e.stopPropagation()
-              }}>{value.slice(1, value.length - 1)}</span>
+              }}>{id}</span>
               <span className="bracket-icon" onClick={(e) => {
-                subLinkClickHandler(value.slice(1, value.length - 1))
+                subLinkClickHandler(id)
                 e.stopPropagation()
               }}>[]</span>
             </span>])
@@ -164,7 +171,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
         }
       }
       return result;
-    }, [linkClickHandler, subLinkClickHandler]);
+    }, [linkClickHandler, subLinkClickHandler, props.keywords]);
 
     const makeBlock = useCallback((type: string | undefined, body: string) => {
       const f = type ? props.blockStyles[type] : undefined;
