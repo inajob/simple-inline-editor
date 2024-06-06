@@ -1,4 +1,5 @@
 /// <reference types="react" />
+import { BlockStyleHandler } from "./Line.tsx";
 import { TextPopupHandler, Keyword } from "./TextareaWithMenu.tsx";
 export interface LinePopupHandler {
     name: string;
@@ -20,7 +21,7 @@ export interface EditorProps {
     textPopupHandlers: TextPopupHandler[];
     linePopupHandlers: LinePopupHandler[];
     keywords: Keyword[];
-    blockStyles: Record<string, (body: string) => React.JSX.Element>;
+    blockStyles: Record<string, BlockStyleHandler>;
 }
 export declare const Editor: React.FC<EditorProps>;
 export default Editor;

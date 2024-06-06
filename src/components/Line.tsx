@@ -9,6 +9,8 @@ import { isBlock, isComment, parseBlock, parsePrefix } from "../util.ts";
 import { TextareaWithMenu, TextPopupHandler, Keyword } from "./TextareaWithMenu.tsx";
 import { useForwardRef } from "../useForwardRef.ts";
 
+export type BlockStyleHandler = (body: string, setRenderElement: React.Dispatch<React.SetStateAction<React.JSX.Element | undefined>>) => React.JSX.Element
+
 export interface LineProps {
   value: string;
   row: number;
@@ -16,7 +18,7 @@ export interface LineProps {
   isFocus: boolean;
   isSelect: boolean;
   keywords: Keyword[];
-  blockStyles: Record<string, (body: string) => React.JSX.Element>;
+  blockStyles: Record<string, BlockStyleHandler>;
   textPopupHandlers: TextPopupHandler[];
   onClick: React.MouseEventHandler<HTMLDivElement>;
   onLinkClick: ((title: string) => void)
@@ -176,7 +178,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
     const makeBlock = useCallback((type: string | undefined, body: string) => {
       const f = type ? props.blockStyles[type] : undefined;
       if (f) {
-        return f(body)
+        return f(body,setRenderElement)
       } else {
         return (
           <>
@@ -219,23 +221,13 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
           return
         } else {
           const parts = parseBlock(s);
-          try{
           const block = makeBlock(parts[0], parts[1])
           setRenderElement (
             <div>
               <pre className="for-copy">{alignIndent(s + "\n```")}</pre>
               <div className="no-select">{block}</div>
             </div>
-          ); // ```
-          }catch(p){
-            if(p instanceof Promise){
-              p.then((e) => {
-                console.log(e)
-                setRenderElement(e)
-              })
-            }
-            setRenderElement(<div>loading...</div>)
-          }
+          );
           return
         }
       } else {

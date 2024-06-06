@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { getLines } from "../util.ts";
 import Editor from "./Editor.tsx";
+import { BlockStyleHandler } from "./Line.tsx";
 import { TextFragment, TextChangeRequest } from "./TextareaWithMenu.tsx";
 
-
 // == block styles ============================
-const csvToTable = (body: string) => {
+const csvToTable:BlockStyleHandler = (body, setRenderElement) => {
   const rows: React.JSX.Element[] = [];
   const lines = getLines(body);
   lines.forEach((l, tri) => {
@@ -17,14 +17,14 @@ const csvToTable = (body: string) => {
     rows.push(<tr key={tri}>{cellElms}</tr>);
   });
   
-  const p = (new Promise((resolve) => {
+  //const p = (new Promise((resolve) => {
     setTimeout(() => {
       console.log("fire")
-      resolve(<table><tbody>{rows}</tbody></table>);
-    },1000)
-  }));
-  console.log(p)
-  throw p;
+      setRenderElement(<table><tbody>{rows}</tbody></table>);
+    },5000)
+  //}));
+  //console.log(p)
+  //throw p;
   
   return <table>{rows}</table>;
 };

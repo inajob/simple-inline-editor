@@ -5,7 +5,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { Line } from "./Line.tsx";
+import { Line, BlockStyleHandler } from "./Line.tsx";
 import { isBlock, isFirstLine, isLastLine, parsePrefix } from "../util.ts";
 import { TextPopupHandler, Keyword } from "./TextareaWithMenu.tsx";
 
@@ -25,7 +25,7 @@ export interface EditorProps {
   textPopupHandlers: TextPopupHandler[];
   linePopupHandlers: LinePopupHandler[];
   keywords: Keyword[];
-  blockStyles: Record<string, (body: string) => React.JSX.Element>;
+  blockStyles: Record<string, BlockStyleHandler>;
 }
 interface Cursor {
   row: number;
