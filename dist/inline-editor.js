@@ -1301,5 +1301,7 @@ const Et = (d) => d.match(/^(\s*)> /) != null, bt = (d) => d.split(/[\r\n]/), Ct
   ] });
 };
 export {
-  _t as Editor
+  _t as Editor,
+  q as isBlock,
+  pt as parseBlock
 };
