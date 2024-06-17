@@ -76,3 +76,5 @@ export const parsePrefix = (s: string) => {
   }
   return [prefix, s];
 };
+
+export default {}

@@ -9,3 +9,5 @@ export declare const isLastLine: (index: number, text: string) => boolean;
 export declare const isFirstLine: (index: number, text: string) => boolean;
 export declare const parseBlock: (text: string) => [string | undefined, string];
 export declare const parsePrefix: (s: string) => string[];
+declare const _default: {};
+export default _default;
