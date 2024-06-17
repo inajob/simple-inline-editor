@@ -47,6 +47,9 @@
     "./dist/components/TextareaWithMenu":{
       "types": "./dist/components/TextareaWithMenu.d.ts"
     },
+    "./dist/components/Line":{
+      "types": "./dist/components/Line.d.ts"
+    },
     "./dist/util":{
       "types": "./dist/util.d.ts"
     }
