@@ -508,12 +508,9 @@ export const Editor: React.FC<EditorProps> = (props) => {
                         return prev
                       }
                       let nextCol = 0;
+                      const ss = e.currentTarget.selectionStart
                       setLines((prevLines) => {
-                        if(e.currentTarget == null || e.currentTarget.selectionStart === undefined){
-                          return prevLines
-                        }
-                        const column = prefix.length +
-                          e.currentTarget.selectionStart;
+                        const column = prefix.length + ss;
                         let afterCursor = prevLines[prev.row].body.slice(column);
                         if (isBlock(line)) {
                           const l = prevLines[prev.row].body;
