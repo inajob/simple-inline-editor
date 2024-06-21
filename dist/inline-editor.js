@@ -1220,8 +1220,8 @@ const Et = (d) => d.match(/^(\s*)> /) != null, bt = (d) => d.split(/[\r\n]/), Ct
                   if (q(a) && !r.shiftKey)
                     return c;
                   {
-                    if (r.currentTarget == null || r.currentTarget.selectionStart !== void 0)
-                      return c;
+                    if (r.currentTarget == null || r.currentTarget.selectionStart === void 0)
+                      return r.preventDefault(), c;
                     let v = 0;
                     return b((P) => {
                       const K = l.length + r.currentTarget.selectionStart;
