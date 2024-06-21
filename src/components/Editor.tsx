@@ -503,7 +503,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                     if (isBlock(line) && !e.shiftKey) {
                       return prev;
                     } else {
-                      if(e.currentTarget == null){return prev}
+                      if(e.currentTarget == null || e.currentTarget.selectionStart !== undefined){return prev}
                       let nextCol = 0;
                       setLines((prevLines) => {
                         const column = prefix.length +

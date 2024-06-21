@@ -1220,7 +1220,7 @@ const Et = (d) => d.match(/^(\s*)> /) != null, bt = (d) => d.split(/[\r\n]/), Ct
                   if (q(a) && !r.shiftKey)
                     return c;
                   {
-                    if (r.currentTarget == null)
+                    if (r.currentTarget == null || r.currentTarget.selectionStart !== void 0)
                       return c;
                     let v = 0;
                     return b((P) => {
