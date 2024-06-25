@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { getLines } from "../util.ts";
 import Editor from "./Editor.tsx";
 import { BlockStyleHandler } from "./Line.tsx";
@@ -185,7 +185,7 @@ export const App: React.FC = () => {
         setLines={setLines}
         linePopupHandlers={linePopupHandlers}
         textPopupHandlers={textPopupHandlers}
-        keywords={keywords.map((k) => {return {value: k, style: "red"}})}
+        keywords={useMemo(() => keywords.map((k) => {return {value: k, style: "red"}}),[keywords])}
         blockStyles={blockStyles}
         onChange={(lines) => {content.current = lines}}
         onLinkClick={clickHandler}
