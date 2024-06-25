@@ -26,7 +26,7 @@ const csvToTable:BlockStyleHandler = (body, setRenderElement) => {
   //console.log(p)
   //throw p;
   
-  return <table>{rows}</table>;
+  return <table><tbody>{rows}</tbody></table>;
 };
 const blockStyles = {
   table: csvToTable,

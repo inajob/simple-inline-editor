@@ -282,23 +282,26 @@ export const Editor: React.FC<EditorProps> = (props) => {
             let currentColumn = e.currentTarget.selectionStart;
             let currentColumnEnd = e.currentTarget.selectionEnd;
             let currentDirection = e.currentTarget.selectionDirection;
-            setCursor((prev) => {
-              switch (e.key) {
-                case "ArrowLeft": {
+            
+            switch (e.key) {
+              case "ArrowLeft": {
                   if (
                     e.currentTarget != null &&
                     e.currentTarget.selectionStart === 0 &&
                     e.currentTarget.selectionEnd === 0
                   ) {
-                    if (prev.row === 0) return prev;
-                    const nextCol = lines[cursor.row - 1].body.length;
                     e.preventDefault();
-                    return {
-                      row: prev.row - 1,
-                      col: nextCol,
-                      colEnd: -1,
-                      direction: currentDirection,
-                    };
+                    setCursor((prev) => {
+                      if (prev.row === 0) return prev;
+                      const nextCol = lines[cursor.row - 1].body.length;
+                      return {
+                        row: prev.row - 1,
+                        col: nextCol,
+                        colEnd: -1,
+                        direction: currentDirection,
+                      };
+                    })
+                    break
                   }
                   if (!e.shiftKey) {
                     currentColumn--;
@@ -308,30 +311,31 @@ export const Editor: React.FC<EditorProps> = (props) => {
                       currentColumn--;
                       currentDirection = "backward";
                     } else if (currentDirection === "forward") {
-                      //currentColumn --
                       currentColumnEnd--;
                     } else if (currentDirection === "backward") {
                       currentColumn--;
-                      //currentColumnEnd --
                     }
                   }
 
                   e.preventDefault();
-                  return {
-                    row: prev.row,
-                    col: currentColumn,
-                    colEnd: currentColumnEnd,
-                    direction: currentDirection,
-                  };
-                }
-                case "ArrowRight": {
-                  const maxCol = -prefix.length + lines[cursor.row].body.length;
-                  
-                  if (
-                    e.currentTarget != null &&
-                    e.currentTarget.selectionStart === maxCol &&
-                    e.currentTarget.selectionEnd === maxCol
-                  ) {
+                  setCursor((prev) => {
+                    return {
+                      row: prev.row,
+                      col: currentColumn,
+                      colEnd: currentColumnEnd,
+                      direction: currentDirection,
+                    };
+                  })
+                break
+              }
+              case "ArrowRight": {
+                const maxCol = -prefix.length + lines[cursor.row].body.length;
+                if (
+                  e.currentTarget != null &&
+                  e.currentTarget.selectionStart === maxCol &&
+                  e.currentTarget.selectionEnd === maxCol
+                ) {
+                  setCursor((prev) => {
                     if (prev.row === lines.length - 1) return prev;
                     e.preventDefault();
                     return {
@@ -340,55 +344,62 @@ export const Editor: React.FC<EditorProps> = (props) => {
                       colEnd: -1,
                       direction: currentDirection,
                     };
+                  })
+                  break
+                }
+                if (!e.shiftKey) {
+                  if (currentColumn < currentColumnEnd) {
+                    currentColumn = currentColumnEnd;
                   }
-                  if (!e.shiftKey) {
-                    if (currentColumn < currentColumnEnd) {
-                      currentColumn = currentColumnEnd;
-                    }
+                  currentColumn++;
+                  currentColumnEnd = -1;
+                } else {
+                  if (currentDirection === "forward") {
+                    currentColumnEnd++;
+                  } else if (currentDirection === "backward") {
                     currentColumn++;
-                    currentColumnEnd = -1;
-                  } else {
-                    if (currentDirection === "forward") {
-                      //currentColumn ++
-                      currentColumnEnd++;
-                    } else if (currentDirection === "backward") {
-                      currentColumn++;
-                      //currentColumnEnd ++
-                    }
                   }
-                  e.preventDefault();
+                }
+                e.preventDefault();
+                setCursor((prev) => {
                   return {
                     row: prev.row,
                     col: currentColumn,
                     colEnd: currentColumnEnd,
                     direction: currentDirection,
                   };
-                }
-                case "ArrowUp":
-                  if (
-                    isBlock(line) &&
-                    e.currentTarget != null &&
-                    !isFirstLine(e.currentTarget.selectionStart, line)
-                  ) {
-                    return prev;
-                  } else {
+                })
+                break
+              }
+              case "ArrowUp":
+                if (
+                  isBlock(line) &&
+                  e.currentTarget != null &&
+                  !isFirstLine(e.currentTarget.selectionStart, line)
+                ) {
+                  //return prev;
+                } else {
+                  e.preventDefault();
+                  setCursor((prev) => {
                     if (prev.row === 0 || e.currentTarget == null) return prev;
-                    e.preventDefault();
                     return {
                       row: prev.row - 1,
                       col: e.currentTarget.selectionStart,
                       colEnd: -1,
                       direction: currentDirection,
                     };
-                  }
-                case "ArrowDown":
-                  if (
-                    isBlock(line) &&
-                    e.currentTarget != null &&
-                    !isLastLine(e.currentTarget.selectionStart, line)
-                  ) {
-                    return prev;
-                  } else {
+                  })
+                }
+                break;
+              case "ArrowDown":
+                if (
+                  isBlock(line) &&
+                  e.currentTarget != null &&
+                  !isLastLine(e.currentTarget.selectionStart, line)
+                ) {
+                  //return prev;
+                } else {
+                  setCursor((prev) => {
                     if (prev.row === lines.length - 1 || e.currentTarget == null) return prev;
                     e.preventDefault();
                     return {
@@ -397,205 +408,221 @@ export const Editor: React.FC<EditorProps> = (props) => {
                       colEnd: -1,
                       direction: currentDirection,
                     };
-                  }
-                case "Backspace":
-                  if (
-                    prefix.length !== 0 &&
-                    ((e.currentTarget.selectionStart === 0 &&
-                      e.currentTarget.selectionEnd === 0) ||
-                      (e.currentTarget.selectionStart === 1 &&
-                        e.currentTarget.selectionEnd === 1))
-                  ) {
-                    if (prefix.length !== 0) {
-                      // インデントを浅くする
-                      setLines((prevLines) => {
-                        if (prefix.length === 1) { // prefix == '-'
-                          prevLines[prev.row].body = e.currentTarget.value.slice(1);
-                          currentColumn--;
-                          if (currentColumn === -1) {
-                            currentColumn++;
-                          }else if(currentColumn === 0 && currentColumnEnd !== 0){
-                            // 条件を限定しすぎか？
-                            currentColumnEnd = 0;
-                          }
-                        } else if (prefix.length > 0) {
-                          prevLines[prev.row].body = prefix.slice(2) + e.currentTarget.value;
-                        }
-                        return [...prevLines];
-                      });
-                      e.preventDefault();
-                    }
-                  } else if (
-                    e.currentTarget != null &&
-                    e.currentTarget.selectionStart === 0 &&
-                    e.currentTarget.selectionEnd === 0
-                  ) {
-                    if (prev.row === 0) return prev;
-                    const parts = parsePrefix(lines[cursor.row - 1].body)
-                    const nextCol = parts[1].length;
+                  })
+                }
+                break;
+              case "Backspace":
+                if (
+                  prefix.length !== 0 &&
+                  ((e.currentTarget.selectionStart === 0 &&
+                    e.currentTarget.selectionEnd === 0) ||
+                    (e.currentTarget.selectionStart === 1 &&
+                      e.currentTarget.selectionEnd === 1))
+                ) {
+                  if (prefix.length !== 0) {
+                    // インデントを浅くする
                     setLines((prevLines) => {
-                      // 上の行と結合する
-                      if (isBlock(prevLines[prev.row - 1].body)) {
-                        prevLines[prev.row - 1].body += "\n" + prevLines[prev.row].body;
-                      } else {
-                        prevLines[prev.row - 1].body += prevLines[prev.row].body;
+                      if (prefix.length === 1) { // prefix == '-'
+                        prevLines[cursor.row].body = e.currentTarget.value.slice(1);
+                        currentColumn--;
+                        if (currentColumn === -1) {
+                          currentColumn++;
+                        }else if(currentColumn === 0 && currentColumnEnd !== 0){
+                          // 条件を限定しすぎか？
+                          currentColumnEnd = 0;
+                        }
+                      } else if (prefix.length > 0) {
+                        prevLines[cursor.row].body = prefix.slice(2) + e.currentTarget.value;
                       }
-                      prevLines.splice(prev.row, 1);
                       return [...prevLines];
                     });
                     e.preventDefault();
+                  }
+                } else if (
+                  e.currentTarget != null &&
+                  e.currentTarget.selectionStart === 0 &&
+                  e.currentTarget.selectionEnd === 0
+                ) {
+                  if (cursor.row === 0) break;
+                  const parts = parsePrefix(lines[cursor.row - 1].body)
+                  const nextCol = parts[1].length;
+                  setLines((prevLines) => {
+                    // 上の行と結合する
+                    if (isBlock(prevLines[cursor.row - 1].body)) {
+                      prevLines[cursor.row - 1].body += "\n" + prevLines[cursor.row].body;
+                    } else {
+                      prevLines[cursor.row - 1].body += prevLines[cursor.row].body;
+                    }
+                    prevLines.splice(cursor.row, 1);
+                    return [...prevLines];
+                  });
+                  setCursor((prev) => {
                     return {
                       row: prev.row - 1,
                       col: nextCol,
                       colEnd: -1,
                       direction: currentDirection,
                     };
-                  }
-                  //currentColumn -- // これは無しでOK、ブラウザのデフォルトの挙動でカーソルが移動する
-                  return {
-                    row: prev.row,
-                    col: currentColumn,
-                    colEnd: currentColumnEnd,
-                    direction: currentDirection,
-                  };
-                  //return prev
-                case "Tab":
-                  setLines((prevLines) => {
-                    if (e.shiftKey) {
-                      if (prefix.length === 1) { // prefix == '-'
-                        prevLines[prev.row].body = e.currentTarget.value.slice(1);
-                        currentColumn--;
-                      } else if (prefix.length > 0) {
-                        prevLines[prev.row].body = prefix.slice(2) + e.currentTarget.value;
-                      }
-                    } else {
-                      let bullet = "-";
-                      if (isBlock(e.currentTarget.value)) {
-                        bullet = " ";
-                      }
-                      if (prefix.length === 0) {
-                        prevLines[prev.row].body = bullet + " " + e.currentTarget.value;
-                        currentColumn++;
-                      } else {
-                        prevLines[prev.row].body = "  " + prefix + e.currentTarget.value;
-                      }
-                    }
-                    // これが無いと箇条書き解除時に行末にカーソルが移動する時がある
-                    setCursor((prev) => {
-                      return {
-                        row: prev.row,
-                        col: currentColumn,
-                        colEnd: -1,
-                        direction: currentDirection,
-                      };
-                    });
-                    return [...prevLines];
-                  });
+                  })
                   e.preventDefault();
+                  break
+                }
+                //currentColumn -- // これは無しでOK、ブラウザのデフォルトの挙動でカーソルが移動する
+                setCursor((prev) => {
+                return {
+                  row: prev.row,
+                  col: currentColumn,
+                  colEnd: currentColumnEnd,
+                  direction: currentDirection,
+                };
+                })
+              break
+              case "Tab":
+                setLines((prevLines) => {
+                  if (e.shiftKey) {
+                    if (prefix.length === 1) { // prefix == '-'
+                      prevLines[cursor.row].body = e.currentTarget.value.slice(1);
+                      currentColumn--;
+                    } else if (prefix.length > 0) {
+                      prevLines[cursor.row].body = prefix.slice(2) + e.currentTarget.value;
+                    }
+                  } else {
+                    let bullet = "-";
+                    if (isBlock(e.currentTarget.value)) {
+                      bullet = " ";
+                    }
+                    if (prefix.length === 0) {
+                      prevLines[cursor.row].body = bullet + " " + e.currentTarget.value;
+                      currentColumn++;
+                    } else {
+                      prevLines[cursor.row].body = "  " + prefix + e.currentTarget.value;
+                    }
+                  }
+                  // これが無いと箇条書き解除時に行末にカーソルが移動する時がある
+                  /*
+                  setCursor((prev) => {
+                    return {
+                      row: prev.row,
+                      col: currentColumn,
+                      colEnd: -1,
+                      direction: currentDirection,
+                    };
+                  });*/
+                  return [...prevLines];
+                });
+                e.preventDefault();
+                setCursor((prev) => {
                   return {
                     row: prev.row,
                     col: currentColumn,
                     colEnd: -1,
                     direction: currentDirection,
                   };
-                case "Enter":
-                  if (e.keyCode === 13) {
-                    if (isBlock(line) && !e.shiftKey) {
-                      return prev;
-                    } else {
-                      if(e.currentTarget == null || e.currentTarget.selectionStart === undefined){
-                        e.preventDefault();
-                        return prev
-                      }
-                      let nextCol = 0;
-                      const ss = e.currentTarget.selectionStart
-                      setLines((prevLines) => {
-                        const column = prefix.length + ss;
-                        let afterCursor = prevLines[prev.row].body.slice(column);
-                        if (isBlock(line)) {
-                          const l = prevLines[prev.row].body;
-                          if (l[l.length - 1] === "\n") {
-                            prevLines[prev.row].body = prevLines[prev.row].body.slice(
-                              0,
-                              column - 1,
-                            ); // remove last \n
-                          } else {
-                            prevLines[prev.row].body = prevLines[prev.row].body.slice(
-                              0,
-                              column,
-                            );
-                          }
-                          if (afterCursor.length > 0) {
-                            if (afterCursor[0] === "\n") {
-                              afterCursor = afterCursor.slice(1);
-                            }
-                          }
+                })
+              break
+              case "Enter":
+                if (e.keyCode === 13) {
+                  if (isBlock(line) && !e.shiftKey) {
+                    break
+                  } else {
+                    if(e.currentTarget == null || e.currentTarget.selectionStart === undefined){
+                      e.preventDefault();
+                      break
+                    }
+                    let nextCol = 0;
+                    const ss = e.currentTarget.selectionStart
+                    setLines((prevLines) => {
+                      const column = prefix.length + ss;
+                      let afterCursor = prevLines[cursor.row].body.slice(column);
+                      if (isBlock(line)) {
+                        const l = prevLines[cursor.row].body;
+                        if (l[l.length - 1] === "\n") {
+                          prevLines[cursor.row].body = prevLines[cursor.row].body.slice(
+                            0,
+                            column - 1,
+                          ); // remove last \n
                         } else {
-                          prevLines[prev.row].body = prevLines[prev.row].body.slice(
+                          prevLines[cursor.row].body = prevLines[cursor.row].body.slice(
                             0,
                             column,
                           );
                         }
-                        if (prefix.length !== 0) {
-                          prevLines.splice(
-                            prev.row + 1,
-                            0,
-                            {body: prefix + " " + afterCursor, key: newKey()},
-                          );
-                          nextCol = 1
-                        } else {
-                          prevLines.splice(prev.row + 1, 0, {body: afterCursor, key: newKey()});
+                        if (afterCursor.length > 0) {
+                          if (afterCursor[0] === "\n") {
+                            afterCursor = afterCursor.slice(1);
+                          }
                         }
-                        return [...prevLines];
-                      });
-                      e.preventDefault();
+                      } else {
+                        prevLines[cursor.row].body = prevLines[cursor.row].body.slice(
+                          0,
+                          column,
+                        );
+                      }
+                      if (prefix.length !== 0) {
+                        prevLines.splice(
+                          cursor.row + 1,
+                          0,
+                          {body: prefix + " " + afterCursor, key: newKey()},
+                        );
+                        nextCol = 1
+                      } else {
+                        prevLines.splice(cursor.row + 1, 0, {body: afterCursor, key: newKey()});
+                      }
+                      return [...prevLines];
+                    });
+                    e.preventDefault();
+                    setCursor((prev) => {
                       return {
                         row: prev.row + 1,
                         col: nextCol,
                         colEnd: -1,
                         direction: currentDirection,
                       };
+                    })
+                  }
+                } else {
+                  break
+                }
+                break
+              case " ":
+                // 行頭の場合はインデントを生成する
+                console.log("space", currentColumn);
+                if (
+                  currentColumn === 0 ||
+                  (currentColumn === 1 && prefix.length >= 1)
+                ) {
+                  setLines((prevLines) => {
+                    let bullet = "-";
+                    if (isBlock(e.currentTarget.value)) {
+                      bullet = " ";
                     }
-                  } else {
-                    return prev;
-                  }
-                case " ":
-                  // 行頭の場合はインデントを生成する
-                  console.log("space", currentColumn);
-                  if (
-                    currentColumn === 0 ||
-                    (currentColumn === 1 && prefix.length >= 1)
-                  ) {
-                    setLines((prevLines) => {
-                      let bullet = "-";
-                      if (isBlock(e.currentTarget.value)) {
-                        bullet = " ";
-                      }
-                      if (prefix.length === 0) {
-                        prevLines[prev.row].body = bullet + " " +
-                          e.currentTarget.value;
-                        currentColumn++;
-                      } else {
-                        prevLines[prev.row].body = "  " + prefix +
-                          e.currentTarget.value;
-                      }
-                      return [...prevLines];
-                    });
-                    e.preventDefault();
-                  } else {
-                    //currentColumn ++ // これは不要、ブラウザのデフォルトの挙動でカーソルを移動する
-                  }
+                    if (prefix.length === 0) {
+                      prevLines[cursor.row].body = bullet + " " +
+                        e.currentTarget.value;
+                      currentColumn++;
+                    } else {
+                      prevLines[cursor.row].body = "  " + prefix +
+                        e.currentTarget.value;
+                    }
+                    return [...prevLines];
+                  });
+                  e.preventDefault();
+                } else {
+                  //currentColumn ++ // これは不要、ブラウザのデフォルトの挙動でカーソルを移動する
+                }
+                setCursor((prev) => {
                   return {
                     row: prev.row,
                     col: currentColumn,
                     colEnd: -1,
                     direction: currentDirection,
                   };
-                default:
-                  //currentColumn ++ // これは不要、ブラウザのデフォルトの挙動でカーソルを移動する
-                  return prev;
-              }
-            });
+                })
+                break
+              default:
+                //currentColumn ++ // これは不要、ブラウザのデフォルトの挙動でカーソルを移動する
+                //return prev;
+            }
           }}
           onLinkClick={props.onLinkClick}
           onSubLinkClick={props.onSubLinkClick}
