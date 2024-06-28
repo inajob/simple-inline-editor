@@ -65,16 +65,16 @@ function wt() {
         j.unshift("Warning: " + r), Function.prototype.apply.call(console[e], console, j);
       }
     }
-    var O = !1, W = !1, i = !1, a = !1, l = !1, o;
-    o = Symbol.for("react.module.reference");
+    var O = !1, W = !1, i = !1, a = !1, l = !1, n;
+    n = Symbol.for("react.module.reference");
     function h(e) {
       return !!(typeof e == "string" || typeof e == "function" || e === y || e === K || l || e === F || e === S || e === C || a || e === B || O || W || i || typeof e == "object" && e !== null && (e.$$typeof === Y || e.$$typeof === D || e.$$typeof === U || e.$$typeof === $ || e.$$typeof === d || // This needs to include all possible module reference object
       // types supported by any Flight configuration anywhere since
       // we don't know which Flight build this will end up being used
       // with.
-      e.$$typeof === o || e.getModuleId !== void 0));
+      e.$$typeof === n || e.getModuleId !== void 0));
     }
-    function n(e, r, c) {
+    function o(e, r, c) {
       var v = e.displayName;
       if (v)
         return v;
@@ -114,7 +114,7 @@ function wt() {
             var c = e;
             return f(c._context) + ".Provider";
           case d:
-            return n(e, e.render, "ForwardRef");
+            return o(e, e.render, "ForwardRef");
           case D:
             var v = e.displayName || null;
             return v !== null ? v : p(e.type) || "Memo";
@@ -673,8 +673,8 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
       let i = "";
       if (R > 0) {
         let a = 0, l = !1;
-        for (let o = 0; o < m.length; o++) {
-          const h = m[o];
+        for (let n = 0; n < m.length; n++) {
+          const h = m[n];
           h === "[" ? a++ : h === "]" ? (a--, l = !0) : l || (i += h);
         }
         return a === 0 && (i = ""), O + i;
@@ -794,55 +794,55 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
       y.current.style.display = "block", y.current.style.height = "0px", y.current.style.height = y.current.scrollHeight + "px", y.current.style.display = i;
     }, [t.value, y, t.isFocus]);
     const U = (i, a, l) => {
-      var n;
-      const o = ["line"], h = i.match(/^(\s*)- /);
+      var o;
+      const n = ["line"], h = i.match(/^(\s*)- /);
       if (i.indexOf("# ") === 0)
-        o.push("h1-style");
+        n.push("h1-style");
       else if (i.indexOf("## ") === 0)
-        o.push("h2-style");
+        n.push("h2-style");
       else if (i.indexOf("### ") === 0)
-        o.push("h3-style");
+        n.push("h3-style");
       else if (h)
-        o.push("list-style"), o.push("list-indent-" + h[1].length / 2);
+        n.push("list-style"), n.push("list-indent-" + h[1].length / 2);
       else if (q(i)) {
         const f = q(i, !0);
-        o.push("list-indent-" + (((n = f == null ? void 0 : f[1]) == null ? void 0 : n.length) ?? 0) / 2);
+        n.push("list-indent-" + (((o = f == null ? void 0 : f[1]) == null ? void 0 : o.length) ?? 0) / 2);
       }
-      return a && o.push("focus"), l && o.push("select"), o.join(" ");
+      return a && n.push("focus"), l && n.push("select"), n.join(" ");
     }, $ = (i) => i ? [] : ["hide"], d = (i) => i ? "hide" : "", S = (i, a, l) => {
-      let o = -1, h = "";
-      return a.forEach(function(n) {
-        const f = i.indexOf(n, l);
-        f !== -1 && (o === -1 || o > f) && (o = f, h = n);
-      }), { pos: o, target: h };
+      let n = -1, h = "";
+      return a.forEach(function(o) {
+        const f = i.indexOf(o, l);
+        f !== -1 && (n === -1 || n > f) && (n = f, h = o);
+      }), { pos: n, target: h };
     }, C = t.onLinkClick, D = t.onSubLinkClick, Y = ne((i) => {
       let a = 0;
       const l = [];
       for (; ; ) {
-        const o = S(i, ["http://", "https://", " ", "["], a);
-        if (o.target === "https://" || o.target === "http://") {
-          a !== o.pos && l.push(i.slice(a, o.pos));
+        const n = S(i, ["http://", "https://", " ", "["], a);
+        if (n.target === "https://" || n.target === "http://") {
+          a !== n.pos && l.push(i.slice(a, n.pos));
           const h = S(
             i,
             [" ", "\r", `
 `],
-            o.pos + o.target.length
+            n.pos + n.target.length
           );
           if (h.pos !== -1) {
-            const n = i.slice(o.pos, h.pos);
-            l.push(/* @__PURE__ */ T.jsx("a", { href: n, children: n }, a)), a = h.pos;
+            const o = i.slice(n.pos, h.pos);
+            l.push(/* @__PURE__ */ T.jsx("a", { href: o, children: o }, a)), a = h.pos;
           } else {
-            const n = i.slice(o.pos, i.length);
-            l.push(/* @__PURE__ */ T.jsx("a", { href: n, children: n }, a)), a = i.length;
+            const o = i.slice(n.pos, i.length);
+            l.push(/* @__PURE__ */ T.jsx("a", { href: o, children: o }, a)), a = i.length;
             break;
           }
-        } else if (o.target == " ")
-          l.push(i.slice(a, o.pos)), l.push(" "), a = o.pos + o.target.length;
-        else if (o.target == "[") {
-          a !== o.pos && l.push(i.slice(a, o.pos));
-          const h = S(i, ["]"], o.pos + o.target.length);
+        } else if (n.target == " ")
+          l.push(i.slice(a, n.pos)), l.push(" "), a = n.pos + n.target.length;
+        else if (n.target == "[") {
+          a !== n.pos && (l.push(i.slice(a, n.pos)), a = n.pos);
+          const h = S(i, ["]"], n.pos + n.target.length);
           if (h.pos !== -1) {
-            const n = i.slice(o.pos, h.pos + 1), f = n.slice(1, n.length - 1), p = t.keywords.find((s) => s.value == f);
+            const o = i.slice(n.pos, h.pos + 1), f = o.slice(1, o.length - 1), p = t.keywords.find((s) => s.value == f);
             console.log("K", f, t.keywords, p);
             let E = " unknown";
             p && (E = " " + p.style), l.push([/* @__PURE__ */ T.jsxs("span", { children: [
@@ -870,41 +870,41 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
     }, [t.blockStyles]), N = ne((i) => {
       const a = i.match(/^(\s*)```.*/), l = (a == null ? void 0 : a[1]) ?? "";
       return i = i.slice(l.length).split(`
-`).map((o) => l + o).join(`
+`).map((n) => l + n).join(`
 `), i;
     }, []), L = ne((i) => {
       const a = i.match(/^(\s*)> /), l = (a == null ? void 0 : a[1]) ?? "";
       return i = i.slice(l.length).split(`
 `).map(
-        (o, h) => l + (h === 0 ? "" : "> ") + o
+        (n, h) => l + (h === 0 ? "" : "> ") + n
       ).join(`
 `), i;
     }, []), I = ne((i) => {
       var a;
       if (console.log(i), q(i))
         if (bt(i)) {
-          const l = i.match(/\s*> /), o = i.slice((a = l == null ? void 0 : l[0]) == null ? void 0 : a.length);
+          const l = i.match(/\s*> /), n = i.slice((a = l == null ? void 0 : l[0]) == null ? void 0 : a.length);
           K(
             /* @__PURE__ */ T.jsxs("div", { children: [
               /* @__PURE__ */ T.jsx("pre", { className: "for-copy", children: L(i) }),
-              /* @__PURE__ */ T.jsx("div", { className: "no-select", children: B("pre", o) })
+              /* @__PURE__ */ T.jsx("div", { className: "no-select", children: B("pre", n) })
             ] })
           );
           return;
         } else {
-          const l = Ct(i), o = B(l[0], l[1]);
+          const l = Ct(i), n = B(l[0], l[1]);
           K(
             /* @__PURE__ */ T.jsxs("div", { children: [
               /* @__PURE__ */ T.jsx("pre", { className: "for-copy", children: N(i + "\n```") }),
-              /* @__PURE__ */ T.jsx("div", { className: "no-select", children: o })
+              /* @__PURE__ */ T.jsx("div", { className: "no-select", children: n })
             ] })
           );
           return;
         }
       else {
-        const l = ["elm"], o = i.match(/^(\s*)-( .*)$/);
+        const l = ["elm"], n = i.match(/^(\s*)-( .*)$/);
         let h = null;
-        i.indexOf("# ") === 0 || i.indexOf("## ") === 0 || i.indexOf("### ") === 0 || o && (i = o[2], h = /* @__PURE__ */ T.jsx("pre", { className: "for-copy-inline", children: o[1] + "-" })), K(
+        i.indexOf("# ") === 0 || i.indexOf("## ") === 0 || i.indexOf("### ") === 0 || n && (i = n[2], h = /* @__PURE__ */ T.jsx("pre", { className: "for-copy-inline", children: n[1] + "-" })), K(
           /* @__PURE__ */ T.jsxs("div", { className: l.join(" "), children: [
             h,
             Y(i)
@@ -917,10 +917,10 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
         i();
         const l = new Range();
         l.selectNodeContents(u.current);
-        const o = document.getSelection();
-        if (!o)
+        const n = document.getSelection();
+        if (!n)
           throw new Error("selection is null");
-        o.empty(), o.addRange(l);
+        n.empty(), n.addRange(l);
       }
     }, R = Ke(t.value), O = R[0], W = R[1];
     return J(() => {
@@ -1025,13 +1025,13 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
     const a = document.getSelection();
     a && (N = Y(a.anchorNode), L = Y(a.focusNode), (N == null ? void 0 : N.parentNode) != B.current && (N = null, L = null), N !== L && S({ row: -1, col: 0 }));
   }, m = () => {
-    var a, l, o, h;
+    var a, l, n, h;
     if (I && (I = !1, N && L && N !== L)) {
-      const n = new Range();
-      if (n.setStart(N, 0), n.setEnd(L, L.children.length), document.getSelection().empty(), document.getSelection().addRange(n), !((a = N.dataset) != null && a.lineno))
+      const o = new Range();
+      if (o.setStart(N, 0), o.setEnd(L, L.children.length), document.getSelection().empty(), document.getSelection().addRange(o), !((a = N.dataset) != null && a.lineno))
         throw new Error("fromLine.dataset?.lineno is undefined");
       const f = parseInt((l = N.dataset) == null ? void 0 : l.lineno);
-      if (!((o = L.dataset) != null && o.lineno))
+      if (!((n = L.dataset) != null && n.lineno))
         throw new Error("toLine.dataset?.lineno is undefined");
       const p = parseInt((h = L.dataset) == null ? void 0 : h.lineno);
       D([f, p]);
@@ -1049,8 +1049,8 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
           throw new Error("focusNode is null");
         if (!(l instanceof Element))
           throw new Error("focusNode is not Element");
-        const o = l.getBoundingClientRect(), h = o.bottom, n = o.x + o.width / 2;
-        O.current.style.left = n + "px", O.current.style.top = h + "px";
+        const n = l.getBoundingClientRect(), h = n.bottom, o = n.x + n.width / 2;
+        O.current.style.left = o + "px", O.current.style.top = h + "px";
       } else
         O.current.style.display = "none";
   }, [C]);
@@ -1058,15 +1058,15 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
     const h = l.clipboardData.getData("text").split(/\r\n|\n/);
     if (h.length === 1)
       return !0;
-    const n = [];
+    const o = [];
     let f = [], p = !1, E = "";
     return h.forEach((s) => {
       const P = s.match(/^(\s*)(```.*)/);
-      p ? s.indexOf(E + "```") === 0 ? (n.push(f.join(`
-`)), p = !1, f = []) : (E !== "" && s.indexOf(E) !== 0 && (n.push(f.join(`
-`)), p = !1, f = [], n.push(s)), f.push(s.slice(E.length))) : P ? (p = !0, E = P[1], f.push(s)) : n.push(s);
-    }), f.length !== 0 && n.push(f.join(`
-`)), w((s) => (s[a] = { body: s[a] + n[0], key: s[a].key }, s.splice(a + 1, 0, ...n.slice(1).map((P) => ({ body: P, key: K() }))), [...s])), l.preventDefault(), !1;
+      p ? s.indexOf(E + "```") === 0 ? (o.push(f.join(`
+`)), p = !1, f = []) : (E !== "" && s.indexOf(E) !== 0 && (o.push(f.join(`
+`)), p = !1, f = [], o.push(s)), f.push(s.slice(E.length))) : P ? (p = !0, E = P[1], f.push(s)) : o.push(s);
+    }), f.length !== 0 && o.push(f.join(`
+`)), w((s) => (s[a] = { body: s[a] + o[0], key: s[a].key }, s.splice(a + 1, 0, ...o.slice(1).map((P) => ({ body: P, key: K() }))), [...s])), l.preventDefault(), !1;
   };
   J(() => {
     document.addEventListener("selectionchange", u), document.addEventListener("pointerup", m);
@@ -1098,15 +1098,15 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
         keywords: g.keywords,
         blockStyles: g.blockStyles,
         selectThisLine: R(),
-        setLine: (o) => (h) => ((n) => {
-          w((f) => (f[n].body = o + h, [...f]));
+        setLine: (n) => (h) => ((o) => {
+          w((f) => (f[o].body = n + h, [...f]));
         })(l),
-        setCursor: (o) => ((h) => {
-          S((n) => ({
+        setCursor: (n) => ((h) => {
+          S((o) => ({
             row: h,
-            col: o,
+            col: n,
             colEnd: -1,
-            direction: n.direction
+            direction: o.direction
           }));
         })(l),
         onPaste: W,
@@ -1116,7 +1116,7 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
         onCompositionEnd: () => {
           $.current = !1, console.log("composition end");
         },
-        onChange: (o) => (h) => ((n) => {
+        onChange: (n) => (h) => ((o) => {
           if (console.log("onChange", $.current), $.current === !1) {
             const f = h.target.selectionStart, p = h.target.selectionEnd, E = h.target.selectionDirection;
             S((s) => ({
@@ -1126,14 +1126,14 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
               direction: E
             }));
           }
-          w((f) => (f[n].body = o + h.target.value, [...f]));
+          w((f) => (f[o].body = n + h.target.value, [...f]));
         })(l),
-        onKeyDown: (o, h) => (n) => {
-          let f = n.currentTarget.selectionStart, p = n.currentTarget.selectionEnd, E = n.currentTarget.selectionDirection;
-          switch (n.key) {
+        onKeyDown: (n, h) => (o) => {
+          let f = o.currentTarget.selectionStart, p = o.currentTarget.selectionEnd, E = o.currentTarget.selectionDirection;
+          switch (o.key) {
             case "ArrowLeft": {
-              if (n.currentTarget != null && n.currentTarget.selectionStart === 0 && n.currentTarget.selectionEnd === 0) {
-                n.preventDefault(), S((s) => {
+              if (o.currentTarget != null && o.currentTarget.selectionStart === 0 && o.currentTarget.selectionEnd === 0) {
+                o.preventDefault(), S((s) => {
                   if (s.row === 0)
                     return s;
                   const P = t[d.row - 1].body.length;
@@ -1146,7 +1146,7 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
                 });
                 break;
               }
-              n.shiftKey ? f == p ? (f--, E = "backward") : E === "forward" ? p-- : E === "backward" && f-- : (f--, p = -1), n.preventDefault(), S((s) => ({
+              o.shiftKey ? f == p ? (f--, E = "backward") : E === "forward" ? p-- : E === "backward" && f-- : (f--, p = -1), o.preventDefault(), S((s) => ({
                 row: s.row,
                 col: f,
                 colEnd: p,
@@ -1155,9 +1155,9 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
               break;
             }
             case "ArrowRight": {
-              const s = -o.length + t[d.row].body.length;
-              if (n.currentTarget != null && n.currentTarget.selectionStart === s && n.currentTarget.selectionEnd === s) {
-                S((P) => P.row === t.length - 1 ? P : (n.preventDefault(), {
+              const s = -n.length + t[d.row].body.length;
+              if (o.currentTarget != null && o.currentTarget.selectionStart === s && o.currentTarget.selectionEnd === s) {
+                S((P) => P.row === t.length - 1 ? P : (o.preventDefault(), {
                   row: P.row + 1,
                   col: 0,
                   colEnd: -1,
@@ -1165,7 +1165,7 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
                 }));
                 break;
               }
-              n.shiftKey ? E === "forward" ? p++ : E === "backward" && f++ : (f < p && (f = p), f++, p = -1), n.preventDefault(), S((P) => ({
+              o.shiftKey ? E === "forward" ? p++ : E === "backward" && f++ : (f < p && (f = p), f++, p = -1), o.preventDefault(), S((P) => ({
                 row: P.row,
                 col: f,
                 colEnd: p,
@@ -1174,27 +1174,27 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
               break;
             }
             case "ArrowUp":
-              q(h) && n.currentTarget != null && !Tt(n.currentTarget.selectionStart, h) || (n.preventDefault(), S((s) => s.row === 0 || n.currentTarget == null ? s : {
+              q(h) && o.currentTarget != null && !Tt(o.currentTarget.selectionStart, h) || (o.preventDefault(), S((s) => s.row === 0 || o.currentTarget == null ? s : {
                 row: s.row - 1,
-                col: n.currentTarget.selectionStart,
+                col: o.currentTarget.selectionStart,
                 colEnd: -1,
                 direction: E
               }));
               break;
             case "ArrowDown":
-              q(h) && n.currentTarget != null && !kt(n.currentTarget.selectionStart, h) || S((s) => s.row === t.length - 1 || n.currentTarget == null ? s : (n.preventDefault(), {
+              q(h) && o.currentTarget != null && !kt(o.currentTarget.selectionStart, h) || S((s) => s.row === t.length - 1 || o.currentTarget == null ? s : (o.preventDefault(), {
                 row: s.row + 1,
-                col: n.currentTarget.selectionStart,
+                col: o.currentTarget.selectionStart,
                 colEnd: -1,
                 direction: E
               }));
               break;
             case "Backspace":
-              if (!n.currentTarget)
+              if (!o.currentTarget)
                 return;
-              if (o.length !== 0 && (n.currentTarget.selectionStart === 0 && n.currentTarget.selectionEnd === 0 || n.currentTarget.selectionStart === 1 && n.currentTarget.selectionEnd === 1))
-                o.length !== 0 && (w((s) => (o.length === 1 ? (s[d.row].body = n.currentTarget.value.slice(1), f--, f === -1 ? f++ : f === 0 && p !== 0 && (p = 0)) : o.length > 0 && (s[d.row].body = o.slice(2) + n.currentTarget.value), [...s])), n.preventDefault());
-              else if (n.currentTarget != null && n.currentTarget.selectionStart === 0 && n.currentTarget.selectionEnd === 0) {
+              if (n.length !== 0 && (o.currentTarget.selectionStart === 0 && o.currentTarget.selectionEnd === 0 || o.currentTarget.selectionStart === 1 && o.currentTarget.selectionEnd === 1))
+                n.length !== 0 && (w((s) => (n.length === 1 ? (s[d.row].body = o.currentTarget.value.slice(1), f--, f === -1 ? f++ : f === 0 && p !== 0 && (p = 0)) : n.length > 0 && (s[d.row].body = n.slice(2) + o.currentTarget.value), [...s])), o.preventDefault());
+              else if (o.currentTarget != null && o.currentTarget.selectionStart === 0 && o.currentTarget.selectionEnd === 0) {
                 if (d.row === 0)
                   break;
                 const P = Ke(t[d.row - 1].body)[1].length;
@@ -1204,7 +1204,7 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
                   col: P,
                   colEnd: -1,
                   direction: E
-                })), n.preventDefault();
+                })), o.preventDefault();
                 break;
               }
               S((s) => ({
@@ -1216,16 +1216,16 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
               break;
             case "Tab":
               w((s) => {
-                if (!n.currentTarget)
+                if (!o.currentTarget)
                   return s;
-                if (n.shiftKey)
-                  o.length === 1 ? (s[d.row].body = n.currentTarget.value.slice(1), f--) : o.length > 0 && (s[d.row].body = o.slice(2) + n.currentTarget.value);
+                if (o.shiftKey)
+                  n.length === 1 ? (s[d.row].body = o.currentTarget.value.slice(1), f--) : n.length > 0 && (s[d.row].body = n.slice(2) + o.currentTarget.value);
                 else {
                   let P = "-";
-                  q(n.currentTarget.value) && (P = " "), o.length === 0 ? (s[d.row].body = P + " " + n.currentTarget.value, f++) : s[d.row].body = "  " + o + n.currentTarget.value;
+                  q(o.currentTarget.value) && (P = " "), n.length === 0 ? (s[d.row].body = P + " " + o.currentTarget.value, f++) : s[d.row].body = "  " + n + o.currentTarget.value;
                 }
                 return [...s];
-              }), n.preventDefault(), S((s) => ({
+              }), o.preventDefault(), S((s) => ({
                 row: s.row,
                 col: f,
                 colEnd: -1,
@@ -1233,18 +1233,18 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
               }));
               break;
             case "Enter":
-              if (n.keyCode === 13) {
-                if (q(h) && !n.shiftKey)
+              if (o.keyCode === 13) {
+                if (q(h) && !o.shiftKey)
                   break;
                 {
-                  if (n.currentTarget == null || n.currentTarget.selectionStart === void 0) {
-                    n.preventDefault();
+                  if (o.currentTarget == null || o.currentTarget.selectionStart === void 0) {
+                    o.preventDefault();
                     break;
                   }
                   let s = 0;
-                  const P = n.currentTarget.selectionStart;
+                  const P = o.currentTarget.selectionStart;
                   w((_) => {
-                    const Z = o.length + P;
+                    const Z = n.length + P;
                     let G = _[d.row].body.slice(Z);
                     if (q(h)) {
                       const te = _[d.row].body;
@@ -1262,12 +1262,12 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
                         0,
                         Z
                       );
-                    return o.length !== 0 ? (_.splice(
+                    return n.length !== 0 ? (_.splice(
                       d.row + 1,
                       0,
-                      { body: o + " " + G, key: K() }
+                      { body: n + " " + G, key: K() }
                     ), s = 1) : _.splice(d.row + 1, 0, { body: G, key: K() }), [..._];
-                  }), n.preventDefault(), S((_) => ({
+                  }), o.preventDefault(), S((_) => ({
                     row: _.row + 1,
                     col: s,
                     colEnd: -1,
@@ -1278,12 +1278,12 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
                 break;
               break;
             case " ":
-              console.log("space", f), (f === 0 || f === 1 && o.length >= 1) && (w((s) => {
-                if (!n.currentTarget)
+              console.log("space", f), (f === 0 || f === 1 && n.length >= 1) && (w((s) => {
+                if (!o.currentTarget)
                   return s;
                 let P = "-";
-                return q(n.currentTarget.value) && (P = " "), o.length === 0 ? (s[d.row].body = P + " " + n.currentTarget.value, f++) : s[d.row].body = "  " + o + n.currentTarget.value, [...s];
-              }), n.preventDefault()), S((s) => ({
+                return q(o.currentTarget.value) && (P = " "), n.length === 0 ? (s[d.row].body = P + " " + o.currentTarget.value, f++) : s[d.row].body = "  " + n + o.currentTarget.value, [...s];
+              }), o.preventDefault()), S((s) => ({
                 row: s.row,
                 col: f,
                 colEnd: -1,
@@ -1294,9 +1294,9 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
         },
         onLinkClick: g.onLinkClick,
         onSubLinkClick: g.onSubLinkClick,
-        onClick: (o) => {
+        onClick: (n) => {
           if (d.row !== l) {
-            const h = o.target.selectionStart;
+            const h = n.target.selectionStart;
             D([l, l]), S(() => ({ row: l, col: h }));
           }
         }
@@ -1308,12 +1308,12 @@ const bt = (g) => g.match(/^(\s*)> /) != null, pt = (g) => g.split(/[\r\n]/), Et
       {
         onClick: () => {
           globalThis.ontouchstart !== null && (a.handler(
-            t.slice(C[0], C[1] + 1).map((o) => o.body),
+            t.slice(C[0], C[1] + 1).map((n) => n.body),
             C
           ), D([C[1], C[1]]));
         },
         onTouchStart: () => {
-          a.handler(t.slice(C[0], C[1] + 1).map((o) => o.body)), D([C[1], C[1]]);
+          a.handler(t.slice(C[0], C[1] + 1).map((n) => n.body)), D([C[1], C[1]]);
         },
         children: a.name
       },

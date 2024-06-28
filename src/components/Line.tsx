@@ -140,6 +140,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
         } else if (cap.target == "["){
           if (pos !== cap.pos) {
             result.push(body.slice(pos, cap.pos));
+            pos = cap.pos
           }
           const endPos = capture(body, ["]"], cap.pos + cap.target.length);
           if (endPos.pos !== -1) {
