@@ -412,6 +412,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                 }
                 break;
               case "Backspace":
+                if(!e.currentTarget)return
                 if (
                   prefix.length !== 0 &&
                   ((e.currentTarget.selectionStart === 0 &&
@@ -478,6 +479,9 @@ export const Editor: React.FC<EditorProps> = (props) => {
                 })
               break
               case "Tab":
+                if(!e.currentTarget){
+                  return
+                }
                 setLines((prevLines) => {
                   if (e.shiftKey) {
                     if (prefix.length === 1) { // prefix == '-'
@@ -587,6 +591,9 @@ export const Editor: React.FC<EditorProps> = (props) => {
               case " ":
                 // 行頭の場合はインデントを生成する
                 console.log("space", currentColumn);
+                if(!e.currentTarget){
+                  return
+                }
                 if (
                   currentColumn === 0 ||
                   (currentColumn === 1 && prefix.length >= 1)
