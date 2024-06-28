@@ -479,10 +479,10 @@ export const Editor: React.FC<EditorProps> = (props) => {
                 })
               break
               case "Tab":
-                if(!e.currentTarget){
-                  return
-                }
                 setLines((prevLines) => {
+                  if(!e.currentTarget){
+                    return prevLines
+                  }
                   if (e.shiftKey) {
                     if (prefix.length === 1) { // prefix == '-'
                       prevLines[cursor.row].body = e.currentTarget.value.slice(1);
@@ -591,14 +591,14 @@ export const Editor: React.FC<EditorProps> = (props) => {
               case " ":
                 // 行頭の場合はインデントを生成する
                 console.log("space", currentColumn);
-                if(!e.currentTarget){
-                  return
-                }
                 if (
                   currentColumn === 0 ||
                   (currentColumn === 1 && prefix.length >= 1)
                 ) {
                   setLines((prevLines) => {
+                    if(!e.currentTarget){
+                      return prevLines
+                    }
                     let bullet = "-";
                     if (isBlock(e.currentTarget.value)) {
                       bullet = " ";
