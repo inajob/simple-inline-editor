@@ -37,7 +37,13 @@ export const Editor: React.FC<EditorProps> = (props) => {
   //const [lines, setLines] = useState(props.initialLines);
   const lines = props.lines;
   const setLines = props.setLines;
-  const keySequence = useRef(lines.length);
+  let maxKey = 0
+  lines.forEach((l) => {
+    if(l.key > maxKey){
+      maxKey = l.key
+    }
+  })
+  const keySequence = useRef(maxKey);
 
   useEffect(() => {
     keySequence.current = lines.length
