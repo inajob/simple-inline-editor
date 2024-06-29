@@ -156,7 +156,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
               <span className={"braket" + style} onClick={(e) => {
                 linkClickHandler(id)
                 e.stopPropagation()
-              }}>{id}</span>
+              }}><span className="invisible">[</span>{id}<span className="invisible">]</span></span>
               <span className="bracket-icon" onClick={(e) => {
                 subLinkClickHandler(id)
                 e.stopPropagation()

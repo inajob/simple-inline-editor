@@ -39,6 +39,7 @@ span.bracket-icon{
   background-color: #99f;
   color: #99f;
   cursor: pointer;
+  user-select: none;
 }
 h1 {
   background-color: #aaf;
@@ -55,6 +56,9 @@ ul.menu li{
   margin: 2px;
 }
 
+.invisible{
+  font-size: 0px;
+}
 .hide{
   display: none;
 }
