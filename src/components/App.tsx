@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { getLines } from "../util.ts";
-import Editor from "./Editor.tsx";
+import Editor, { LinePopupHandler } from "./Editor.tsx";
 import { BlockStyleHandler } from "./Line.tsx";
 import { TextFragment, TextChangeRequest } from "./TextareaWithMenu.tsx";
 
@@ -37,7 +37,7 @@ export const App: React.FC = () => {
   const content = useRef<string[]>([]);
 
   // == Line Popup Handlers ============================
-  const linePopupHandlers = [
+  const linePopupHandlers: LinePopupHandler[] = [
     {
       name: "alert",
       handler: (lines: string[]) => {
@@ -50,6 +50,18 @@ export const App: React.FC = () => {
       handler: () => {
         alert("test2-1");
       },
+    },
+    {
+      name: "delete",
+      handler: (_, range) => {
+        if(range == undefined){
+          throw "range is undefined"
+        }
+        setLines((prevLines) => {
+          prevLines.splice(range[0], range[1] - range[0] + 1)
+          return prevLines
+        })
+      }
     },
   ];
 
