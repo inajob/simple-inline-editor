@@ -154,6 +154,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
       let blockContent: string[] = [];
       let inBlock = false;
       let blockPrefix = "";
+      
       lines.forEach((l) => {
         const blockMatch = l.match(/^(\s*)(```.*)/); // ```
         if (inBlock) {
@@ -186,7 +187,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
         out.push(blockContent.join("\n"));
       }
       setLines((prev) => {
-        prev[no] = {body: prev[no] + out[0], key: prev[no].key};
+        prev[no] = {body: prev[no].body + out[0], key: prev[no].key};
         prev.splice(no + 1, 0, ...out.slice(1).map((l) => {return {body: l, key: newKey()}}));
         return [...prev];
       });
