@@ -1,5 +1,5 @@
-/// <reference types="react" />
-import { TextPopupHandler, Keyword } from "./TextareaWithMenu.tsx";
+import { TextPopupHandler, Keyword } from './TextareaWithMenu.tsx';
+
 export type BlockStyleHandler = (body: string, setRenderElement: React.Dispatch<React.SetStateAction<React.JSX.Element | undefined>>) => React.JSX.Element;
 export interface LineProps {
     value: string;
@@ -23,4 +23,4 @@ export interface LineProps {
     setCursor: (col: number) => void;
     selectThisLine: () => void;
 }
-export declare const Line: import("react").ForwardRefExoticComponent<LineProps & import("react").RefAttributes<HTMLTextAreaElement>>;
+export declare const Line: import('react').ForwardRefExoticComponent<LineProps & import('react').RefAttributes<HTMLTextAreaElement>>;

@@ -162,7 +162,7 @@ export const TextareaWithMenu = React.forwardRef<
     let isOpenAutoComplete = false;
     if (select.selection === "" && candidate !== "") {
       popupHandlers = props.keywords.map((m) => m.value).filter((k) => {
-        return k.indexOf(candidate) != -1;
+        return k.toLowerCase().indexOf(candidate.toLowerCase()) != -1;
       }).map((k, i) => {
         return {
           name: k,

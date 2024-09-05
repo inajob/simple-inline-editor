@@ -1,6 +1,6 @@
-/// <reference types="react" />
-import { BlockStyleHandler } from "./Line.tsx";
-import { TextPopupHandler, Keyword } from "./TextareaWithMenu.tsx";
+import { BlockStyleHandler } from './Line.tsx';
+import { TextPopupHandler, Keyword } from './TextareaWithMenu.tsx';
+
 export interface LinePopupHandler {
     name: string;
     handler: (lines: string[], range?: number[]) => void;
