@@ -100,7 +100,7 @@ ul.menu li{
 }
 .line{
   display: flex;
-  /*word-break: break-all;*/
+  word-break: break-all;
 }
 .line .line-item{
   flex: 1;
