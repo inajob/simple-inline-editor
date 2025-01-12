@@ -222,6 +222,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
       console.log("EFFECT", "col:", cursor.col, "end:", end);
       focusLine.current.setSelectionRange(cursor.col, end, cursor.direction);
 
+      // workadound for Android Chrome
       const styleSheets = document.styleSheets;
       for (const styleSheet of styleSheets) {
         const rules = styleSheet.cssRules || styleSheet.rules;
@@ -240,7 +241,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
             }
           }
         }
-      }, 1000);
+      }, 100);
     }
   }, [cursor, lines]);
   lines.forEach((_, i) => {

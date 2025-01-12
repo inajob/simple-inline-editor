@@ -1093,7 +1093,7 @@ const Tt = (g) => g.match(/^(\s*)> /) != null, Ct = (g) => g.split(/[\r\n]/), Rt
           for (const u of r)
             u instanceof CSSStyleRule && u.selectorText === ".line" && (u.style.wordBreak = "break-all");
         }
-      }, 1e3);
+      }, 100);
     }
   }, [f, t]), t.forEach((o, i) => {
     l.current[i] = pt();
