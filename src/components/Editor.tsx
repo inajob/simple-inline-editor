@@ -222,26 +222,30 @@ export const Editor: React.FC<EditorProps> = (props) => {
       console.log("EFFECT", "col:", cursor.col, "end:", end);
       focusLine.current.setSelectionRange(cursor.col, end, cursor.direction);
 
-      // workadound for Android Chrome
-      const styleSheets = document.styleSheets;
-      for (const styleSheet of styleSheets) {
-        const rules = styleSheet.cssRules || styleSheet.rules;
-        for (const rule of rules) {
-          if (rule instanceof CSSStyleRule && rule.selectorText === '.line') {
-            rule.style.wordBreak = 'normal'
-          }
-        }
-      }
-      setTimeout(() => {
+      const userAgent = navigator.userAgent || navigator.vendor;
+      const isAndroid = /Android/i.test(userAgent);
+      if(isAndroid){
+        // workadound for Android Chrome
+        const styleSheets = document.styleSheets;
         for (const styleSheet of styleSheets) {
           const rules = styleSheet.cssRules || styleSheet.rules;
           for (const rule of rules) {
             if (rule instanceof CSSStyleRule && rule.selectorText === '.line') {
-              rule.style.wordBreak = 'break-all'
+              rule.style.wordBreak = 'normal'
             }
           }
         }
-      }, 100);
+        setTimeout(() => {
+          for (const styleSheet of styleSheets) {
+            const rules = styleSheet.cssRules || styleSheet.rules;
+            for (const rule of rules) {
+              if (rule instanceof CSSStyleRule && rule.selectorText === '.line') {
+                rule.style.wordBreak = 'break-all'
+              }
+            }
+          }
+        }, 100);
+      }
     }
   }, [cursor, lines]);
   lines.forEach((_, i) => {
