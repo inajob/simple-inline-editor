@@ -221,6 +221,26 @@ export const Editor: React.FC<EditorProps> = (props) => {
       }
       console.log("EFFECT", "col:", cursor.col, "end:", end);
       focusLine.current.setSelectionRange(cursor.col, end, cursor.direction);
+
+      const styleSheets = document.styleSheets;
+      for (const styleSheet of styleSheets) {
+        const rules = styleSheet.cssRules || styleSheet.rules;
+        for (const rule of rules) {
+          if (rule instanceof CSSStyleRule && rule.selectorText === '.line') {
+            rule.style.wordBreak = 'normal'
+          }
+        }
+      }
+      setTimeout(() => {
+        for (const styleSheet of styleSheets) {
+          const rules = styleSheet.cssRules || styleSheet.rules;
+          for (const rule of rules) {
+            if (rule instanceof CSSStyleRule && rule.selectorText === '.line') {
+              rule.style.wordBreak = 'break-all'
+            }
+          }
+        }
+      }, 1000);
     }
   }, [cursor, lines]);
   lines.forEach((_, i) => {
