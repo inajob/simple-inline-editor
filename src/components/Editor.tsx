@@ -22,6 +22,7 @@ export interface EditorProps {
   onLinkClick: ((title: string) => void)
   onSubLinkClick: ((title: string) => void)
   onMagicFunc: ((row: number) => () => void)
+  onUploadImage: ((blob:File) => void)
   textPopupHandlers: TextPopupHandler[];
   linePopupHandlers: LinePopupHandler[];
   keywords: Keyword[];
@@ -150,6 +151,20 @@ export const Editor: React.FC<EditorProps> = (props) => {
 
   const paste =
     (no: number): React.ClipboardEventHandler<HTMLTextAreaElement> => (e) => {
+      const items = e.clipboardData.items;
+      for(let i = 0; i < items.length; i ++){
+        console.log(items[i]);
+        if(items[i].type.indexOf("image") !== -1){
+          // find image
+          console.log("capture image");
+          const blob = items[i].getAsFile();
+          if(blob !== null){
+            props.onUploadImage(blob)
+            return false;
+          }
+        }
+      }
+      
       const body = e.clipboardData.getData("text");
       const lines = body.split(/\r\n|\n/);
       if (lines.length === 1) {

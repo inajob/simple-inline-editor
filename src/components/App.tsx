@@ -197,13 +197,16 @@ export const App: React.FC = () => {
         setLines={setLines}
         linePopupHandlers={linePopupHandlers}
         textPopupHandlers={textPopupHandlers}
-        keywords={useMemo(() => keywords.map((k) => {return {value: k, style: "red"}}),[keywords])}
+        keywords={useMemo(() => keywords.map((k) => { return { value: k, style: "red" }; }), [keywords])}
         blockStyles={blockStyles}
-        onChange={(lines) => {content.current = lines}}
+        onChange={(lines) => { content.current = lines; } }
         onLinkClick={clickHandler}
         onSubLinkClick={clickHandler}
-        onMagicFunc={(row) => () => {console.log("magic" + row)}}
-      />
+        onMagicFunc={(row) => () => { console.log("magic" + row); } }
+        onUploadImage={function (blob: File) {
+          alert("upload image" +  blob);
+          console.log(blob)
+        } }      />
     </div>
   );
 };
