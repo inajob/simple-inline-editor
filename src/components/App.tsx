@@ -203,9 +203,9 @@ export const App: React.FC = () => {
         onLinkClick={clickHandler}
         onSubLinkClick={clickHandler}
         onMagicFunc={(row) => () => { console.log("magic" + row); } }
-        onUploadImage={function (blob: File) {
-          alert("upload image" +  blob);
-          console.log(blob)
+        onUploadImage={function (blob: File, row: number) {
+          alert("upload image" +  blob + ", row:" + row);
+          console.log(blob, row)
         } }      />
     </div>
   );

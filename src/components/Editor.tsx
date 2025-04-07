@@ -22,7 +22,7 @@ export interface EditorProps {
   onLinkClick: ((title: string) => void)
   onSubLinkClick: ((title: string) => void)
   onMagicFunc: ((row: number) => () => void)
-  onUploadImage: ((blob:File) => void)
+  onUploadImage: ((blob:File, row: number) => void)
   textPopupHandlers: TextPopupHandler[];
   linePopupHandlers: LinePopupHandler[];
   keywords: Keyword[];
@@ -159,7 +159,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
           console.log("capture image");
           const blob = items[i].getAsFile();
           if(blob !== null){
-            props.onUploadImage(blob)
+            props.onUploadImage(blob, cursor.row)
             return false;
           }
         }
