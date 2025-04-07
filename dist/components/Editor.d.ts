@@ -18,7 +18,7 @@ export interface EditorProps {
     onLinkClick: ((title: string) => void);
     onSubLinkClick: ((title: string) => void);
     onMagicFunc: ((row: number) => () => void);
-    onUploadImage: ((blob: File) => void);
+    onUploadImage: ((blob: File, row: number) => void);
     textPopupHandlers: TextPopupHandler[];
     linePopupHandlers: LinePopupHandler[];
     keywords: Keyword[];

@@ -1063,7 +1063,7 @@ const Tt = (h) => h.match(/^(\s*)> /) != null, Ct = (h) => h.split(/[\r\n]/), Rt
         console.log("capture image");
         const C = r[p].getAsFile();
         if (C !== null)
-          return h.onUploadImage(C), !1;
+          return h.onUploadImage(C, f.row), !1;
       }
     const i = a.clipboardData.getData("text").split(/\r\n|\n/);
     if (i.length === 1)
