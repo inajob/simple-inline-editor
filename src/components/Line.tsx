@@ -109,6 +109,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
 
     const linkClickHandler = props.onLinkClick
     const subLinkClickHandler = props.onSubLinkClick
+    
     const makeLine = useCallback((body: string) => {
       let pos = 0;
       const result = [];
@@ -125,11 +126,11 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
           );
           if (endPos.pos !== -1) {
             const link = body.slice(cap.pos, endPos.pos);
-            result.push(<a key={pos} href={link}>{link}</a>);
+            result.push(<a key={pos} href={link}>{decodeURIComponent(link)}</a>);
             pos = endPos.pos;
           } else {
             const link = body.slice(cap.pos, body.length);
-            result.push(<a key={pos} href={link}>{link}</a>);
+            result.push(<a key={pos} href={link}>{decodeURIComponent(link)}</a>);
             pos = body.length;
             break;
           }
