@@ -126,11 +126,11 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
           );
           if (endPos.pos !== -1) {
             const link = body.slice(cap.pos, endPos.pos);
-            result.push(<a key={pos} href={link}>{decodeURIComponent(link)}</a>);
+            result.push(<a key={pos} href={link}>AAA{decodeURIComponent(link)}</a>);
             pos = endPos.pos;
           } else {
             const link = body.slice(cap.pos, body.length);
-            result.push(<a key={pos} href={link}>{decodeURIComponent(link)}</a>);
+            result.push(<a key={pos} href={link}>AAA{decodeURIComponent(link)}</a>);
             pos = body.length;
             break;
           }
