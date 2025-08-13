@@ -1,6 +1,7 @@
 import { TextPopupHandler, Keyword } from './TextareaWithMenu.tsx';
 
 export type BlockStyleHandler = (body: string, setRenderElement: React.Dispatch<React.SetStateAction<React.JSX.Element | undefined>>) => React.JSX.Element;
+export type InlineStyleHandler = (body: string) => React.JSX.Element;
 export interface LineProps {
     value: string;
     row: number;
@@ -8,6 +9,7 @@ export interface LineProps {
     isFocus: boolean;
     isSelect: boolean;
     keywords: Keyword[];
+    inlineStyles: Record<string, InlineStyleHandler>;
     blockStyles: Record<string, BlockStyleHandler>;
     textPopupHandlers: TextPopupHandler[];
     onClick: React.MouseEventHandler<HTMLDivElement>;
