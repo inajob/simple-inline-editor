@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { getLines } from "../util.ts";
 import Editor, { LinePopupHandler } from "./Editor.tsx";
-import { BlockStyleHandler } from "./Line.tsx";
+import { BlockStyleHandler, InlineStyleHandler } from "./Line.tsx";
 import { TextFragment, TextChangeRequest } from "./TextareaWithMenu.tsx";
 
 // == block styles ============================
@@ -31,6 +31,16 @@ const csvToTable:BlockStyleHandler = (body, setRenderElement) => {
 const blockStyles = {
   table: csvToTable,
 };
+
+// == inline styles ============================
+
+const inlineStyleRed:InlineStyleHandler = (body:string) => {
+  return <span style={{"color":"red"}}>{body}</span>
+}
+
+const inlineStyles = {
+  red: inlineStyleRed,
+}
 
 
 export const App: React.FC = () => {
@@ -120,6 +130,7 @@ export const App: React.FC = () => {
     "- 箇条書き",
     "  - 箇条書き",
     "- [リンク]",
+    "- {{red red}}, {{red red}}",
     "```code\n//ソースコード的なもの\nalert('test')",
     "```table\n表組,の,デモ\n11,22,33",
     "",
@@ -198,6 +209,7 @@ export const App: React.FC = () => {
         linePopupHandlers={linePopupHandlers}
         textPopupHandlers={textPopupHandlers}
         keywords={useMemo(() => keywords.map((k) => { return { value: k, style: "red" }; }), [keywords])}
+        inlineStyles={inlineStyles}
         blockStyles={blockStyles}
         onChange={(lines) => { content.current = lines; } }
         onLinkClick={clickHandler}

@@ -10,6 +10,7 @@ import { TextareaWithMenu, TextPopupHandler, Keyword } from "./TextareaWithMenu.
 import { useForwardRef } from "../useForwardRef.ts";
 
 export type BlockStyleHandler = (body: string, setRenderElement: React.Dispatch<React.SetStateAction<React.JSX.Element | undefined>>) => React.JSX.Element
+export type InlineStyleHandler = (body: string) => React.JSX.Element
 
 export interface LineProps {
   value: string;
@@ -18,6 +19,7 @@ export interface LineProps {
   isFocus: boolean;
   isSelect: boolean;
   keywords: Keyword[];
+  inlineStyles: Record<string, InlineStyleHandler>;
   blockStyles: Record<string, BlockStyleHandler>;
   textPopupHandlers: TextPopupHandler[];
   onClick: React.MouseEventHandler<HTMLDivElement>;
@@ -114,7 +116,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
       let pos = 0;
       const result = [];
       for (;;) {
-        const cap = capture(body, ["http://", "https://", " ", "["], pos);
+        const cap = capture(body, ["http://", "https://", " ", "[", "{{"], pos);
         if ((cap.target === "https://" || cap.target === "http://")) {
           if (pos !== cap.pos) {
             result.push(body.slice(pos, cap.pos));
@@ -168,6 +170,25 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
             result.push(body.slice(pos, body.length));
             pos = body.length
           }
+        } else if (cap.target == "{{"){
+          if (pos !== cap.pos) {
+            result.push(body.slice(pos, cap.pos));
+          }
+          const endPos = capture(body, ["}}"], cap.pos + cap.target.length);
+          if (endPos.pos !== -1) {
+            const value = body.slice(cap.pos + 2, endPos.pos)
+            const [command, rest] = value.split(" ", 2)
+            if(Object.keys(props.inlineStyles).includes(command)){
+              const r = props.inlineStyles[command](rest)
+              result.push(r)
+            }else{
+              result.push("unknown command:" + value)
+            }
+            pos = endPos.pos + 2
+          } else {
+            result.push(body.slice(pos, body.length));
+            pos = body.length
+          }
         } else {
           result.push(body.slice(pos, body.length));
           pos = body.length;
@@ -175,7 +196,7 @@ export const Line = forwardRef<HTMLTextAreaElement, LineProps>(
         }
       }
       return result;
-    }, [linkClickHandler, subLinkClickHandler, props.keywords]);
+    }, [linkClickHandler, subLinkClickHandler, props.keywords, props.inlineStyles]);
 
     const makeBlock = useCallback((type: string | undefined, body: string) => {
       const f = type ? props.blockStyles[type] : undefined;

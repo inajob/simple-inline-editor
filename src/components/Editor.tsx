@@ -5,7 +5,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { Line, BlockStyleHandler } from "./Line.tsx";
+import { Line, InlineStyleHandler, BlockStyleHandler } from "./Line.tsx";
 import { isBlock, isFirstLine, isLastLine, parsePrefix } from "../util.ts";
 import { TextPopupHandler, Keyword } from "./TextareaWithMenu.tsx";
 
@@ -26,6 +26,7 @@ export interface EditorProps {
   textPopupHandlers: TextPopupHandler[];
   linePopupHandlers: LinePopupHandler[];
   keywords: Keyword[];
+  inlineStyles: Record<string, InlineStyleHandler>;
   blockStyles: Record<string, BlockStyleHandler>;
 }
 interface Cursor {
@@ -281,6 +282,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
           textPopupHandlers={props.textPopupHandlers}
           onMagicFunc={props.onMagicFunc(index)}
           keywords={props.keywords}
+          inlineStyles={props.inlineStyles}
           blockStyles={props.blockStyles}
           selectThisLine={selectThisLine()}
           setLine={(prefix) => (s) =>
